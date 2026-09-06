@@ -14,6 +14,17 @@ Mobile-first operator for the canonical 200-prospect CRM.
 - Tracks Sent, Replied, Won/Paid, and Skip locally.
 - Works as an installable PWA and caches the app shell for offline use.
 
+## One-time GitHub Pages switch
+
+The repository includes `.github/workflows/prospect-android-pages.yml`. The GitHub App used to build this project cannot turn on the repository-level Pages setting itself. Do this once in GitHub:
+
+1. Open the `cashh-radar` repository.
+2. **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Open **Actions → Deploy Prospect Android Web App to Pages** and choose **Run workflow** (or make any later change under `webapp/`).
+
+After that, later pushes to `data/200-prospect-sales-engine/webapp/**` deploy automatically.
+
 ## Important attachment limitation
 
 A normal `mailto:` URL can reliably prefill recipient, subject, and body, but browsers cannot reliably pre-attach a local file to the email composer. Therefore automatic attachments use the Gmail API and deliberately create a **draft for review**, not an automatic send.
