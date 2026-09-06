@@ -110,3 +110,4 @@ Do not commit `data/*.db` to GitHub. The production service should create and mi
 - Full backend source is in GitHub.
 - CI is expected to run `pytest -q` and `node --check static/app.js`.
 - Render deployment is blocked only by Render billing/account setup, not by missing app code.
+- All regression tests passing.
