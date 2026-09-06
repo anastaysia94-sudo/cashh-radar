@@ -1,0 +1,27 @@
+from pathlib import Path
+import json
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_railway_config_exists_and_uses_docker_backend():
+    config = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
+    assert config["$schema"] == "https://railway.com/railway.schema.json"
+    assert config["build"]["builder"] == "DOCKERFILE"
+
+
+def test_railway_start_command_runs_full_fastapi_app():
+    config = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
+    start = config["deploy"]["startCommand"]
+    assert "uvicorn app:app" in start
+    assert "0.0.0.0" in start
+    assert "${PORT:-8000}" in start
+    assert "proxy-headers" in start
+
+
+def test_railway_uses_readiness_healthcheck():
+    config = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
+    deploy = config["deploy"]
+    assert deploy["healthcheckPath"] == "/api/health/ready"
+    assert deploy["healthcheckTimeout"] >= 100
