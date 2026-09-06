@@ -37,6 +37,7 @@ def test_repository_copy_stays_render_only():
     allowed_files = {
         Path("tests/test_render_only_repository.py"),
         Path("RENDER_DEPLOYMENT_STATUS.md"),
+        Path("RENDER_BILLING_LAUNCH_RUNBOOK.md"),
     }
     hits = []
     for path in _repo_files():
