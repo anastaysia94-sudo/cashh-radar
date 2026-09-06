@@ -25,12 +25,12 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Compile Python entrypoints
-        run: python -m py_compile app.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
+        run: python -m py_compile app.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
 
       - name: Run Python tests
         run: python -m pytest -q
 
-      - name: Validate deployment files
+      - name: Validate deployment files and Android prospect bundle
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -40,6 +40,7 @@ jobs:
           dockerfile = Path('Dockerfile').read_text(encoding='utf-8')
           assert '0.0.0.0' in dockerfile, 'Dockerfile must bind to 0.0.0.0 for container platforms'
           assert '${PORT:-8000}' in dockerfile, 'Dockerfile must honor platform PORT'
+          assert 'uvicorn launcher:app' in dockerfile, 'Dockerfile must expose the /prospects Android app mount'
 
           for path in ('render.yaml', 'deploy/render.yaml'):
               data = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
@@ -59,7 +60,18 @@ jobs:
           assert railway['$schema'] == 'https://railway.com/railway.schema.json'
           assert railway['build']['builder'] == 'DOCKERFILE'
           assert railway['deploy']['healthcheckPath'] == '/api/health/ready'
-          assert 'uvicorn app:app' in railway['deploy']['startCommand']
+          assert 'uvicorn launcher:app' in railway['deploy']['startCommand']
+
+          app_dir = Path('prospect-android-app')
+          required = [
+              'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-core.js',
+              'easy-ui.js', 'easy-send.js', 'easy-v3.js', 'prospects.js', 'sw.js',
+              'manifest.webmanifest', 'icon.svg', 'README.md',
+              '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
+          ]
+          missing = [name for name in required if not (app_dir / name).exists()]
+          assert not missing, f'Prospect Android app files missing: {missing}'
+          assert (app_dir / 'index.html').stat().st_size > 1000, 'index.html must contain the full Android app shell'
           PY
 
       - name: Set up Node
@@ -68,10 +80,18 @@ jobs:
           node-version: '22'
 
       - name: Check frontend JavaScript syntax
-        run: node --check static/app.js
+        run: |
+          node --check static/app.js
+          node --check prospect-android-app/easy-core.js
+          node --check prospect-android-app/easy-ui.js
+          node --check prospect-android-app/easy-send.js
+          node --check prospect-android-app/easy-v3.js
+          node --check prospect-android-app/prospects.js
 
       - name: Check service worker JavaScript syntax
-        run: node --check static/sw.js
+        run: |
+          node --check static/sw.js
+          node --check prospect-android-app/sw.js
 
       - name: Docker build smoke test
         run: docker build -t cashh-radar:ci .
