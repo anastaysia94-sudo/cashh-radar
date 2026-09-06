@@ -19,6 +19,5 @@ data/backups/
 *.sqlite3
 .DS_Store
 .vercel/
-vercel.json
 public/
 prospect-portal/
