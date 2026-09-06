@@ -1,5 +1,5 @@
-const CACHE='prospect-200-v3';
-const FILES=['./','index.html','easy.html','easy.css','easy-core.js','easy-ui.js','easy-send.js','prospects.js','manifest.webmanifest','icon.svg'];
+const CACHE='prospect-200-v4';
+const FILES=['./','index.html','easy.html','easy.css','easy-v3.css','easy-core.js','easy-ui.js','easy-send.js','easy-v3.js','prospects.js','manifest.webmanifest','icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
 });
