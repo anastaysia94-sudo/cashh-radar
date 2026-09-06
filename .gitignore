@@ -8,3 +8,4 @@ data/*.db-shm
 data/*.db
 data/backups/
 *.log
+prospect-portal/
