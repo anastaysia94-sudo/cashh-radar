@@ -25,20 +25,21 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Compile Python entrypoints
-        run: python -m py_compile app.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
+        run: python -m py_compile app.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
 
       - name: Run Python tests
         run: python -m pytest -q
 
-      - name: Validate Render deployment files
+      - name: Validate deployment files
         run: |
           python - <<'PY'
           from pathlib import Path
+          import json
           import yaml
 
           dockerfile = Path('Dockerfile').read_text(encoding='utf-8')
-          assert '0.0.0.0' in dockerfile, 'Dockerfile must bind to 0.0.0.0 for Render'
-          assert '${PORT:-8000}' in dockerfile, 'Dockerfile must honor Render PORT'
+          assert '0.0.0.0' in dockerfile, 'Dockerfile must bind to 0.0.0.0 for container platforms'
+          assert '${PORT:-8000}' in dockerfile, 'Dockerfile must honor platform PORT'
 
           for path in ('render.yaml', 'deploy/render.yaml'):
               data = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
@@ -49,6 +50,10 @@ jobs:
               assert web.get('type') == 'web', f'{path} service type must be web'
               assert web.get('runtime') == 'docker', f'{path} runtime must be docker'
               assert web.get('healthCheckPath') == '/api/health/ready', f'{path} must use readiness health check'
+
+          vercel = json.loads(Path('vercel.json').read_text(encoding='utf-8'))
+          assert vercel['routes'] == [{'src': '/(.*)', 'dest': 'api/index.py'}]
+          assert 'api/index.py' in vercel.get('functions', {})
           PY
 
       - name: Set up Node
