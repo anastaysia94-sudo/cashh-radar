@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#102a43">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="easy.css">
+  <link rel="stylesheet" href="easy-v3.css">
+  <title>200 Prospect Sales Engine</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="prospects.js"></script>
+</head>
+<body>
+<header>
+  <div class="head"><div><h1>200 Prospect Sales Engine</h1><small>Next-best-action mode — one prospect at a time</small></div><button class="iconbtn" id="settingsBtn" aria-label="Settings">⚙</button></div>
+  <div class="progress" aria-label="Daily progress"><span id="progressBar"></span></div>
+  <div class="stats"><span><b id="doneCount">0</b> processed</span><span><b id="sentCount">0</b> sent</span><span><b id="replyCount">0</b> replies</span><span><b id="dueCount">0</b> due</span><span><b id="wonCount">0</b> won</span></div>
+</header>
+<main>
+  <section id="focusView"></section>
+  <section id="queueView" class="queue"></section>
+  <section id="followView" class="queue"></section>
+  <section id="statsView" class="queue"></section>
+</main>
+<nav class="bottom" aria-label="App navigation">
+  <button data-tab="focus" class="active"><b>▶</b>Focus</button>
+  <button data-tab="queue"><b>☰</b>Queue</button>
+  <button data-tab="follow"><b>↻</b>Follow-ups <span id="followBadge" class="navbadge"></span></button>
+  <button data-tab="stats"><b>✓</b>Progress</button>
+</nav>
+<dialog id="settingsDialog">
+  <h2>One-time setup</h2>
+  <label>Your name<input id="senderName" placeholder="Your name"></label>
+  <label>Google OAuth Client ID<input id="clientId" placeholder="...apps.googleusercontent.com"></label>
+  <p class="help"><b>Easiest sending:</b> add a Gmail OAuth Client ID once. Then the big action button creates a Gmail draft with the prospect email, subject, message and prospect PNG already attached. You still review and press Send yourself.<br><br>Without Gmail setup, the app opens your Android mail app with To + Subject + Body filled in. Browsers cannot reliably attach a file through a normal mailto link.</p>
+  <button class="btn primary" id="saveSettings">Save settings</button>
+  <button class="btn soft" id="installBtn">Install / Add to Home Screen</button>
+  <button class="btn soft" id="backupBtn">Download progress backup</button>
+  <button class="btn soft" id="closeSettings">Close</button>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="easy-core.js"></script>
+<script src="easy-ui.js"></script>
+<script src="easy-send.js"></script>
+<script src="easy-v3.js"></script>
+</body>
+</html>
