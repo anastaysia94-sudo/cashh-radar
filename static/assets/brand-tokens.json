@@ -1,0 +1,20 @@
+{
+  "brand": "Cashh Radar",
+  "tagline": "Spot better money opportunities.",
+  "fonts": {
+    "heading": "Sora",
+    "body": "Inter"
+  },
+  "colors": {
+    "midnight": "#0B1020",
+    "charcoal": "#151A26",
+    "teal": "#00E5C2",
+    "green": "#22D463",
+    "aqua": "#7CF2E3",
+    "text": "#F8F7F9",
+    "muted": "#A6ACB9",
+    "border": "#27303B",
+    "warning": "#FFC53D",
+    "danger": "#FF5C5C"
+  }
+}
