@@ -1,64 +1,58 @@
-# 200 Prospect Sales Engine — Android Web App
+# 200 Prospect Sales Engine — Android Easy Flow
 
-Mobile-first operator for the canonical 200-prospect CRM.
+The Android web app now defaults to **Focus mode: one prospect at a time**.
 
-## What it does
+## New operating flow
 
-- Shows the highest-priority researched prospects first, then discovery slots up to 200.
-- Stores operator edits and progress locally on the Android device.
-- Lets you add a verified prospect email address without inventing one.
-- **Email ready:** opens the phone's mail app with To, Subject, and message already filled in.
-- **Gmail draft + image:** generates a prospect-specific PNG card and creates a Gmail draft with recipient, subject, message, and PNG attached.
-- **Share + image:** uses Android's share sheet with the generated image when supported.
-- Includes initial contact, Follow-up 1, Follow-up 2, qualification, and close/confirmation messages.
-- Tracks Sent, Replied, Won/Paid, and Skip locally.
-- Works as an installable PWA and caches the app shell for offline use.
+1. **Verify the lead** — open the actual source and mark it verified if it is still active.
+2. **Add the contact** — paste a verified email when one is publicly provided. If the prospect uses Reddit/Craigslist/application forms instead, tap **Copy message + open listing / DM**.
+3. **Use the prepared message** — Initial, Follow-up 1, Follow-up 2, Qualify reply, and Close are one-tap message modes. Subject/body are already populated and can be edited.
+4. **Prepare the email** — if Gmail OAuth is configured, the main button creates a Gmail draft with recipient, subject, message, and a prospect-specific PNG attached. Otherwise Android opens the mail app with To + Subject + Body filled in.
+5. **Confirm the real send** — tap **I sent it — next prospect** only after you actually send it. The app then advances automatically.
+6. **Follow-ups** — the Follow-ups tab surfaces prospects actually marked Sent after the follow-up window is due.
 
-## One-time GitHub Pages switch
+## Bottom navigation
 
-The repository includes `.github/workflows/prospect-android-pages.yml`. The GitHub App used to build this project cannot turn on the repository-level Pages setting itself. Do this once in GitHub:
+- **Focus** — one prospect at a time; this is the default.
+- **Queue** — search/filter all 200 slots and jump to any prospect.
+- **Follow-ups** — only real sent contacts whose follow-up is due.
+- **Progress** — processed, sent, replies, wins, skipped, and remaining.
 
-1. Open the `cashh-radar` repository.
-2. **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-4. Open **Actions → Deploy Prospect Android Web App to Pages** and choose **Run workflow** (or make any later change under `webapp/`).
+## Android-specific improvements
 
-After that, later pushes to `data/200-prospect-sales-engine/webapp/**` deploy automatically.
+- Large tap targets and a single primary action per step.
+- The app automatically moves to the next workable prospect after a confirmed send or skip.
+- Progress is saved locally on the Android device using the same `ps200-mobile-v1` state key, so the redesign keeps prior local progress.
+- The service worker caches the easy-flow shell for offline reopening.
+- The PWA manifest launches directly into `easy.html`.
 
-## Important attachment limitation
+## Email + image behavior
 
-A normal `mailto:` URL can reliably prefill recipient, subject, and body, but browsers cannot reliably pre-attach a local file to the email composer. Therefore automatic attachments use the Gmail API and deliberately create a **draft for review**, not an automatic send.
+A normal `mailto:` URL can prefill recipient, subject, and body, but browsers cannot reliably pre-attach a local file. Therefore automatic attachments use the Gmail API and create a **draft for review**, not an automatic send.
 
-## One-time Gmail setup
+### One-time Gmail setup
 
-1. Open Google Cloud Console.
-2. Create or select a project.
-3. Enable **Gmail API**.
-4. Configure the OAuth consent screen.
-5. Create an **OAuth 2.0 Client ID** for a Web application.
-6. Add the HTTPS origin where this web app is hosted as an **Authorized JavaScript origin**.
-7. Open the app → Settings → paste the Client ID.
-8. Tap **Gmail draft + image** on a prospect and approve the `gmail.compose` permission.
+1. Enable **Gmail API** in Google Cloud.
+2. Configure the OAuth consent screen.
+3. Create an OAuth 2.0 Client ID for a Web application.
+4. Add the deployed app's HTTPS origin as an Authorized JavaScript origin.
+5. Open the app → ⚙ Settings → paste the Client ID.
+6. Approve the `https://www.googleapis.com/auth/gmail.compose` scope when prompted.
 
-The app asks only for `https://www.googleapis.com/auth/gmail.compose`. The Client ID is stored locally in the browser. No Gmail password is stored.
+The app does not store a Gmail password and does not silently mass-send messages.
 
 ## Prospect emails
 
-The current CRM does not contain verified email addresses for most Reddit/Craigslist prospects; their allowed contact path is usually DM, reply, or an application form. The app intentionally leaves those email fields empty instead of fabricating addresses. When a verified email becomes available, enter it in the row and the app remembers it locally.
-
-## Data updates
-
-`prospects.js` is the web-app seed snapshot. Keep the XLSX in `data/200-prospect-sales-engine/` as the canonical CRM. On a CRM refresh, regenerate `prospects.js` from the verified rows while preserving real outreach outcomes and never inventing prospects, replies, payments, or email addresses.
+Most current Reddit/Craigslist leads do not publish verified email addresses. The app intentionally leaves those addresses blank instead of inventing them. When a verified email becomes available, enter it once and the Android device remembers it locally.
 
 ## Install on Android
 
-Open the hosted HTTPS app in Chrome, then use **Install app** / **Add to Home screen**. The app also provides an Install button when Chrome exposes the PWA install prompt.
+Open the hosted HTTPS app in Chrome, then use **Install app** / **Add to Home screen**. The app also exposes an Install button from ⚙ Settings when Chrome makes the PWA install prompt available.
 
-## Safety / outreach quality
+## Safety / quality rules
 
-- Verify that a listing is still live before contacting it.
+- Verify the listing before contact.
 - Personalize at least one true detail before sending.
-- Do not mass-send identical messages.
-- Do not auto-send email; review the draft first.
-- Do not fabricate experience, results, clients, pay, email addresses, or outcomes.
-- Stop on requests for upfront fees, gift cards, crypto deposits, banking logins, or suspicious credentials.
+- Do not fabricate email addresses, experience, results, clients, replies, payments, or outcomes.
+- Do not silently auto-send. Review the draft and press Send yourself.
+- Stop on upfront fees, gift cards, crypto deposits, banking logins, suspicious credentials, or requests that violate the platform's contact rules.
