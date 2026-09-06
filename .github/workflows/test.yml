@@ -54,6 +54,12 @@ jobs:
           vercel = json.loads(Path('vercel.json').read_text(encoding='utf-8'))
           assert vercel['routes'] == [{'src': '/(.*)', 'dest': 'api/index.py'}]
           assert 'api/index.py' in vercel.get('functions', {})
+
+          railway = json.loads(Path('railway.json').read_text(encoding='utf-8'))
+          assert railway['$schema'] == 'https://railway.com/railway.schema.json'
+          assert railway['build']['builder'] == 'DOCKERFILE'
+          assert railway['deploy']['healthcheckPath'] == '/api/health/ready'
+          assert 'uvicorn app:app' in railway['deploy']['startCommand']
           PY
 
       - name: Set up Node
