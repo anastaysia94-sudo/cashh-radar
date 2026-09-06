@@ -5,7 +5,7 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "/bin/sh -c \"exec uvicorn launcher:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers\"",
+    "startCommand": "uvicorn app:app --host 0.0.0.0 --port $PORT --proxy-headers",
     "healthcheckPath": "/api/health/ready",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
