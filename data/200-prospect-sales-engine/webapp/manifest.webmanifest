@@ -1,0 +1,18 @@
+{
+  "name": "200 Prospect Sales Engine",
+  "short_name": "Prospect 200",
+  "description": "Android-first prospect outreach CRM with prefilled email drafts, follow-up scripts, image cards, and Gmail draft attachments.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#102a43",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
