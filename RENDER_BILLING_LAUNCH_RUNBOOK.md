@@ -22,7 +22,7 @@ Do not reintroduce any of the following into this repository:
 - `prospect-portal/`
 - `vercel.json`
 - `.vercel/`
-- Cashh Radar Lite
+- Lite versions or limited deployments
 - no-billing static launch pages
 - unrelated prospecting CRM/webapp files
 
@@ -49,7 +49,7 @@ Region: Oregon
 Auto deploy: yes
 ```
 
-For the strongest production setup, use the included `render.yaml` in the Render dashboard because the ChatGPT Render tool has limited service options and may not create the persistent disk declared in the blueprint.
+For the strongest production setup, use the included `render.yaml` in the Render dashboard because the ChatGPT Render tool has limited service options and may not create the persistent disk declaration.
 
 ## Environment variables to enter in Render
 
@@ -103,7 +103,7 @@ Then log in using the admin email and private admin password set in Render.
 
 ## Data durability note
 
-Do not commit `data/*.db` to GitHub. The production service should create and migrate its own database on Render storage. For a real launch with accounts and saved user data, use a persistent disk or migrate to managed PostgreSQL before relying on it for customers.
+Do not commit `data/*.db` to GitHub. The production service should create and migrate its own database on Render storage. For a real launch with accounts and saved user data, use a persistent disk or a separate database service like Supabase.
 
 ## Current source status
 
