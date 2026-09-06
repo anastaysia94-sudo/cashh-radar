@@ -9,6 +9,7 @@ def test_railway_config_exists_and_uses_docker_backend():
     config = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
     assert config["$schema"] == "https://railway.com/railway.schema.json"
     assert config["build"]["builder"] == "DOCKERFILE"
+    assert config["build"]["dockerfilePath"] == "Dockerfile"
 
 
 def test_railway_start_command_runs_full_fastapi_app():
