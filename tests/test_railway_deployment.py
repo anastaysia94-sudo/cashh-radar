@@ -17,7 +17,8 @@ def test_railway_start_command_runs_full_fastapi_app():
     start = config["deploy"]["startCommand"]
     assert "uvicorn app:app" in start
     assert "0.0.0.0" in start
-    assert "${PORT:-8000}" in start
+    assert "--port $PORT" in start
+    assert "${PORT:-8000}" not in start
     assert "proxy-headers" in start
 
 
