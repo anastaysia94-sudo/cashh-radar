@@ -1,0 +1,5 @@
+Trigger GitHub Pages redeploy after permissions were updated.
+
+This file was added to force a push to main and re-run the `Deploy Prospect Android Web App to Pages` workflow.
+
+Timestamp: 2026-09-06T00:00:00Z
