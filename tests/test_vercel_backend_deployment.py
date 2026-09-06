@@ -11,7 +11,7 @@ def test_vercel_entrypoint_imports_real_fastapi_app():
     assert "from app import app" in text
     assert "CASHH_DB_PATH" in text
     assert "/tmp/cashh_radar.db" in text
-    assert "Cashh Radar Lite" not in text
+    assert "static front door" in text
 
 
 def test_vercel_routes_all_requests_to_backend_entrypoint():
@@ -20,6 +20,6 @@ def test_vercel_routes_all_requests_to_backend_entrypoint():
     assert config["routes"] == [{"src": "/(.*)", "dest": "api/index.py"}]
 
 
-def test_vercel_adapter_does_not_restore_static_lite_front_door():
+def test_vercel_adapter_does_not_restore_static_front_door():
     assert not (ROOT / "public").exists()
     assert not (ROOT / "public" / "index.html").exists()
