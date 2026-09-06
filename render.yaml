@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: cashh-radar
+    runtime: docker
+    plan: 0.5c-512mb
+    healthCheckPath: /api/health/ready
+    envVars:
+      - key: CASHH_COOKIE_SECURE
+        value: "1"
+      - key: CASHH_DEV_MODE
+        value: "0"
+      - key: CASHH_SCHEDULER_ENABLED
+        value: "1"
+      - key: CASHH_SCHEDULED_SOURCES
+        value: "grants_gov"
+      - key: CASHH_BACKUP_DIR
+        value: "/app/data/backups"
+      - key: CASHH_REQUIRE_EMAIL_VERIFICATION
+        value: "0"
+      - key: CASHH_SECRET_KEY
+        generateValue: true
+      - key: CASHH_ADMIN_EMAIL
+        sync: false
+      - key: CASHH_ADMIN_PASSWORD
+        sync: false
+      - key: CASHH_SUPPORT_EMAIL
+        sync: false
+      - key: CASHH_METRICS_TOKEN
+        generateValue: true
+    disk:
+      name: cashh-radar-data
+      mountPath: /app/data
+      sizeGB: 1
