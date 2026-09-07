@@ -1,8 +1,8 @@
 """Vercel serverless entrypoint for the full Cashh Radar FastAPI app.
 
-This imports the real FastAPI application from app.py, keeps the existing
-serverless runtime defaults, and registers the canonical Cashh Radar
-opportunity-to-outcome loop.
+This imports the real FastAPI application from app.py and uses Vercel-safe
+runtime defaults. It is not a static front door. The canonical Cashh Radar
+opportunity-to-outcome loop is registered on that same application.
 
 Important: local SQLite on Vercel is temporary. For durable accounts/watchlists,
 connect a real persistent database before treating Vercel as production storage.
