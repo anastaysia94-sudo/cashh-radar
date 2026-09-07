@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PROSPECT_APP_DIR = BASE_DIR / "prospect-android-app"
 
 # Cashh Radar has one canonical opportunity lifecycle. Register the orchestration
-# layer and its UI connection before exposing the app through production.
+# layer and its connected UI before exposing the same app through production.
 register_cashh_loop(core_app)
 register_cashh_loop_ui(core_app)
 
