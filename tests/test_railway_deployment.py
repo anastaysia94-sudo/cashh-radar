@@ -12,10 +12,12 @@ def test_railway_config_exists_and_uses_docker_backend():
     assert config["build"]["dockerfilePath"] == "Dockerfile"
 
 
-def test_railway_start_command_runs_full_fastapi_app():
+def test_railway_start_command_runs_canonical_fastapi_launcher():
     config = json.loads((ROOT / "railway.json").read_text(encoding="utf-8"))
     start = config["deploy"]["startCommand"]
-    assert "uvicorn app:app" in start
+    # launcher.py registers the canonical opportunity loop and mounts /prospects,
+    # so Railway should expose the same application surface as Docker.
+    assert "uvicorn launcher:app" in start
     assert "0.0.0.0" in start
     assert "--port 8000" in start
     assert "$PORT" not in start
