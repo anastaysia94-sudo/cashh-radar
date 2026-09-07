@@ -1,10 +1,11 @@
 """Vercel serverless entrypoint for the full Cashh Radar FastAPI app.
 
 This imports the real FastAPI application from app.py and uses Vercel-safe
-runtime defaults. It is not a static front door.
+runtime defaults. It is not a static front door. The canonical Cashh Radar
+opportunity-to-outcome loop is registered on that same application.
 
 Important: local SQLite on Vercel is temporary. For durable accounts/watchlists,
-connect a real Postgres database such as Supabase and update the app data layer.
+connect a real persistent database before treating Vercel as production storage.
 """
 
 from __future__ import annotations
@@ -17,8 +18,6 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# Vercel functions do not provide a persistent app-local disk. These defaults
-# keep the full backend importable/runnable by storing SQLite temp data in /tmp.
 os.environ.setdefault("CASHH_DB_PATH", "/tmp/cashh_radar.db")
 os.environ.setdefault("CASHH_BACKUP_DIR", "/tmp/cashh_radar_backups")
 os.environ.setdefault("CASHH_SCHEDULER_ENABLED", "0")
@@ -31,3 +30,6 @@ if vercel_url and not os.environ.get("CASHH_PUBLIC_URL"):
     os.environ["CASHH_PUBLIC_URL"] = f"https://{vercel_url.lstrip('https://').lstrip('http://')}"
 
 from app import app  # noqa: E402,F401
+from cashh_loop import register_cashh_loop  # noqa: E402
+
+register_cashh_loop(app)
