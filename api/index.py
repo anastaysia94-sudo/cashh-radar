@@ -2,7 +2,7 @@
 
 This imports the real FastAPI application from app.py and uses Vercel-safe
 runtime defaults. It is not a static front door. The canonical Cashh Radar
-opportunity-to-outcome loop is registered on that same application.
+opportunity-to-outcome loop and connected UI are registered on that same app.
 
 Important: local SQLite on Vercel is temporary. For durable accounts/watchlists,
 connect a real persistent database before treating Vercel as production storage.
@@ -31,5 +31,7 @@ if vercel_url and not os.environ.get("CASHH_PUBLIC_URL"):
 
 from app import app  # noqa: E402,F401
 from cashh_loop import register_cashh_loop  # noqa: E402
+from cashh_loop_ui import register_cashh_loop_ui  # noqa: E402
 
 register_cashh_loop(app)
+register_cashh_loop_ui(app)
