@@ -1,0 +1,1 @@
+window.P500_FIELDS=["id","r","b","c","i","e","w","s","g","t","u","y","d","m","h","v","q","rd"];window.P500_ROWS=[...];
