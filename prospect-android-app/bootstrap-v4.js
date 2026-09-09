@@ -33,7 +33,7 @@
   window.PROSPECT_TARGET_TOTAL=700;
   window.PROSPECT_DATA_UPDATED='2026-09-08';
   window.PROSPECT_SEED=[...business,...legacy];
-  const scripts=['easy-core.js','easy-ui.js','easy-send.js','easy-v3.js','easy-v4.js'];
+  const scripts=['easy-core.js','easy-v4-core.js','easy-ui.js','easy-send.js','easy-v3.js','easy-v4-ui.js','easy-v4-image.js'];
   for(const src of scripts){
     await new Promise((resolve,reject)=>{
       const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Could not load ${src}`));document.body.appendChild(s);
