@@ -1,0 +1,3 @@
+Business,Email,Website,City,HoldReason,CheckDate,Note
+345 Partners,info@345partners.com,https://www.345partners.com/,Campbell CA,campaign_fit_hold,2026-09-13,"Passed identity/newness screening, but an investment/advisory firm is a materially weaker match for the current $100 local-business content package than the final accepted roster. Preserved for possible future B2B/consulting offer research, not counted in V5/V6 staging."
+Alegrity Group,info@alegritygroup.com,https://www.tjotax.com/,Campbell CA,identity_evidence_hold,2026-09-13,"Public email and website/domain evidence did not resolve cleanly enough to one business identity for this batch. Held rather than inventing a merger/DBA explanation or forcing a mismatched domain into the dedupe system."
