@@ -16,6 +16,7 @@ const FILES=[
   'bootstrap-v4.js',
   'easy-core.js',
   'easy-v4-core.js',
+  'easy-v4-policy.js',
   'easy-ui.js',
   'easy-send.js',
   'easy-v3.js',
