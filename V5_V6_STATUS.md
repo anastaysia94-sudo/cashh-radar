@@ -47,17 +47,20 @@ Therefore this workbook is useful as a normalized historical/exclusion and copy-
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now completed five audited research passes:
+The fresh-source pipeline has now completed six audited research passes:
 
 - Seed pass: 41 candidates checked, **36 accepted**, 5 rejected as historical overlap.
 - Batch 2: 17 candidates checked against the 747 canonical historical identities plus the 36 seed accepts, **11 accepted**, 6 rejected.
 - Batch 3: 13 candidates checked against the 747 canonical historical identities plus all 47 prior staging accepts, **12 accepted**, 1 rejected.
 - Batch 4: 17 research finalists reviewed against the 747 canonical historical identities plus all 59 prior staging accepts; 2 preliminary newness-pass records were held for quality reasons and replaced; **15 final candidates accepted**.
 - Batch 5: 19 research finalists reviewed against the 747 canonical historical identities plus all 74 prior staging accepts; **15 accepted**, 3 rejected as historical identities, and 1 held because the exact public email could not be resolved without guessing.
-- **Cumulative staging pool: 89 genuinely new, source-backed, gate-accepted prospects.**
-- Remaining to reach the 400-prospect target: **311**, before the intentional over-research/rank/prune stage.
+- Batch 6: 19 finalists reviewed against the 747 canonical historical identities plus all 89 prior staging accepts; **15 accepted** and 4 rejected as historical identities.
+- **Cumulative staging pool: 104 genuinely new, source-backed, gate-accepted prospects.**
+- Remaining to reach the 400-prospect target: **296**, before the intentional over-research/rank/prune stage.
 
-Batch 5 historical rejects were Lunardi Moving Services, San Jose Dry Carpet Cleaning, and Blu Skye Media. Their current sites are evidence that the businesses remain active, but current evidence does not make an old identity new. B2 Perfection Auto Body remains an evidence hold because the current owned site exposes an email contact while the retrieved text masks the exact address; no email was inferred or reconstructed.
+Batch 6 historical rejects were 45 Minutes Garage Door Repair, One Stop Garage Doors & Gates, Cali Rollin Electric, and Cafe Primavera. Each has current evidence, but each already exists in V1–V4. Current activity never overrides the historical-newness gate.
+
+Batch 6 also intentionally avoided forcing higher-compliance prospects such as credit repair, medical-spa and tax-service candidates into the accepted pool merely to increase count. Nichi Bei Bussan remained outside the accepted roster because the current owned site did not expose an exact textual email while an older government directory did; stale contact evidence was not promoted to current business-contact evidence.
 
 Audit files:
 
@@ -79,8 +82,12 @@ Audit files:
 - `data/v5-v6-research/batch5-2026-09-13-gate-report.json`
 - `data/v5-v6-research/batch5-2026-09-13-accepted.csv`
 - `data/v5-v6-research/batch5-2026-09-13-rejected-and-holds.csv`
+- `data/v5-v6-research/batch6-2026-09-13.md`
+- `data/v5-v6-research/batch6-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch6-2026-09-13-accepted.csv`
+- `data/v5-v6-research/batch6-2026-09-13-rejected.csv`
 
-These 89 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
+These 104 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
 
 ## Current production runtime
 
@@ -141,7 +148,7 @@ Research holds are not force-promoted. Businesses with hidden/unverified email a
 
 Before the final split, research should materially exceed 400 accepted candidates so the system can rank and prune rather than treating the first 400 survivors as sacred tablets.
 
-If Batch 5 is merged, the next exclusion universe is **836 records**: 747 canonical historical identities plus 89 accepted staging prospects.
+After Batch 6 merges, the next exclusion universe is **851 records**: 747 canonical historical identities plus 104 accepted staging prospects.
 
 ## Payment
 
