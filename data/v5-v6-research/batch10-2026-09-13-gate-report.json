@@ -1,0 +1,36 @@
+{
+  "batch": 10,
+  "check_date": "2026-09-13",
+  "historical_identity_count": 747,
+  "prior_staging_count": 149,
+  "exclusion_universe_before_batch": 896,
+  "research_candidates_reviewed": 21,
+  "accepted": 15,
+  "rejected_existing_identity": 4,
+  "quality_holds": 2,
+  "staging_total_after_batch": 164,
+  "remaining_to_400": 236,
+  "next_exclusion_universe": 911,
+  "rejected_businesses": [
+    "GEEK911",
+    "Lux Method",
+    "Cali Rollin Electric",
+    "Cafe Primavera"
+  ],
+  "held_businesses": [
+    "Pacific Coast Recycling",
+    "Hearth & Table Group"
+  ],
+  "gate": {
+    "unique_identity_required": true,
+    "public_business_contact_required": true,
+    "source_url_required": true,
+    "santa_clara_county_connection_required": true,
+    "current_observation_required": true,
+    "campaign_fit_required": true,
+    "no_fabrication": true,
+    "repo_collision_check": true
+  },
+  "status": "staging_only",
+  "note": "Batch 10 adds 15 current, source-backed businesses spanning cleaning, accounting, managed IT, windows/doors, restaurants/events, real estate, art classes, specialty retail, moving and educational e-commerce. Final V5/V6 assignment waits for deliberate over-research, ranking and pruning."
+}
