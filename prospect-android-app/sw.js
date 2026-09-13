@@ -23,6 +23,7 @@ const FILES=[
   'easy-v4-ui.js',
   'easy-v4-image.js',
   'prospect-bridge.js',
+  'server-performance.js',
   'pwa-runtime.js',
   'manifest.webmanifest',
   'icon.svg'
