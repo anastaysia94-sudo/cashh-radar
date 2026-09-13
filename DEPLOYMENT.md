@@ -1,44 +1,84 @@
-# Cashh Radar v2.2 Deployment
+# Cashh Radar Deployment
 
-## Recommended same-day production shape
+## Production shape
 
-Use **one Docker web-service instance with a persistent `/app/data` disk**. The included Blueprint uses Render plan ID `0.5c-512mb` because a persistent application disk is part of this launch architecture; it is not a free ephemeral-service configuration. Keep `CASHH_SCHEDULER_ENABLED=1` so alerts, source refresh, digests, webhooks, maintenance and backups run in the same process/storage boundary.
+Use **one Docker web-service instance with persistent storage mounted at `/app/data`** while Cashh Radar remains on SQLite. The prospect execution surface now writes real per-user outreach state, replies, outcomes, time tracking, learning events and freshness metadata into the same database as the broader opportunity system. Ephemeral production storage is therefore not acceptable.
 
-This is intentionally simpler than a separate cron service because a separate Render cron job cannot share the web service's persistent SQLite disk. Move to a managed shared database + dedicated workers when scaling beyond the single-instance launch.
+Recommended launch configuration:
+
+- one web replica;
+- persistent `/app/data` storage;
+- `CASHH_DB_PATH=/app/data/cashh_radar.db`;
+- `CASHH_BACKUP_DIR=/app/data/backups`;
+- `CASHH_SCHEDULER_ENABLED=1`;
+- verified SQLite backups enabled;
+- `/api/health/ready` as the platform healthcheck.
+
+Before running multiple replicas, migrate shared state to managed PostgreSQL and move scheduled work to a dedicated worker/shared job system. SQLite plus multiple writers is not the place to discover distributed systems through interpretive dance.
+
+## Railway production
+
+The repository includes `railway.json` and a Dockerfile. The production service should:
+
+1. build with `Dockerfile`;
+2. start with `uvicorn launcher:app --host 0.0.0.0 --port 8000 --proxy-headers`;
+3. expose port 8000;
+4. use `/api/health/ready` as its healthcheck;
+5. attach a persistent volume at `/app/data`;
+6. keep one replica while SQLite is the datastore.
+
+The existing production Cashh Radar service uses a 1 GB Railway volume named `cashh-radar-db` mounted at `/app/data`. Do not remove that mount during ordinary deploys.
 
 ## Render Blueprint
 
-The repository root includes `render.yaml`.
+The repository also includes `render.yaml` and `deploy/render.yaml` for Render deployments. Use one Docker web service with a persistent disk at `/app/data` and the same database/backup environment settings.
 
-1. Connect the GitHub repo in Render.
-2. Choose **New → Blueprint**.
-3. Select the repo.
-4. Enter required `sync: false` values when prompted.
-5. Deploy.
-
-Read `LAUNCH_TODAY.md` for exact nontechnical steps.
+A separate cron service must not be introduced while SQLite is stored on a web-service-local persistent disk because it would not share the same database. Use the in-process scheduler until the database and job system are moved to shared infrastructure.
 
 ## Required production settings
 
 - `CASHH_SECRET_KEY`: long random secret.
-- `CASHH_PUBLIC_URL`: the real HTTPS Render/custom-domain URL.
+- `CASHH_PUBLIC_URL`: the real HTTPS production URL.
 - `CASHH_COOKIE_SECURE=1`.
 - `CASHH_DEV_MODE=0`.
 - `CASHH_ADMIN_EMAIL` / `CASHH_ADMIN_PASSWORD`: first owner login.
 - `CASHH_SUPPORT_EMAIL`: public contact used by policy/support pages.
+- `CASHH_DB_PATH=/app/data/cashh_radar.db`.
+- `CASHH_BACKUP_DIR=/app/data/backups`.
 
 ## Scheduler
 
-The Blueprint enables the in-process scheduler. Defaults:
+The in-process scheduler handles:
 
-- outgoing webhooks: 5 min;
-- alerts: 10 min;
-- configured sources: 30 min;
-- digests: hourly evaluation (daily/weekly cadence is enforced per user);
-- maintenance: 6 hours;
-- verified SQLite backup: daily.
+- outgoing webhooks;
+- alerts;
+- configured opportunity sources;
+- digests;
+- maintenance;
+- verified SQLite backups;
+- rotating source-backed prospect freshness checks through the unified prospect bridge.
 
-`CASHH_SCHEDULED_SOURCES=grants_gov` is included in the launch Blueprint. Add USAJOBS/Lever only after their credentials/tokens and terms are ready.
+Prospect refresh defaults are deliberately bounded:
+
+- `CASHH_PROSPECT_REFRESH_BATCH=8`;
+- `CASHH_PROSPECT_REFRESH_SECONDS=900`;
+- `CASHH_PROSPECT_HTTP_TIMEOUT=5`.
+
+The refresh worker uses public source URLs, refuses private/local-network targets, records current/restricted/unavailable/error states, and updates the canonical opportunity's last-seen evidence only when the public source remains reachable.
+
+`CASHH_SCHEDULED_SOURCES=grants_gov` is a safe initial source configuration. Add USAJOBS or Lever only after credentials/tokens and source terms are ready.
+
+## Unified prospect lifecycle
+
+The production launcher registers `cashh_prospect_bridge.py` before mounting `/prospects/`. On startup the bridge:
+
+1. validates and unpacks the 500 source-backed business records;
+2. maps each record to a normal Cashh Radar `opportunities` row;
+3. creates the prospect catalog and per-user server-state tables when needed;
+4. preserves the evidence boundary between public facts, model assumptions and actual outcomes;
+5. starts the bounded freshness worker when the scheduler is enabled.
+
+The browser PWA keeps local state for offline resilience, but authenticated state is reconciled to the server. The service worker explicitly bypasses `/api/*`, so authenticated API responses are never written into the PWA cache.
 
 ## Billing
 
@@ -50,15 +90,24 @@ Keep the raw request body intact; the application verifies the Stripe signature 
 
 ## Email
 
-SMTP powers password reset, email verification, two-step login, team invitations and digest delivery. For a same-day free launch, SMTP can be activated after the site is public. Do **not** set `CASHH_REQUIRE_EMAIL_VERIFICATION=1` until SMTP has been tested.
+SMTP powers password reset, email verification, two-step login, team invitations and digest delivery. Do **not** set `CASHH_REQUIRE_EMAIL_VERIFICATION=1` until SMTP has been tested.
+
+Prospect outreach itself remains user-reviewed. Gmail integration creates drafts; Cashh Radar does not silently press Send.
 
 ## Health / monitoring
 
 - `/api/health/live`
 - `/api/health/ready`
 - `/api/health`
+- `/api/prospects/status`
+- `/api/source-status`
 - `/api/metrics` with `Authorization: Bearer $CASHH_METRICS_TOKEN`
 
-## Domain
+After each production deployment, verify at minimum:
 
-Render automatically serves HTTPS on its service URL. A custom domain is optional for day-one launch and can be connected afterward without changing the application architecture.
+1. `/api/health/ready` returns 200;
+2. `/api/prospects/status` reports `bridge: unified` and a 500-record catalog;
+3. `/api/opportunities?category=Client%20Prospect` reports the mapped prospect opportunities;
+4. `/prospects/` loads the unified bridge runtime;
+5. `/prospects/sw.js` includes the unified cache version and API-cache bypass;
+6. the database and backup files remain present under the persistent `/app/data` mount.
