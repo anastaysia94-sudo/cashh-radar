@@ -1,0 +1,33 @@
+{
+  "batch": "batch8-2026-09-13",
+  "status": "STAGING_ONLY",
+  "historical_canonical_identities": 747,
+  "prior_accepted_staging": 119,
+  "input_exclusion_universe": 866,
+  "finalists_reviewed": 15,
+  "accepted": 15,
+  "historical_rejects": 0,
+  "staging_collision_rejects": 0,
+  "quality_holds_after_finalist_gate": 0,
+  "projected_cumulative_staging_after_merge": 134,
+  "projected_remaining_to_400_after_merge": 266,
+  "next_exclusion_universe_after_merge": 881,
+  "collision_dimensions_checked": [
+    "normalized_business_identity",
+    "public_email",
+    "business_or_owned_web_domain",
+    "phone",
+    "accepted_staging_email",
+    "accepted_staging_business_or_owned_web_domain",
+    "accepted_staging_business_identity"
+  ],
+  "integrity_notes": [
+    "The finalist set was broadened beyond contractor-heavy sourcing to local retail, creative, hospitality, pet care, property management, beauty and design businesses.",
+    "Door Into Summer uses the current owned-domain email hello@intosummer.photos rather than an older Gmail alias.",
+    "Breit Ideas uses a current Chamber-published ISP email; comcast.net is not treated as a business-domain fingerprint.",
+    "Property-management observations do not promise investment, occupancy or rental outcomes.",
+    "Beauty and pet-service observations avoid medical, treatment, health or behavior guarantees.",
+    "Restaurant observations focus on dining, catering, reservations and events rather than alcohol sales.",
+    "No masked, inferred or reconstructed email address was accepted."
+  ]
+}
