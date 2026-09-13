@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='cashh-radar-prospects-v5-20260912';
+const CACHE='cashh-radar-prospects-v6-unified-20260912';
 const FILES=[
   './',
   'index.html',
@@ -22,6 +22,7 @@ const FILES=[
   'easy-v3.js',
   'easy-v4-ui.js',
   'easy-v4-image.js',
+  'prospect-bridge.js',
   'pwa-runtime.js',
   'manifest.webmanifest',
   'icon.svg'
@@ -47,6 +48,10 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
+
+  // Authenticated/user-specific APIs must never be cached by the PWA. Let the
+  // browser perform a normal network request so sessions and state stay isolated.
+  if(url.pathname.startsWith('/api/'))return;
 
   if(event.request.mode==='navigate'){
     event.respondWith(
