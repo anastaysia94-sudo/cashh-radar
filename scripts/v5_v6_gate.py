@@ -4,7 +4,7 @@ import argparse
 import csv
 import json
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -62,6 +62,17 @@ def first_present(row: dict[str, str], *keys: str) -> str:
     return ''
 
 
+def first_list_value(value: str) -> str:
+    """Pick one stable identity value from a semicolon/comma-delimited historical cell."""
+    raw = _clean(value)
+    if not raw:
+        return ''
+    for separator in (';', '|'):
+        if separator in raw:
+            return _clean(raw.split(separator, 1)[0])
+    return raw
+
+
 def load_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline='', encoding='utf-8-sig') as fh:
         return list(csv.DictReader(fh))
@@ -78,10 +89,18 @@ class Decision:
 
 
 def fingerprint(row: dict[str, str]) -> tuple[str, str, str, str]:
-    name = first_present(row, 'Business', 'Business Name', 'Company', 'Name')
-    email = first_present(row, 'Email', 'Public Email', 'Contact Email')
-    website = first_present(row, 'Website', 'Domain', 'SourceURL', 'Source URL')
-    phone = first_present(row, 'Phone', 'Phone #', 'Telephone')
+    name = first_present(row, 'Business', 'Business Name', 'Company', 'Name', 'Normalized Business')
+    email = first_list_value(first_present(
+        row,
+        'Email', 'Public Email', 'Contact Email', 'Known Public Email(s)'
+    ))
+    # Identity domain must come from the business itself. Never use SourceURL here:
+    # many candidates legitimately share the same directory / public-record source.
+    website = first_list_value(first_present(
+        row,
+        'Website', 'Domain', 'Known Website Domain(s)', 'Website Domain'
+    ))
+    phone = first_list_value(first_present(row, 'Phone', 'Phone #', 'Telephone', 'Known Phone(s)'))
     return (
         normalize_name(name),
         normalize_email(email),
@@ -175,11 +194,11 @@ def run(history_csv: Path, candidate_csv: Path, out_dir: Path) -> dict[str, int]
             if key not in all_fields:
                 all_fields.append(key)
 
-    def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
+    def write_csv(path: Path, output_rows: list[dict[str, str]]) -> None:
         with path.open('w', newline='', encoding='utf-8-sig') as fh:
             writer = csv.DictWriter(fh, fieldnames=all_fields)
             writer.writeheader()
-            writer.writerows(rows)
+            writer.writerows(output_rows)
 
     write_csv(out_dir / 'accepted.csv', accepted_rows)
     write_csv(out_dir / 'rejected.csv', rejected_rows)
