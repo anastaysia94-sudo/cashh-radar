@@ -45,7 +45,7 @@ It remains useful as a copy-quality and exclusion reference, but it must **not**
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now advanced through **Batch 11**.
+The fresh-source pipeline has now advanced through **Batch 12**.
 
 | Pass | Accepted | Cumulative |
 |---|---:|---:|
@@ -59,15 +59,16 @@ The fresh-source pipeline has now advanced through **Batch 11**.
 | Batch 8 | 15 | 134 |
 | Batch 9 | 15 | 149 |
 | Batch 10 | 15 | 164 |
-| Batch 11 | 14 | **178** |
+| Batch 11 | 14 | 178 |
+| Batch 12 | 15 | **193** |
 
 ### Current checkpoint
 
-- **Accepted staging pool: 178 genuinely new, source-backed prospects**
-- Remaining to the 400 accepted-candidate threshold: **222**
-- Current exclusion universe for the next pass: **925 records**
+- **Accepted staging pool: 193 genuinely new, source-backed prospects**
+- Remaining to the 400 accepted-candidate threshold: **207**
+- Current exclusion universe for the next pass: **940 records**
   - 747 canonical historical identities
-  - 178 accepted staging prospects
+  - 193 accepted staging prospects
 
 These records are still **STAGING ONLY**. They are not yet labeled final V5 or V6 and are not yet a send-ready 400-lead package.
 
@@ -85,6 +86,8 @@ Earlier batch artifacts remain under `data/v5-v6-research/`. The newest checkpoi
 - `data/v5-v6-research/batch10-2026-09-13.md`
 - `data/v5-v6-research/batch11-2026-09-13.md`
 - `data/v5-v6-research/batch11-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch12-2026-09-13.md`
+- `data/v5-v6-research/batch12-2026-09-13-gate-report.json`
 
 Raw/public contact fields are retained only where supported by current business evidence. A missing CSV is not permission to reconstruct or guess an address.
 
