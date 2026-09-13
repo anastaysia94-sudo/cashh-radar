@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='cashh-radar-prospects-v6-unified-20260912';
+const CACHE='cashh-radar-prospects-v7-truthful-timing-20260912';
 const FILES=[
   './',
   'index.html',
