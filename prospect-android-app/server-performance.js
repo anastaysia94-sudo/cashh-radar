@@ -20,8 +20,8 @@
       const response=await fetch('/api/prospects/performance',{credentials:'same-origin'});
       if(response.status===401){bridge.authenticated=false;return null;}
       if(!response.ok)throw new Error(`HTTP ${response.status}`);
-      bridge.performance=await response.json();
-      return bridge.performance;
+      bridge.serverPerformance=await response.json();
+      return bridge.serverPerformance;
     }catch(error){
       console.warn('Cashh Radar performance sync failed',error);
       return null;
@@ -47,7 +47,7 @@
   renderStats=()=>{
     priorRenderStats();
     if(!bridge.authenticated)return;
-    if(bridge.performance)paintPerformance(bridge.performance);
+    if(bridge.serverPerformance)paintPerformance(bridge.serverPerformance);
     else paintLoading();
     loadPerformance().then(performance=>{
       if(currentTab!=='stats')return;
