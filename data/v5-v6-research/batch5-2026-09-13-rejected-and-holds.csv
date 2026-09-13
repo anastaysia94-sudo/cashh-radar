@@ -1,0 +1,5 @@
+Business,Email,Website,City,Disposition,Reason,CheckDate,Note
+Lunardi Moving Services,info@lunardimoving.com,https://www.lunardimoving.com/,San Jose CA,REJECT,historical_identity_match,2026-09-13,"Already present in V2 canonical exclusion data; current evidence does not make the historical business a new V5/V6 identity."
+San Jose Dry Carpet Cleaning,info@sanjosedrycarpetcleaning.com,https://sanjosedrycarpetcleaning.com/,San Jose CA,REJECT,historical_identity_match,2026-09-13,"Already present in V2 canonical exclusion data by name/email/domain."
+Blu Skye Media,info@bluskyemedia.com,https://bsm.photos/,San Jose CA,REJECT,historical_identity_match,2026-09-13,"Already present in V2 canonical exclusion data; the current 2026 site is fresh evidence for an old identity, not a new prospect."
+B2 Perfection Auto Body,,https://b2perfection.com/,Sunnyvale CA,HOLD,exact_public_email_not_resolved,2026-09-13,"Current owned site is active and exposes an email link, but retrieved public text masks the exact address. Held rather than guessing or reconstructing it."

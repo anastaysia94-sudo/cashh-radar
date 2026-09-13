@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-13",
+  "status": "staging_only_not_final_v5_v6",
+  "canonical_v1_v4_rows": 747,
+  "prior_staging_accepted": 74,
+  "combined_exclusion_rows": 821,
+  "research_finalists_reviewed": 19,
+  "accepted_rows": 15,
+  "historical_rejected_rows": 3,
+  "evidence_holds": 1,
+  "cumulative_staging_accepted": 89,
+  "remaining_to_400_target": 311,
+  "historical_rejections": [
+    {
+      "business": "Lunardi Moving Services",
+      "reason": "historical_identity_match"
+    },
+    {
+      "business": "San Jose Dry Carpet Cleaning",
+      "reason": "historical_identity_match"
+    },
+    {
+      "business": "Blu Skye Media",
+      "reason": "historical_identity_match"
+    }
+  ],
+  "holds": [
+    {
+      "business": "B2 Perfection Auto Body",
+      "reason": "exact_public_email_not_resolved",
+      "note": "Current owned site exposes an email contact, but the retrieved source masks the exact address. The record is held rather than guessing or reconstructing the email."
+    }
+  ]
+}
