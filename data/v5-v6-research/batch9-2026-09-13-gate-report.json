@@ -1,0 +1,25 @@
+{
+  "batch": 9,
+  "check_date": "2026-09-13",
+  "historical_identity_count": 747,
+  "prior_staging_count": 134,
+  "exclusion_universe_before_batch": 881,
+  "final_candidates_reviewed": 15,
+  "accepted": 15,
+  "rejected": 0,
+  "holds": 0,
+  "staging_total_after_batch": 149,
+  "remaining_to_400": 251,
+  "next_exclusion_universe": 896,
+  "gate": {
+    "unique_identity_required": true,
+    "public_business_contact_required": true,
+    "source_url_required": true,
+    "santa_clara_county_connection_required": true,
+    "current_observation_required": true,
+    "no_fabrication": true,
+    "repo_collision_check": true
+  },
+  "status": "staging_only",
+  "note": "Batch 9 expanded into interior design, staging, pet grooming, photography, floral, bakery, yoga, ceramics and related visual/local-service categories. Final V5/V6 assignment waits for the over-research, ranking and prune stage."
+}
