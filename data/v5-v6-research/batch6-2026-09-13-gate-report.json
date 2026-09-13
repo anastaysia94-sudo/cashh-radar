@@ -1,0 +1,20 @@
+{
+  "date": "2026-09-13",
+  "status": "staging_only_not_final_v5_v6",
+  "canonical_v1_v4_rows": 747,
+  "prior_staging_accepted": 89,
+  "combined_exclusion_rows": 836,
+  "research_finalists_reviewed": 19,
+  "accepted_rows": 15,
+  "historical_rejected_rows": 4,
+  "evidence_holds": 0,
+  "cumulative_staging_accepted": 104,
+  "remaining_to_400_target": 296,
+  "next_exclusion_rows": 851,
+  "historical_rejections": [
+    {"business": "45 Minutes Garage Door Repair", "reason": "historical_identity_email_domain_match"},
+    {"business": "One Stop Garage Doors & Gates", "reason": "historical_identity_email_domain_match"},
+    {"business": "Cali Rollin Electric", "reason": "historical_identity_email_domain_match"},
+    {"business": "Cafe Primavera", "reason": "historical_identity_email_domain_match"}
+  ]
+}
