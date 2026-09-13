@@ -1,0 +1,6 @@
+Business,Disposition,Reason,EvidenceSummary
+Charm's Grooming,REJECT_HISTORICAL,"Existing V1 identity","Historical exclusion workbook contains Charm's Grooming, charmsgrooming@gmail.com and charmsgrooming.com. Current activity does not make it a new V5/V6 identity."
+V3 Society,REJECT_HISTORICAL,"Existing V3 identity","Historical exclusion workbook contains V3 Society, riki@v3society.com and v3society.com."
+The Dance Affair,REJECT_HISTORICAL,"Existing V2 identity","Historical exclusion workbook contains The Dance Affair, thedanceaffair@gmail.com and thedanceaffair.com."
+Studio M Ballroom,REJECT_HISTORICAL,"Existing V2 identity","Historical exclusion workbook contains Studio M Ballroom, mteam@studiomballroom.com and studiomballroom.com."
+SmittenKiss LLC,HOLD_GEOGRAPHY,"Current business location is outside Santa Clara County","A current owned site places SmittenKiss in Walnut Creek. An older/currently crawled Triton preferred-vendor page contains a Santa Clara license entry that expired 2026-05-13, so it is not used to override the present location. No Santa Clara County identity is claimed."
