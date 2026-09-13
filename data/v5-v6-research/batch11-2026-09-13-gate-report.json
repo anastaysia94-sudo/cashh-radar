@@ -1,0 +1,25 @@
+{
+  "batch": 11,
+  "check_date": "2026-09-13",
+  "status": "STAGING_ONLY",
+  "historical_canonical_identities": 747,
+  "prior_accepted_staging": 164,
+  "input_exclusion_universe": 911,
+  "finalists_reviewed": 14,
+  "accepted": 14,
+  "rejected": 0,
+  "holds": 0,
+  "cumulative_staging_accepted": 178,
+  "remaining_to_400_target": 222,
+  "next_exclusion_universe": 925,
+  "gate": {
+    "unique_identity_required": true,
+    "public_business_contact_required": true,
+    "source_url_required": true,
+    "santa_clara_county_connection_required": true,
+    "current_observation_required": true,
+    "no_fabrication": true,
+    "repo_contact_collision_check": true
+  },
+  "note": "Batch 11 expanded into cleaning, dance, pet care, martial arts, moving, music instruction, home organization and tutoring. Final V5/V6 assignment waits for over-research, ranking and pruning."
+}
