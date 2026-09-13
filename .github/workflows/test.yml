@@ -68,10 +68,11 @@ jobs:
           app_dir = Path('prospect-android-app')
           required = [
               'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-v4.css',
-              'easy-core.js', 'easy-v4-core.js', 'easy-ui.js', 'easy-send.js',
-              'easy-v3.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'bootstrap-v4.js',
-              'pwa-runtime.js', 'prospects.js', 'sw.js', 'manifest.webmanifest',
-              'icon.svg', 'README.md', '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
+              'easy-core.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-ui.js',
+              'easy-send.js', 'easy-v3.js', 'easy-v4-ui.js', 'easy-v4-image.js',
+              'bootstrap-v4.js', 'pwa-runtime.js', 'prospects.js', 'sw.js',
+              'manifest.webmanifest', 'icon.svg', 'README.md',
+              '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
               'data/p500-gz-1.js', 'data/p500-gz-2.js', 'data/p500-gz-3.js',
               'data/p500-gz-4.js', 'data/p500-loader.js',
           ]
@@ -81,14 +82,18 @@ jobs:
           index = (app_dir / 'index.html').read_text(encoding='utf-8')
           easy = (app_dir / 'easy.html').read_text(encoding='utf-8')
           sw = (app_dir / 'sw.js').read_text(encoding='utf-8')
+          bootstrap = (app_dir / 'bootstrap-v4.js').read_text(encoding='utf-8')
+          policy = (app_dir / 'easy-v4-policy.js').read_text(encoding='utf-8')
           manifest = json.loads((app_dir / 'manifest.webmanifest').read_text(encoding='utf-8'))
           for shell_name, shell in (('index.html', index), ('easy.html', easy)):
               assert 'data/p500-loader.js' in shell, f'{shell_name} must load the 500-prospect integrity loader'
               assert 'bootstrap-v4.js' in shell, f'{shell_name} must boot the v4 prospect runtime'
               assert 'easy-v4.css' in shell, f'{shell_name} must load v4 styles'
               assert 'pwa-runtime.js' in shell, f'{shell_name} must register the install/update runtime'
-          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'pwa-runtime.js', 'data/p500-loader.js'):
+          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'pwa-runtime.js', 'data/p500-loader.js'):
               assert asset in sw, f'service worker must cache {asset}'
+          assert 'easy-v4-policy.js' in bootstrap, 'v4 bootstrap must enforce outreach policy before UI startup'
+          assert 'reddit:false' in policy and 'emailOnly:true' in policy, 'email-only/no-Reddit policy flags must remain enabled'
           assert manifest['name'] == 'Cashh Radar Prospect Engine'
           assert manifest['start_url'] == './'
           assert manifest['scope'] == './'
@@ -120,6 +125,7 @@ jobs:
           node --check static/loop-ui.js
           node --check prospect-android-app/easy-core.js
           node --check prospect-android-app/easy-v4-core.js
+          node --check prospect-android-app/easy-v4-policy.js
           node --check prospect-android-app/easy-ui.js
           node --check prospect-android-app/easy-send.js
           node --check prospect-android-app/easy-v3.js
