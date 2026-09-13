@@ -1,0 +1,27 @@
+{
+  "batch": "batch7-2026-09-13",
+  "status": "STAGING_ONLY",
+  "historical_canonical_identities": 747,
+  "prior_accepted_staging": 104,
+  "input_exclusion_universe": 851,
+  "finalists_reviewed": 20,
+  "accepted": 15,
+  "historical_rejects": 4,
+  "geography_or_current_evidence_holds": 1,
+  "projected_cumulative_staging_after_merge": 119,
+  "projected_remaining_to_400_after_merge": 281,
+  "next_exclusion_universe_after_merge": 866,
+  "collision_dimensions_checked": [
+    "normalized_business_identity",
+    "public_email",
+    "business_or_owned_web_domain",
+    "phone"
+  ],
+  "integrity_notes": [
+    "Current activity does not override a V1-V4 historical identity match.",
+    "A current location outside Santa Clara County is not force-promoted from an older local vendor listing.",
+    "No masked or inferred email address is accepted.",
+    "Fitness, tutoring, auto and event observations are educational and do not promise outcomes.",
+    "Accepted records were checked against the 104 already accepted staging prospects in addition to the historical exclusion universe."
+  ]
+}
