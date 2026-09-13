@@ -33,6 +33,8 @@ def segment_learning(conn: Any, user_id: int) -> dict[str, dict[str, Any]]:
     Adjustments are relative to the user's own portfolio rates, not an external
     benchmark. Under three sent prospects in a segment, adjustment stays zero.
     At ten sent prospects the segment can receive the full bounded adjustment.
+    Reply and paid conversion counts are restricted to the sent-outreach cohort so
+    incomplete imports/manual records cannot create impossible conversion rates.
     """
     rows = conn.execute(
         """
@@ -51,8 +53,8 @@ def segment_learning(conn: Any, user_id: int) -> dict[str, dict[str, Any]]:
     ).fetchall()
 
     portfolio_sent = sum(1 for row in rows if row["sent_at"])
-    portfolio_replied = sum(1 for row in rows if row["replied_at"])
-    portfolio_paid = sum(1 for row in rows if row["outcome_stage"] == "paid")
+    portfolio_replied = sum(1 for row in rows if row["sent_at"] and row["replied_at"])
+    portfolio_paid = sum(1 for row in rows if row["sent_at"] and row["outcome_stage"] == "paid")
     portfolio_reply_rate = _rate(portfolio_replied, portfolio_sent) or 0.0
     portfolio_paid_rate = _rate(portfolio_paid, portfolio_sent) or 0.0
 
@@ -61,12 +63,16 @@ def segment_learning(conn: Any, user_id: int) -> dict[str, dict[str, Any]]:
     )
     for row in rows:
         group = grouped[row["industry"]]
-        if row["sent_at"]:
+        sent = bool(row["sent_at"])
+        if sent:
             group["sent"] += 1
-        if row["replied_at"]:
+        if sent and row["replied_at"]:
             group["replied"] += 1
-        if row["outcome_stage"] == "paid":
+        if sent and row["outcome_stage"] == "paid":
             group["paid"] += 1
+        # Real paid revenue remains real even if an imported/manual record is
+        # missing sent_at; it simply cannot influence conversion-rate learning.
+        if row["outcome_stage"] == "paid":
             group["revenue"] += float(row["outcome_amount"] or 0.0)
         group["minutes"] += int(row["minutes_spent"] or 0)
 
@@ -100,7 +106,7 @@ def segment_learning(conn: Any, user_id: int) -> dict[str, dict[str, Any]]:
             "confidence": confidence,
             "sample_weight": round(weight, 2),
             "basis": (
-                "Adjustment compares this industry's observed reply and paid rates with the user's own "
+                "Adjustment compares this industry's observed reply and paid rates within the sent-outreach cohort with the user's own "
                 "portfolio rates. It is zero below 3 sent prospects, ramps gradually through 10, and is capped at +/-10 points."
             ),
         }
@@ -185,7 +191,7 @@ def build_radar(core: Any, user_id: int, limit: int) -> dict[str, Any]:
         "items": items[:limit],
         "ranking_note": (
             "Base prospect priority still uses learned fit, deliverability, evidence freshness, lifecycle urgency, and value density. "
-            "When an industry has at least 3 sent prospects, a bounded +/-10 point empirical adjustment compares that industry's actual reply/paid rates with the user's own portfolio. "
+            "When an industry has at least 3 sent prospects, a bounded +/-10 point empirical adjustment compares that industry's actual reply/paid rates within the sent-outreach cohort with the user's own portfolio. "
             "Modeled offer value remains an assumption until actual payment and tracked effort exist."
         ),
     }
