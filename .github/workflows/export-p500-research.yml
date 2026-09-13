@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install research extraction dependencies
+        run: python -m pip install requests pypdf
+
       - name: Decode packed source-backed prospect bundle
         run: |
           python - <<'PY'
@@ -47,9 +50,66 @@ jobs:
           }, indent=2), encoding='utf-8')
           PY
 
+      - name: Download and extract current CUSD CUPCCAA contractor list
+        run: |
+          python - <<'PY'
+          import csv
+          import io
+          import json
+          import re
+          from pathlib import Path
+          import requests
+          from pypdf import PdfReader
+
+          URL = 'https://www.cusdk8.org/fs/resource-manager/view/ce90e6dd-ad5b-4546-8e73-3f3e726a2b0a'
+          out = Path('research-export')
+          out.mkdir(exist_ok=True)
+          response = requests.get(URL, timeout=60)
+          response.raise_for_status()
+          pdf_path = out / 'cusd-cupccaa-2026.pdf'
+          pdf_path.write_bytes(response.content)
+
+          reader = PdfReader(io.BytesIO(response.content))
+          page_texts = []
+          email_rows = []
+          email_re = re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', re.I)
+          phone_re = re.compile(r'(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}')
+          for page_no, page in enumerate(reader.pages, start=1):
+              text = page.extract_text() or ''
+              page_texts.append(f'\n===== PAGE {page_no} =====\n{text}')
+              lines = [re.sub(r'\s+', ' ', line).strip() for line in text.splitlines() if line.strip()]
+              for i, line in enumerate(lines):
+                  emails = email_re.findall(line)
+                  if not emails:
+                      continue
+                  context = lines[max(0, i-5):min(len(lines), i+5)]
+                  phones = []
+                  for ctx in context:
+                      phones.extend(phone_re.findall(ctx))
+                  email_rows.append({
+                      'page': page_no,
+                      'email': emails[0],
+                      'context_before_5_after_4': ' | '.join(context),
+                      'phones_in_context': '; '.join(dict.fromkeys(phones)),
+                      'source_url': URL,
+                  })
+
+          (out / 'cusd-cupccaa-2026.txt').write_text(''.join(page_texts), encoding='utf-8')
+          with (out / 'cusd-cupccaa-email-context.csv').open('w', newline='', encoding='utf-8-sig') as fh:
+              writer = csv.DictWriter(fh, fieldnames=['page','email','context_before_5_after_4','phones_in_context','source_url'])
+              writer.writeheader()
+              writer.writerows(email_rows)
+          (out / 'cusd-cupccaa-metadata.json').write_text(json.dumps({
+              'source_url': URL,
+              'page_count': len(reader.pages),
+              'email_anchor_count': len(email_rows),
+          }, indent=2), encoding='utf-8')
+          print(json.dumps({'pages': len(reader.pages), 'email_anchors': len(email_rows)}))
+          PY
+
       - name: Upload research export
         uses: actions/upload-artifact@v4
         with:
-          name: p500-source-backed-research-export
+          name: p500-and-cusd-research-export
           path: research-export/
           retention-days: 7
