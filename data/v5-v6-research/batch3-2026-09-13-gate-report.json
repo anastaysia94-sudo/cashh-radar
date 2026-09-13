@@ -1,0 +1,20 @@
+{
+  "date": "2026-09-13",
+  "status": "staging_only_not_final_v5_v6",
+  "canonical_v1_v4_rows": 747,
+  "prior_staging_accepted": 47,
+  "combined_exclusion_rows": 794,
+  "combined_exclusion_unique_names": 779,
+  "combined_exclusion_unique_emails": 769,
+  "combined_exclusion_unique_domains": 551,
+  "candidate_rows": 13,
+  "accepted_rows": 12,
+  "rejected_rows": 1,
+  "cumulative_staging_accepted": 59,
+  "remaining_to_400_target": 341,
+  "note": "This pass treats all 747 canonical V1-V4 identities plus all 47 previously accepted V5/V6 staging prospects as one exclusion universe before evaluating Batch 3.",
+  "control_rejection": {
+    "business": "San Jose Catering Company",
+    "reasons": "historical_name_match;historical_email_match;historical_domain_match"
+  }
+}
