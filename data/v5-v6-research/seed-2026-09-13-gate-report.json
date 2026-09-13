@@ -1,0 +1,11 @@
+{
+  "historical_rows": 747,
+  "historical_unique_names": 732,
+  "historical_unique_emails": 722,
+  "historical_unique_domains": 506,
+  "historical_unique_phones": 0,
+  "candidate_rows": 41,
+  "accepted_rows": 36,
+  "rejected_rows": 5,
+  "status": "staging_only_not_final_v5_v6"
+}
