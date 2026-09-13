@@ -1,112 +1,106 @@
-# 200 Prospect Sales Engine — Android Web App
+# Cashh Radar Prospect Engine — Mobile PWA
 
-Mobile-first operator for the canonical 200-prospect CRM.
+Cashh Radar's mobile-first prospect execution surface. It is mounted by the production FastAPI launcher at `/prospects/` and is designed to turn a large prospect universe into one clear next-best action at a time.
 
-## Current Android flow (v3)
+## Current runtime — v4
 
-The default experience is **Next-Best-Action Mode**. You work one prospect at a time instead of managing a giant spreadsheet on your phone.
+The canonical entrypoints are `index.html` and the backward-compatible `easy.html`. Both now load the same v4 runtime:
+
+1. `prospects.js` supplies the legacy prospect seed.
+2. Four packed `data/p500-gz-*.js` chunks supply the 500 source-backed Santa Clara County business records.
+3. `data/p500-loader.js` decompresses and integrity-checks that dataset in the browser.
+4. `bootstrap-v4.js` combines the source-backed and legacy records into the 700-prospect queue.
+5. `easy-v4-core.js`, `easy-v4-policy.js`, `easy-v4-ui.js`, and `easy-v4-image.js` layer ranking, outreach policy, mobile workflow, compliance controls, and business-specific outreach imagery over the base app.
+
+The loader refuses to continue if the packed business dataset does not contain exactly 500 records with 500 unique public email values.
+
+## Outreach policy enforced in code
+
+The active v4 workflow is email-first and excludes Reddit from prospect prioritization.
+
+- The 500 source-backed business records are prioritized when they retain a public email and source evidence.
+- Legacy Reddit rows that have not already entered a real lifecycle state are marked `DO NOT PRIORITIZE — REDDIT DISABLED`.
+- Other untouched legacy rows without a verified email are marked `DEPRIORITIZE — NO VERIFIED EMAIL`.
+- Existing `SENT`, `REPLIED`, and `WON / PAID` lifecycle records are preserved instead of being rewritten by the policy layer.
+
+No email address, reply, payment, customer, outcome, or verification event may be fabricated.
+
+## Next-best-action flow
 
 The app automatically prioritizes:
 
-1. Prospects who **replied**.
-2. Previously contacted prospects whose **follow-up is due**.
-3. The next high-priority new prospect.
+1. Prospects who replied.
+2. Previously contacted prospects whose follow-up is due.
+3. Source-backed business prospects with a public email.
+4. Eligible legacy email prospects.
 
-For the current prospect, the large action box tells you exactly what to do next:
+For the focused prospect, the app walks through:
 
-1. **Verify** — open the real source and confirm the opportunity is still active.
-2. **Contact** — use a verified email when one exists; otherwise copy the prepared message and open the listing/DM/application route.
-3. **Draft** — the correct initial, Follow-up 1, Follow-up 2, qualification, or closing message is selected automatically.
-4. **Confirm** — after you actually send it, tap **I sent it — next best action**. The next prospect loads automatically.
+1. **Verify** — inspect the real source and confirm the record is still usable.
+2. **Contact** — use the verified/public contact route.
+3. **Draft** — prepare the correct initial, follow-up, qualification, or close message.
+4. **Confirm** — only after the user actually sends the message, mark it sent and move to the next action.
 
-A first-run guide explains this flow, and Android clipboard support can paste a copied email address into the current prospect with one tap.
+The app does not silently send outreach.
 
-## Follow-up automation inside the app
+## Business outreach compliance gate
 
-The app does not silently send messages. Instead it schedules the workflow locally:
+The 500 business-outreach records require a physical postal address in local Settings before the commercial send action is unlocked. The address is appended to the commercial message template along with opt-out language.
 
-- Follow-up 1: **2 business days** after the initial contact.
-- Follow-up 2: **5 business days** after Follow-up 1.
-- Replies are surfaced ahead of follow-ups.
-- Follow-ups are surfaced ahead of new outreach.
+This is an application safeguard, not a legal conclusion. Users remain responsible for complying with applicable law, platform rules, and truthful advertising requirements.
 
-Only contacts that the user actually marks as Sent enter the follow-up queue.
+## Gmail draft mode
 
-## Email and attachment flow
+With an optional Google OAuth Client ID, Cashh Radar can create a Gmail draft for review containing the prospect recipient, subject, message body, and generated prospect PNG. It does not press Send.
 
-### Email ready
+Without Gmail OAuth, the app can open the device email composer with recipient, subject, and body populated when a verified/public email is available.
 
-When a verified prospect email address is present, the app can open the Android mail composer with:
+## PWA install and offline behavior
 
-- To
-- Subject
-- Prospect-specific message
+`pwa-runtime.js` registers `sw.js`, handles the browser install prompt when available, and reports when an updated service worker is ready.
 
-already populated.
+The service worker caches the complete active prospect runtime, including:
 
-### Gmail draft + image
+- the v4 shell and styles;
+- packed 500-record data chunks and loader;
+- v4 core, policy, UI, and image layers;
+- legacy seed data;
+- manifest and icon.
 
-With optional Gmail OAuth configured, the app creates a Gmail **draft for review** containing:
+Navigation uses a network-first strategy with the cached canonical shell as the offline fallback. Static runtime assets use cached copies with background network refresh.
 
-- Recipient
-- Subject
-- Message body
-- Prospect-specific PNG outreach card generated from CRM fields
+## Production mount
 
-The app never automatically presses Send.
+`launcher.py` mounts this directory at:
 
-### Source / DM prospects
+```text
+/prospects/
+```
 
-Many Reddit and Craigslist opportunities do not publish a public email address. The app intentionally does not invent one. For those rows, the primary workflow copies the prepared message and opens the real listing/contact route.
+The Docker and Railway launch paths use `uvicorn launcher:app`, so the prospect PWA ships with the main Cashh Radar service rather than depending on a separate static-site deployment.
 
-## One-time Gmail setup
+## CI protection
 
-1. Enable **Gmail API** in Google Cloud.
-2. Configure the OAuth consent screen.
-3. Create an OAuth 2.0 Web Client ID.
-4. Add the hosted HTTPS app origin as an Authorized JavaScript origin.
-5. Open the app → Settings → paste the Client ID.
-6. Approve the `https://www.googleapis.com/auth/gmail.compose` permission when first creating a Gmail draft.
+`.github/workflows/test.yml` now checks that:
 
-The Client ID and local CRM progress are stored on the Android device. No Gmail password is stored.
+- both entrypoints load v4;
+- the service worker caches all v4 runtime dependencies;
+- the outreach policy remains email-first with Reddit disabled;
+- the packed business dataset still expands to 500 rows with 500 unique public emails;
+- all active JavaScript files pass `node --check`;
+- Python tests, compilation, deployment configuration, and Docker build smoke tests still pass.
 
-## Install on Android
+## Data integrity rules
 
-The app is an installable PWA. Open the hosted HTTPS version in Chrome and choose **Install app / Add to Home screen**. The service worker caches the focus flow for offline use.
+Preserve source evidence and existing user lifecycle state. Never invent:
 
-## GitHub Pages deployment
+- prospects;
+- email addresses;
+- source verification;
+- replies;
+- payments;
+- customers;
+- testimonials;
+- earnings or outcomes.
 
-The repository includes `.github/workflows/prospect-android-pages.yml`.
-
-Repository-level GitHub Pages still has to be enabled once by an account owner because the connected GitHub integration does not have administration permission to create the Pages site.
-
-1. Open the `cashh-radar` repository.
-2. Go to **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-4. Re-run **Deploy Prospect Android Web App to Pages** from Actions.
-
-After Pages is enabled, later changes under `data/200-prospect-sales-engine/webapp/**` deploy automatically.
-
-## Canonical data
-
-The XLSX at `data/200-prospect-sales-engine/200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx` remains the canonical CRM. `prospects.js` is the web-app seed snapshot.
-
-Future refreshes should preserve real outreach state and must never invent:
-
-- prospects
-- email addresses
-- replies
-- payments
-- customers
-- testimonials
-- outcomes
-
-## Safety / quality rules
-
-- Verify a listing before contacting it.
-- Personalize at least one true detail.
-- Respect the platform's allowed contact method.
-- Do not mass-send identical messages.
-- Do not fabricate experience or portfolio results.
-- Do not send sensitive identity or banking information to unverified contacts.
-- Stop on requests for upfront fees, gift cards, crypto deposits, banking logins, or suspicious credential requests.
+When evidence expires or cannot be reverified, mark that uncertainty instead of pretending the record is current.
