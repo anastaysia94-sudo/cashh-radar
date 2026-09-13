@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Post-deployment smoke test for Cashh Radar.
 
-Run this after the Render service is live:
+Run this after the Railway service deploy finishes:
 
-    python scripts/production_smoke.py https://your-cashh-radar.onrender.com
+    python scripts/production_smoke.py https://cashh-radar-web-production.up.railway.app
 
 Optional metrics check:
 
-    python scripts/production_smoke.py https://your-cashh-radar.onrender.com --metrics-token "$CASHH_METRICS_TOKEN"
+    python scripts/production_smoke.py https://cashh-radar-web-production.up.railway.app --metrics-token "$CASHH_METRICS_TOKEN"
 
 The script uses only Python standard-library modules so it can run from CI,
-Render shell, GitHub Codespaces, or a basic laptop without extra packages.
+Railway shell, GitHub Codespaces, or a basic laptop without extra packages.
 """
 
 from __future__ import annotations
@@ -27,6 +27,7 @@ from urllib.request import Request, urlopen
 
 
 DEFAULT_TIMEOUT_SECONDS = 15
+LIVE_RAILWAY_URL = "https://cashh-radar-web-production.up.railway.app"
 
 
 @dataclass(frozen=True)
@@ -42,7 +43,9 @@ TARGETS: List[CheckTarget] = [
     CheckTarget("/api/health/live", description="process liveness"),
     CheckTarget("/api/health/ready", description="database, schema, and config readiness"),
     CheckTarget("/api/health", description="combined health payload"),
+    CheckTarget("/api/launch/status", expected_content_hint="Cashh Radar", description="public-safe launch status JSON"),
     CheckTarget("/", expected_content_hint="Cashh Radar", description="main app shell"),
+    CheckTarget("/launch-status", expected_content_hint="Cashh Radar launch status", description="public-safe launch status page"),
     CheckTarget("/manifest.json", expected_content_hint="Cashh Radar", description="PWA manifest"),
     CheckTarget("/sitemap.xml", expected_content_hint="urlset", description="SEO sitemap"),
     CheckTarget("/privacy", expected_content_hint="Privacy", description="privacy page"),
@@ -52,6 +55,10 @@ TARGETS: List[CheckTarget] = [
     CheckTarget("/support", expected_content_hint="Support", description="support page"),
     CheckTarget("/api/metrics", description="protected metrics endpoint", requires_metrics_token=True),
 ]
+
+
+def default_base_url() -> str:
+    return LIVE_RAILWAY_URL
 
 
 @dataclass
@@ -81,7 +88,7 @@ def fetch_text(url: str, timeout: int, headers: Optional[Dict[str, str]] = None)
 
 def run_target(base_url: str, target: CheckTarget, timeout: int, metrics_token: Optional[str]) -> CheckResult:
     url = urljoin(base_url, target.path.lstrip("/"))
-    headers: Dict[str, str] = {"User-Agent": "cashh-radar-production-smoke/1.0"}
+    headers: Dict[str, str] = {"User-Agent": "cashh-radar-production-smoke/1.1"}
     if target.requires_metrics_token:
         if not metrics_token:
             return CheckResult(target.path, "SKIP", 0, "metrics token not provided")
@@ -121,7 +128,7 @@ def print_results(results: Iterable[CheckResult]) -> int:
     print("Cashh Radar production smoke test")
     print("=" * 36)
     for result in rows:
-        print(f"{result.status:4} {result.path:24} {result.elapsed_ms:5}ms  {result.detail}")
+        print(f"{result.status:4} {result.path:28} {result.elapsed_ms:5}ms  {result.detail}")
     failed = [row for row in rows if row.status == "FAIL"]
     skipped = [row for row in rows if row.status == "SKIP"]
     print("-" * 36)
@@ -131,7 +138,7 @@ def print_results(results: Iterable[CheckResult]) -> int:
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Smoke-test a deployed Cashh Radar service.")
-    parser.add_argument("base_url", help="Deployed base URL, for example https://cashh-radar.onrender.com")
+    parser.add_argument("base_url", nargs="?", default=default_base_url(), help=f"Deployed base URL. Defaults to {LIVE_RAILWAY_URL}")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS, help="Request timeout in seconds")
     parser.add_argument("--metrics-token", default=None, help="Optional CASHH_METRICS_TOKEN for /api/metrics")
     args = parser.parse_args(argv)
