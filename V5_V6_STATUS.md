@@ -31,7 +31,7 @@ Three exact normalized business identities appear in more than one historical ve
 2. South Bay Design & Landscaping — V3 + V4
 3. D&D Electrical Construction — V3 + V4
 
-The canonical exclusion workbook remains the authoritative historical identity source. The repo gate applies a stricter normalization layer on top of it, so a new employee email does not magically turn an old business into a fresh lead. Civilization survives another spreadsheet.
+The canonical exclusion workbook remains the authoritative historical identity source. The repo gate applies a stricter normalization layer on top of it, so a new employee email does not magically turn an old business into a fresh lead.
 
 ## Recovered 500-row expert workbook
 
@@ -47,14 +47,15 @@ Therefore this workbook is useful as a normalized historical/exclusion and copy-
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now completed two audited research passes:
+The fresh-source pipeline has now completed three audited research passes:
 
 - Seed pass: 41 candidates checked, **36 accepted**, 5 rejected as historical overlap.
-- Batch 2: 17 candidates checked against the 747 canonical historical identities **plus the 36 seed accepts**, **11 accepted**, 6 rejected.
-- **Cumulative staging pool: 47 genuinely new gate-accepted prospects.**
-- Remaining to reach the 400-prospect target: **353**, before the intentional over-research/rank/prune stage.
+- Batch 2: 17 candidates checked against the 747 canonical historical identities plus the 36 seed accepts, **11 accepted**, 6 rejected.
+- Batch 3: 13 candidates checked against the 747 canonical historical identities plus all 47 prior staging accepts, **12 accepted**, 1 rejected.
+- **Cumulative staging pool: 59 genuinely new gate-accepted prospects.**
+- Remaining to reach the 400-prospect target: **341**, before the intentional over-research/rank/prune stage.
 
-Batch 2 deliberately preserved all rejects. The exact gate caught Oliveira Fence and McKim Corporation as historical identities even though newly observed contact evidence looked fresh, and it also rejected Environmental Systems, Galeb Paving, Waterproofing Associates, and Strawn Construction for prior identity/email/domain overlap.
+Batch 3 included an intentional historical-control candidate, San Jose Catering Company. The gate rejected it on normalized business identity, public email and business domain exactly as expected. Current evidence does not override historical-newness rules.
 
 Audit files:
 
@@ -64,8 +65,12 @@ Audit files:
 - `data/v5-v6-research/batch2-2026-09-13-gate-report.json`
 - `data/v5-v6-research/batch2-2026-09-13-accepted.csv`
 - `data/v5-v6-research/batch2-2026-09-13-rejected.csv`
+- `data/v5-v6-research/batch3-2026-09-13.md`
+- `data/v5-v6-research/batch3-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch3-2026-09-13-accepted.csv`
+- `data/v5-v6-research/batch3-2026-09-13-rejected.csv`
 
-These 47 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
+These 59 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
 
 ## Current production runtime
 
@@ -82,6 +87,7 @@ Current public research sources being used for the next universe include:
 - current contractor qualification / CUPCCAA lists where suitable;
 - current city bid/planholder records;
 - current public licensing, permit, carrier or procurement records when they materially support identity/activity;
+- current municipal approved-vendor/caterer lists when they expose legitimate business contact evidence;
 - other legitimate public business directories only when they provide usable business-contact evidence.
 
 Official/current business pages are preferred for personalization. Government or procurement records are used as corroborating evidence when they establish current activity, location, qualification or a public business-intended contact.
@@ -102,7 +108,7 @@ A record is not V5/V6-ready until it has:
 - no known opt-out/bounce prohibition;
 - no fabricated details.
 
-Research holds are not force-promoted. Businesses with hidden/unverified email addresses, weak campaign fit, ambiguous location, or evidence that they are temporarily closed remain outside the accepted pool until the missing evidence is resolved.
+Research holds are not force-promoted. Businesses with hidden/unverified email addresses, weak campaign fit, ambiguous location, identity conflicts, licensing concerns, or evidence that they are temporarily closed remain outside the accepted pool until the missing evidence is resolved.
 
 ## Required build after the 400-record gate passes
 
