@@ -1,0 +1,29 @@
+{
+  "batch": 12,
+  "checked": "2026-09-13",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 178,
+  "candidates_reviewed_for_final_roster": 15,
+  "accepted": 15,
+  "rejected": 0,
+  "holds": 0,
+  "new_staging_total": 193,
+  "remaining_to_400": 207,
+  "next_exclusion_universe": 940,
+  "controls": {
+    "public_business_contact_required": true,
+    "current_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "repo_business_name_collision_check": true,
+    "repo_owned_domain_collision_check": true,
+    "guessed_email_allowed": false,
+    "shared_host_as_business_domain": false,
+    "health_or_fitness_outcome_claims_allowed": false
+  },
+  "notes": [
+    "All accepted records retain current source URLs and business-intended email evidence.",
+    "No direct repository collision was found for accepted business identities or owned domains during this pass.",
+    "Wellness and fitness prospects are limited to service-selection and scheduling angles rather than medical or outcome promises."
+  ]
+}
