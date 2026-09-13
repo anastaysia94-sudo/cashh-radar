@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-13",
+  "status": "staging_only_not_final_v5_v6",
+  "canonical_v1_v4_rows": 747,
+  "prior_staging_accepted": 59,
+  "combined_exclusion_rows": 806,
+  "research_finalists_reviewed": 17,
+  "final_gate_candidates": 15,
+  "accepted_rows": 15,
+  "overlap_rejected_rows": 0,
+  "research_holds": 2,
+  "cumulative_staging_accepted": 74,
+  "remaining_to_400_target": 326,
+  "holds": [
+    {
+      "business": "345 Partners",
+      "reason": "campaign_fit_hold",
+      "note": "Passed identity/newness screening but was held because an investment/advisory firm is a materially weaker fit for the current $100 local-business content package than the replacement candidate."
+    },
+    {
+      "business": "Alegrity Group",
+      "reason": "identity_evidence_hold",
+      "note": "Public email and website/domain evidence did not resolve cleanly enough to one business identity for this batch. Held instead of forcing an explanation."
+    }
+  ],
+  "replacement_checks": [
+    {
+      "business": "Morgan Hill Laundry",
+      "result": "accepted",
+      "note": "No historical/staging name, email, business-domain or phone collision found; current owned site publishes Morgan Hill location, business email, services and commercial-laundry use cases."
+    },
+    {
+      "business": "WorkNetic Systems",
+      "result": "accepted",
+      "note": "No historical/staging name, email, business-domain or phone collision found; current site publishes downtown San Jose contact details and managed/co-managed IT services."
+    }
+  ]
+}
