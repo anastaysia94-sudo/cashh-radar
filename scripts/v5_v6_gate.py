@@ -4,13 +4,19 @@ import argparse
 import csv
 import json
 import re
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
 
 COMMON_COMPANY_TOKENS = {
     'inc', 'incorporated', 'llc', 'l l c', 'corp', 'corporation', 'co', 'company',
     'ltd', 'limited', 'dba', 'the', 'and', '&'
+}
+
+FREE_EMAIL_DOMAINS = {
+    'gmail.com', 'yahoo.com', 'yahoo.net', 'outlook.com', 'hotmail.com', 'live.com',
+    'aol.com', 'icloud.com', 'me.com', 'msn.com', 'proton.me', 'protonmail.com',
+    'comcast.net', 'sbcglobal.net', 'earthlink.net', 'att.net'
 }
 
 
@@ -62,6 +68,31 @@ def first_present(row: dict[str, str], *keys: str) -> str:
     return ''
 
 
+def split_list_values(value: str | None) -> list[str]:
+    raw = _clean(value)
+    if not raw:
+        return []
+    return [part.strip() for part in re.split(r'[;|,\n]+', raw) if part.strip()]
+
+
+def first_list_value(value: str | None) -> str:
+    values = split_list_values(value)
+    return values[0] if values else ''
+
+
+def candidate_business_domain(row: dict[str, str], normalized_email: str) -> str:
+    website = first_list_value(first_present(
+        row,
+        'Website', 'Domain', 'Known Website Domain(s)', 'Website Domain'
+    ))
+    if website:
+        return normalize_domain(website)
+    email_domain = normalize_domain(normalized_email)
+    if email_domain and email_domain not in FREE_EMAIL_DOMAINS:
+        return email_domain
+    return ''
+
+
 def load_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline='', encoding='utf-8-sig') as fh:
         return list(csv.DictReader(fh))
@@ -78,14 +109,17 @@ class Decision:
 
 
 def fingerprint(row: dict[str, str]) -> tuple[str, str, str, str]:
-    name = first_present(row, 'Business', 'Business Name', 'Company', 'Name')
-    email = first_present(row, 'Email', 'Public Email', 'Contact Email')
-    website = first_present(row, 'Website', 'Domain', 'SourceURL', 'Source URL')
-    phone = first_present(row, 'Phone', 'Phone #', 'Telephone')
+    name = first_present(row, 'Business', 'Business Name', 'Company', 'Name', 'Normalized Business')
+    email = normalize_email(first_list_value(first_present(
+        row,
+        'Email', 'Public Email', 'Contact Email', 'Known Public Email(s)'
+    )))
+    domain = candidate_business_domain(row, email)
+    phone = first_list_value(first_present(row, 'Phone', 'Phone #', 'Telephone', 'Known Phone(s)'))
     return (
         normalize_name(name),
-        normalize_email(email),
-        normalize_domain(website),
+        email,
+        domain,
         normalize_phone(phone),
     )
 
@@ -93,15 +127,27 @@ def fingerprint(row: dict[str, str]) -> tuple[str, str, str, str]:
 def build_exclusion(rows: list[dict[str, str]]) -> dict[str, set[str]]:
     names, emails, domains, phones = set(), set(), set(), set()
     for row in rows:
-        n, e, d, p = fingerprint(row)
-        if n:
-            names.add(n)
-        if e:
-            emails.add(e)
-        if d:
-            domains.add(d)
-        if p:
-            phones.add(p)
+        name = first_present(row, 'Business', 'Business Name', 'Company', 'Name', 'Normalized Business')
+        if name:
+            names.add(normalize_name(name))
+
+        email_cell = first_present(row, 'Known Public Email(s)', 'Email', 'Public Email', 'Contact Email')
+        for value in split_list_values(email_cell):
+            normalized = normalize_email(value)
+            if normalized:
+                emails.add(normalized)
+
+        domain_cell = first_present(row, 'Known Website Domain(s)', 'Website', 'Domain', 'Website Domain')
+        for value in split_list_values(domain_cell):
+            normalized = normalize_domain(value)
+            if normalized:
+                domains.add(normalized)
+
+        phone_cell = first_present(row, 'Known Phone(s)', 'Phone', 'Phone #', 'Telephone')
+        for value in split_list_values(phone_cell):
+            normalized = normalize_phone(value)
+            if normalized:
+                phones.add(normalized)
     return {'name': names, 'email': emails, 'domain': domains, 'phone': phones}
 
 
@@ -175,11 +221,11 @@ def run(history_csv: Path, candidate_csv: Path, out_dir: Path) -> dict[str, int]
             if key not in all_fields:
                 all_fields.append(key)
 
-    def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
+    def write_csv(path: Path, output_rows: list[dict[str, str]]) -> None:
         with path.open('w', newline='', encoding='utf-8-sig') as fh:
             writer = csv.DictWriter(fh, fieldnames=all_fields)
             writer.writeheader()
-            writer.writerows(rows)
+            writer.writerows(output_rows)
 
     write_csv(out_dir / 'accepted.csv', accepted_rows)
     write_csv(out_dir / 'rejected.csv', rejected_rows)

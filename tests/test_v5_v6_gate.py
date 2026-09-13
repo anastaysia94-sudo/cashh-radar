@@ -62,3 +62,50 @@ def test_gate_requires_evidence_fields(tmp_path):
     assert 'missing_city_or_service_area' in row['_reasons']
     assert 'missing_industry_or_service_focus' in row['_reasons']
     assert 'missing_personalization_observation' in row['_reasons']
+
+
+def test_shared_directory_source_is_not_treated_as_shared_business_domain(tmp_path):
+    history = tmp_path / 'history.csv'
+    candidates = tmp_path / 'candidates.csv'
+    out = tmp_path / 'out'
+    write_csv(history, [
+        {
+            'Business': 'Historical Co',
+            'Known Public Email(s)': 'old@historical.example',
+            'Known Website Domain(s)': 'historical.example',
+        }
+    ])
+    directory = 'https://public.example.gov/current-qualified-contractors.pdf'
+    write_csv(candidates, [
+        {'Business': 'Fresh Electric', 'Email': 'estimating@fresh-electric.example', 'City': 'San Jose', 'Industry': 'Electrical', 'Observation': 'Current qualified contractor; C-10 electrical', 'SourceURL': directory},
+        {'Business': 'Fresh Plumbing', 'Email': 'office@fresh-plumbing.example', 'City': 'Campbell', 'Industry': 'Plumbing', 'Observation': 'Current qualified contractor; C-36 plumbing', 'SourceURL': directory},
+    ])
+    report = run(history, candidates, out)
+    assert report['accepted_rows'] == 2
+    accepted = list(csv.DictReader(open(out / 'accepted.csv', encoding='utf-8-sig')))
+    assert {row['_normalized_domain'] for row in accepted} == {'fresh-electric.example', 'fresh-plumbing.example'}
+    assert report['historical_unique_domains'] == 1
+
+
+def test_gate_checks_all_historical_email_and_domain_values(tmp_path):
+    history = tmp_path / 'history.csv'
+    candidates = tmp_path / 'candidates.csv'
+    out = tmp_path / 'out'
+    write_csv(history, [
+        {
+            'Business': 'Legacy Builder',
+            'Known Public Email(s)': 'first@legacy.example; second@legacy.example',
+            'Known Website Domain(s)': 'old-legacy.example; legacy.example',
+        }
+    ])
+    write_csv(candidates, [
+        {'Business': 'Renamed Operation', 'Email': 'second@legacy.example', 'City': 'San Jose', 'Industry': 'Construction', 'Observation': 'Current general-building work', 'SourceURL': 'https://directory.example/one'},
+        {'Business': 'Another Renamed Operation', 'Email': 'new@legacy.example', 'Website': 'https://legacy.example', 'City': 'Santa Clara', 'Industry': 'Construction', 'Observation': 'Current general-building work', 'SourceURL': 'https://directory.example/two'},
+    ])
+    report = run(history, candidates, out)
+    assert report['accepted_rows'] == 0
+    rejected = list(csv.DictReader(open(out / 'rejected.csv', encoding='utf-8-sig')))
+    assert any('historical_email_match' in row['_reasons'] for row in rejected)
+    assert any('historical_domain_match' in row['_reasons'] for row in rejected)
+    assert report['historical_unique_emails'] == 2
+    assert report['historical_unique_domains'] == 2
