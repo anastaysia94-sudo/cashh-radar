@@ -1,6 +1,6 @@
 # Cashh Radar — V5 + V6 Ethical Expansion Checkpoint
 
-Updated: 2026-09-12
+Updated: 2026-09-13
 
 ## Goal
 
@@ -20,7 +20,8 @@ The currently recovered V1–V4 files contain:
 - V3: 200 rows
 - V4: 200 rows
 - Raw historical rows: **750**
-- Unique normalized business names: **747**
+- Canonical historical identities: **747**
+- Repo-gate normalized business names across those 747 identities: **732**
 - Unique public email values: **722**
 - Unique website/domain values observed: **506**
 
@@ -29,6 +30,8 @@ Three exact normalized business identities appear in more than one historical ve
 1. Blue's Roofing — V3 + V4
 2. South Bay Design & Landscaping — V3 + V4
 3. D&D Electrical Construction — V3 + V4
+
+The canonical exclusion workbook remains the authoritative historical identity source. The repo gate applies a stricter normalization layer on top of it, so a new employee email does not magically turn an old business into a fresh lead. Civilization survives another spreadsheet.
 
 ## Recovered 500-row expert workbook
 
@@ -42,26 +45,53 @@ Dedupe audit result against the recovered V1–V4 exclusion universe:
 
 Therefore this workbook is useful as a normalized historical/exclusion and copy-quality reference, but it must **not** be presented as the 400-new-lead V5/V6 batch.
 
+## Current V5/V6 staging progress
+
+The fresh-source pipeline has now completed two audited research passes:
+
+- Seed pass: 41 candidates checked, **36 accepted**, 5 rejected as historical overlap.
+- Batch 2: 17 candidates checked against the 747 canonical historical identities **plus the 36 seed accepts**, **11 accepted**, 6 rejected.
+- **Cumulative staging pool: 47 genuinely new gate-accepted prospects.**
+- Remaining to reach the 400-prospect target: **353**, before the intentional over-research/rank/prune stage.
+
+Batch 2 deliberately preserved all rejects. The exact gate caught Oliveira Fence and McKim Corporation as historical identities even though newly observed contact evidence looked fresh, and it also rejected Environmental Systems, Galeb Paving, Waterproofing Associates, and Strawn Construction for prior identity/email/domain overlap.
+
+Audit files:
+
+- `data/v5-v6-research/seed-2026-09-13.md`
+- `data/v5-v6-research/seed-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch2-2026-09-13.md`
+- `data/v5-v6-research/batch2-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch2-2026-09-13-accepted.csv`
+- `data/v5-v6-research/batch2-2026-09-13-rejected.csv`
+
+These 47 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
+
 ## Current production runtime
 
-Production v4 already runs a 700-prospect PWA combining 500 source-backed business records with 200 legacy records. This production dataset also cannot automatically be relabeled as V5/V6 without passing the newness/dedupe gate.
+Cashh Radar production already runs the unified Prospect Engine with 500 source-backed server-integrated prospects plus the legacy browser records used for continuity. That existing production universe cannot automatically be relabeled as V5/V6 without passing the fresh-identity gate.
+
+V5/V6 staging is a separate research boundary until the 400-new-prospect gate, enrichment, ranking, QA and final package build are complete.
 
 ## Fresh-source expansion
 
 Current public research sources being used for the next universe include:
 
-- Builders' Exchange of Santa Clara County membership directory (currently reports 590 contractors)
-- current official business sites/contact pages
-- current contractor qualification / CUPCCAA lists where suitable
-- other legitimate public business directories only when they provide usable business-contact evidence
+- Builders' Exchange of Santa Clara County membership directory;
+- current official business sites/contact pages;
+- current contractor qualification / CUPCCAA lists where suitable;
+- current city bid/planholder records;
+- current public licensing, permit, carrier or procurement records when they materially support identity/activity;
+- other legitimate public business directories only when they provide usable business-contact evidence.
 
-The Builders' Exchange directory is particularly useful because its member pages frequently publish named contacts, business email addresses, cities and service categories.
+Official/current business pages are preferred for personalization. Government or procurement records are used as corroborating evidence when they establish current activity, location, qualification or a public business-intended contact.
 
 ## Required record gate for V5/V6
 
 A record is not V5/V6-ready until it has:
 
 - unique identity after V1–V4 comparison;
+- no identity/email/business-domain/phone collision with already accepted V5/V6 staging records;
 - business name;
 - public/business-intended email;
 - source URL;
@@ -71,6 +101,8 @@ A record is not V5/V6-ready until it has:
 - source/check date;
 - no known opt-out/bounce prohibition;
 - no fabricated details.
+
+Research holds are not force-promoted. Businesses with hidden/unverified email addresses, weak campaign fit, ambiguous location, or evidence that they are temporarily closed remain outside the accepted pool until the missing evidence is resolved.
 
 ## Required build after the 400-record gate passes
 
@@ -87,6 +119,8 @@ A record is not V5/V6-ready until it has:
 - V5 ZIP
 - V6 ZIP
 - combined ZIP
+
+Before the final split, research should materially exceed 400 accepted candidates so the system can rank and prune rather than treating the first 400 survivors as sacred tablets.
 
 ## Payment
 
