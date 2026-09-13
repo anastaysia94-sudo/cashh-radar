@@ -47,15 +47,16 @@ Therefore this workbook is useful as a normalized historical/exclusion and copy-
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now completed three audited research passes:
+The fresh-source pipeline has now completed four audited research passes:
 
 - Seed pass: 41 candidates checked, **36 accepted**, 5 rejected as historical overlap.
 - Batch 2: 17 candidates checked against the 747 canonical historical identities plus the 36 seed accepts, **11 accepted**, 6 rejected.
 - Batch 3: 13 candidates checked against the 747 canonical historical identities plus all 47 prior staging accepts, **12 accepted**, 1 rejected.
-- **Cumulative staging pool: 59 genuinely new gate-accepted prospects.**
-- Remaining to reach the 400-prospect target: **341**, before the intentional over-research/rank/prune stage.
+- Batch 4: 17 research finalists reviewed against the 747 canonical historical identities plus all 59 prior staging accepts; 2 preliminary newness-pass records were held for quality reasons and replaced; **15 final candidates accepted**.
+- **Cumulative staging pool: 74 genuinely new, source-backed, gate-accepted prospects.**
+- Remaining to reach the 400-prospect target: **326**, before the intentional over-research/rank/prune stage.
 
-Batch 3 included an intentional historical-control candidate, San Jose Catering Company. The gate rejected it on normalized business identity, public email and business domain exactly as expected. Current evidence does not override historical-newness rules.
+Batch 4 adds an explicit campaign-fit/identity-quality review after technical newness. `345 Partners` is preserved as a campaign-fit hold, and `Alegrity Group` is preserved as an identity-evidence hold. They are not counted merely because they passed an initial newness screen. Morgan Hill Laundry and WorkNetic Systems replaced them after current-source and historical/staging collision checks.
 
 Audit files:
 
@@ -69,12 +70,16 @@ Audit files:
 - `data/v5-v6-research/batch3-2026-09-13-gate-report.json`
 - `data/v5-v6-research/batch3-2026-09-13-accepted.csv`
 - `data/v5-v6-research/batch3-2026-09-13-rejected.csv`
+- `data/v5-v6-research/batch4-2026-09-13.md`
+- `data/v5-v6-research/batch4-2026-09-13-gate-report.json`
+- `data/v5-v6-research/batch4-2026-09-13-accepted.csv`
+- `data/v5-v6-research/batch4-2026-09-13-holds.csv`
 
-These 59 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
+These 74 records remain **staging only**. They are not yet labeled final V5 or V6, and they are not yet part of a send-ready 400-lead package.
 
 ## Current production runtime
 
-Cashh Radar production already runs the unified Prospect Engine with 500 source-backed server-integrated prospects plus the legacy browser records used for continuity. That existing production universe cannot automatically be relabeled as V5/V6 without passing the fresh-identity gate.
+Cashh Radar production already runs the unified Prospect Engine with 500 source-backed server-integrated prospects plus legacy browser records used for continuity. That existing production universe cannot automatically be relabeled as V5/V6 without passing the fresh-identity gate.
 
 V5/V6 staging is a separate research boundary until the 400-new-prospect gate, enrichment, ranking, QA and final package build are complete.
 
@@ -106,7 +111,10 @@ A record is not V5/V6-ready until it has:
 - current observation suitable for personalization;
 - source/check date;
 - no known opt-out/bounce prohibition;
-- no fabricated details.
+- no fabricated details;
+- sufficient fit for the actual $100 package or a documented reason to hold it rather than force it into quota.
+
+Shared platform hosts such as `sites.google.com` are evidence URLs, not business-domain fingerprints. Free/ISP email domains likewise are not treated as business website domains.
 
 Research holds are not force-promoted. Businesses with hidden/unverified email addresses, weak campaign fit, ambiguous location, identity conflicts, licensing concerns, or evidence that they are temporarily closed remain outside the accepted pool until the missing evidence is resolved.
 
