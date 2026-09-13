@@ -4,22 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#102a43">
+  <meta name="description" content="Cashh Radar Prospect Engine: a mobile-first, evidence-aware outreach workflow for source-backed prospects, follow-ups, drafts, and outcomes.">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg">
   <link rel="stylesheet" href="easy.css">
   <link rel="stylesheet" href="easy-v3.css">
-  <title>200 Prospect Sales Engine</title>
+  <link rel="stylesheet" href="easy-v4.css">
+  <title>Cashh Radar Prospect Engine</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="prospects.js"></script>
+  <script src="data/p500-gz-1.js"></script>
+  <script src="data/p500-gz-2.js"></script>
+  <script src="data/p500-gz-3.js"></script>
+  <script src="data/p500-gz-4.js"></script>
+  <script src="data/p500-loader.js"></script>
 </head>
 <body>
 <header>
-  <div class="head"><div><h1>200 Prospect Sales Engine</h1><small>Next-best-action mode — one prospect at a time</small></div><button class="iconbtn" id="settingsBtn" aria-label="Settings">⚙</button></div>
-  <div class="progress" aria-label="Daily progress"><span id="progressBar"></span></div>
+  <div class="head"><div><h1>Cashh Radar Prospect Engine</h1><small>700 prospects • next-best-action mode</small></div><button class="iconbtn" id="settingsBtn" aria-label="Settings">⚙</button></div>
+  <div class="progress" aria-label="Queue progress"><span id="progressBar"></span></div>
   <div class="stats"><span><b id="doneCount">0</b> processed</span><span><b id="sentCount">0</b> sent</span><span><b id="replyCount">0</b> replies</span><span><b id="dueCount">0</b> due</span><span><b id="wonCount">0</b> won</span></div>
 </header>
 <main>
-  <section id="focusView"></section>
+  <section id="focusView" aria-live="polite"></section>
   <section id="queueView" class="queue"></section>
   <section id="followView" class="queue"></section>
   <section id="statsView" class="queue"></section>
@@ -41,9 +48,8 @@
   <button class="btn soft" id="closeSettings">Close</button>
 </dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="easy-core.js"></script>
-<script src="easy-ui.js"></script>
-<script src="easy-send.js"></script>
-<script src="easy-v3.js"></script>
+<noscript><section class="panel"><h2>JavaScript is required</h2><p>Cashh Radar needs JavaScript to load and verify the local prospect dataset.</p></section></noscript>
+<script src="bootstrap-v4.js"></script>
+<script src="pwa-runtime.js"></script>
 </body>
 </html>

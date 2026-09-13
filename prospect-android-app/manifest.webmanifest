@@ -1,12 +1,14 @@
 {
-  "name": "200 Prospect Sales Engine",
-  "short_name": "Prospect 200",
-  "description": "Android-first prospect CRM with one-prospect focus mode, ready-to-review outreach drafts, follow-ups, image cards, and optional Gmail draft attachments.",
-  "start_url": "easy.html",
+  "id": "./",
+  "name": "Cashh Radar Prospect Engine",
+  "short_name": "Cashh Radar",
+  "description": "Mobile-first prospect intelligence and next-best-action workflow for source-backed outreach, follow-ups, drafts, and outcomes.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f4f7fa",
   "theme_color": "#102a43",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "icon.svg",
