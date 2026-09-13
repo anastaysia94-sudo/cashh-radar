@@ -25,7 +25,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Compile Python entrypoints
-        run: python -m py_compile app.py cashh_loop.py cashh_loop_ui.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
+        run: python -m py_compile app.py cashh_loop.py cashh_loop_ui.py cashh_prospect_bridge.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
 
       - name: Run Python tests
         run: python -m pytest -q
@@ -65,12 +65,16 @@ jobs:
           assert railway['deploy']['healthcheckPath'] == '/api/health/ready'
           assert 'uvicorn launcher:app' in railway['deploy']['startCommand']
 
+          launcher = Path('launcher.py').read_text(encoding='utf-8')
+          assert 'register_prospect_bridge(core_app)' in launcher
+          assert 'start_prospect_bridge_scheduler(core)' in launcher
+
           app_dir = Path('prospect-android-app')
           required = [
               'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-v4.css',
               'easy-core.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-ui.js',
               'easy-send.js', 'easy-v3.js', 'easy-v4-ui.js', 'easy-v4-image.js',
-              'bootstrap-v4.js', 'pwa-runtime.js', 'prospects.js', 'sw.js',
+              'prospect-bridge.js', 'bootstrap-v4.js', 'pwa-runtime.js', 'prospects.js', 'sw.js',
               'manifest.webmanifest', 'icon.svg', 'README.md',
               '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
               'data/p500-gz-1.js', 'data/p500-gz-2.js', 'data/p500-gz-3.js',
@@ -84,15 +88,20 @@ jobs:
           sw = (app_dir / 'sw.js').read_text(encoding='utf-8')
           bootstrap = (app_dir / 'bootstrap-v4.js').read_text(encoding='utf-8')
           policy = (app_dir / 'easy-v4-policy.js').read_text(encoding='utf-8')
+          bridge = (app_dir / 'prospect-bridge.js').read_text(encoding='utf-8')
           manifest = json.loads((app_dir / 'manifest.webmanifest').read_text(encoding='utf-8'))
           for shell_name, shell in (('index.html', index), ('easy.html', easy)):
               assert 'data/p500-loader.js' in shell, f'{shell_name} must load the 500-prospect integrity loader'
               assert 'bootstrap-v4.js' in shell, f'{shell_name} must boot the v4 prospect runtime'
               assert 'easy-v4.css' in shell, f'{shell_name} must load v4 styles'
               assert 'pwa-runtime.js' in shell, f'{shell_name} must register the install/update runtime'
-          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'pwa-runtime.js', 'data/p500-loader.js'):
+          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'prospect-bridge.js', 'pwa-runtime.js', 'data/p500-loader.js'):
               assert asset in sw, f'service worker must cache {asset}'
+          assert "url.pathname.startsWith('/api/')" in sw, 'service worker must bypass authenticated API caching'
+          assert 'cashh-radar-prospects-v6-unified-20260912' in sw
           assert 'easy-v4-policy.js' in bootstrap, 'v4 bootstrap must enforce outreach policy before UI startup'
+          assert 'prospect-bridge.js' in bootstrap, 'v4 bootstrap must load the unified server lifecycle bridge'
+          assert '/api/prospects/state/' in bridge and '/api/radar/unified' in bridge
           assert 'reddit:false' in policy and 'emailOnly:true' in policy, 'email-only/no-Reddit policy flags must remain enabled'
           assert manifest['name'] == 'Cashh Radar Prospect Engine'
           assert manifest['start_url'] == './'
@@ -131,6 +140,7 @@ jobs:
           node --check prospect-android-app/easy-v3.js
           node --check prospect-android-app/easy-v4-ui.js
           node --check prospect-android-app/easy-v4-image.js
+          node --check prospect-android-app/prospect-bridge.js
           node --check prospect-android-app/bootstrap-v4.js
           node --check prospect-android-app/pwa-runtime.js
           node --check prospect-android-app/data/p500-loader.js
