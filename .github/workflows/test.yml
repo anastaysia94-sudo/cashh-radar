@@ -25,7 +25,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Compile Python entrypoints
-        run: python -m py_compile app.py cashh_loop.py cashh_loop_ui.py cashh_prospect_bridge.py prospect_performance.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
+        run: python -m py_compile app.py cashh_loop.py cashh_loop_ui.py cashh_prospect_bridge.py cashh_performance_radar.py prospect_performance.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
 
       - name: Run Python tests
         run: python -m pytest -q
@@ -41,19 +41,19 @@ jobs:
           import yaml
 
           dockerfile = Path('Dockerfile').read_text(encoding='utf-8')
-          assert '0.0.0.0' in dockerfile, 'Dockerfile must bind to 0.0.0.0 for container platforms'
-          assert '${PORT:-8000}' in dockerfile, 'Dockerfile must honor platform PORT'
-          assert 'uvicorn launcher:app' in dockerfile, 'Dockerfile must expose the /prospects app mount'
+          assert '0.0.0.0' in dockerfile
+          assert '${PORT:-8000}' in dockerfile
+          assert 'uvicorn launcher:app' in dockerfile
 
           for path in ('render.yaml', 'deploy/render.yaml'):
               data = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
-              assert isinstance(data, dict), f'{path} must parse as a YAML object'
+              assert isinstance(data, dict)
               services = data.get('services')
-              assert isinstance(services, list) and services, f'{path} must define services'
+              assert isinstance(services, list) and services
               web = services[0]
-              assert web.get('type') == 'web', f'{path} service type must be web'
-              assert web.get('runtime') == 'docker', f'{path} runtime must be docker'
-              assert web.get('healthCheckPath') == '/api/health/ready', f'{path} must use readiness health check'
+              assert web.get('type') == 'web'
+              assert web.get('runtime') == 'docker'
+              assert web.get('healthCheckPath') == '/api/health/ready'
 
           vercel = json.loads(Path('vercel.json').read_text(encoding='utf-8'))
           assert vercel['routes'] == [{'src': '/(.*)', 'dest': 'api/index.py'}]
@@ -67,9 +67,18 @@ jobs:
 
           launcher = Path('launcher.py').read_text(encoding='utf-8')
           assert 'register_prospect_bridge(core_app)' in launcher
+          assert 'register_performance_radar(core_app)' in launcher
           assert 'start_prospect_bridge_scheduler(core)' in launcher
           assert '/api/prospects/performance' in launcher
           assert 'summarize_prospect_performance' in launcher
+
+          learned = Path('cashh_performance_radar.py').read_text(encoding='utf-8')
+          assert 'MIN_SEGMENT_SENT = 3' in learned
+          assert 'FULL_WEIGHT_SENT = 10' in learned
+          assert 'MAX_SEGMENT_ADJUSTMENT = 10.0' in learned
+          assert '/api/radar/performance-aware' in learned
+          assert 'prospect_performance' in learned
+          assert 'segment_learning' in learned
 
           app_dir = Path('prospect-android-app')
           required = [
@@ -94,27 +103,29 @@ jobs:
           performance_ui = (app_dir / 'server-performance.js').read_text(encoding='utf-8')
           manifest = json.loads((app_dir / 'manifest.webmanifest').read_text(encoding='utf-8'))
           for shell_name, shell in (('index.html', index), ('easy.html', easy)):
-              assert 'data/p500-loader.js' in shell, f'{shell_name} must load the 500-prospect integrity loader'
-              assert 'bootstrap-v4.js' in shell, f'{shell_name} must boot the v4 prospect runtime'
-              assert 'easy-v4.css' in shell, f'{shell_name} must load v4 styles'
-              assert 'pwa-runtime.js' in shell, f'{shell_name} must register the install/update runtime'
+              assert 'data/p500-loader.js' in shell
+              assert 'bootstrap-v4.js' in shell
+              assert 'easy-v4.css' in shell
+              assert 'pwa-runtime.js' in shell
           for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'prospect-bridge.js', 'server-performance.js', 'pwa-runtime.js', 'data/p500-loader.js'):
-              assert asset in sw, f'service worker must cache {asset}'
-          assert "url.pathname.startsWith('/api/')" in sw, 'service worker must bypass authenticated API caching'
+              assert asset in sw
+          assert "url.pathname.startsWith('/api/')" in sw
           assert 'cashh-radar-prospects-v7-truthful-timing-20260912' in sw
-          assert 'easy-v4-policy.js' in bootstrap, 'v4 bootstrap must enforce outreach policy before UI startup'
-          assert 'prospect-bridge.js' in bootstrap, 'v4 bootstrap must load the unified server lifecycle bridge'
-          assert 'server-performance.js' in bootstrap, 'v4 bootstrap must load persisted performance overlay'
+          assert 'easy-v4-policy.js' in bootstrap
+          assert 'prospect-bridge.js' in bootstrap
+          assert 'server-performance.js' in bootstrap
           assert '/api/prospects/state/' in bridge and '/api/radar/unified' in bridge
-          assert 'TIMER_IDLE_MS=120000' in bridge, 'work timer must pause after two minutes without activity'
-          assert 'data-bridge="timer"' in bridge, 'prospect focus must expose explicit Start/Stop work timer control'
-          assert 'Math.floor(workTimer.activeSeconds/60)' in bridge, 'partial timer minutes must never be rounded up'
-          assert '60000' not in bridge, 'implicit one-minute focus-tab effort timer must not return'
-          assert 'Proposed $100 offers are not revenue.' in bridge, 'actual performance must stay separate from modeled offer value'
+          assert 'TIMER_IDLE_MS=120000' in bridge
+          assert 'data-bridge="timer"' in bridge
+          assert 'Math.floor(workTimer.activeSeconds/60)' in bridge
+          assert '60000' not in bridge
+          assert 'Proposed $100 offers are not revenue.' in bridge
           assert '/api/prospects/performance' in performance_ui
+          assert '/api/radar/performance-aware' in performance_ui
           assert 'Server-synced actual prospect performance' in performance_ui
-          assert 'Proposed $100 offers are not counted as revenue.' in performance_ui
-          assert 'reddit:false' in policy and 'emailOnly:true' in policy, 'email-only/no-Reddit policy flags must remain enabled'
+          assert 'What your actual outreach is teaching Radar' in performance_ui
+          assert 'Tiny samples do not get to run the company.' in performance_ui
+          assert 'reddit:false' in policy and 'emailOnly:true' in policy
           assert manifest['name'] == 'Cashh Radar Prospect Engine'
           assert manifest['start_url'] == './'
           assert manifest['scope'] == './'
@@ -123,16 +134,16 @@ jobs:
           for number in range(1, 5):
               text = (app_dir / 'data' / f'p500-gz-{number}.js').read_text(encoding='utf-8')
               match = re.search(r"\+'([^']*)';?\s*$", text)
-              assert match, f'Could not parse compressed prospect chunk {number}'
+              assert match
               chunks.append(match.group(1))
           payload = json.loads(gzip.decompress(base64.b64decode(''.join(chunks))).decode('utf-8'))
           fields = payload.get('fields') or []
           rows = payload.get('rows') or []
-          assert len(rows) == 500, f'Expected 500 source-backed prospects, got {len(rows)}'
+          assert len(rows) == 500
           email_index = fields.index('e')
           emails = [str(row[email_index] or '').strip().lower() for row in rows]
-          assert all(emails), 'Every source-backed prospect must retain a public email in the packed dataset'
-          assert len(set(emails)) == 500, 'Packed prospect emails must remain unique'
+          assert all(emails)
+          assert len(set(emails)) == 500
           PY
 
       - name: Set up Node
