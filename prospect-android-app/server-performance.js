@@ -8,6 +8,12 @@
   const hourly=value=>value==null?'—':`$${Number(value).toFixed(2)}/hr`;
   const percent=value=>value==null?'—':`${Number(value).toFixed(1)}%`;
 
+  function performancePanel(){return document.querySelector('.actualPerformancePanel');}
+  function paintLoading(message='Loading your server-synced performance…'){
+    const panel=performancePanel();
+    if(!panel||!bridge.authenticated)return;
+    panel.innerHTML=`<h2 style="margin-top:0;color:var(--navy)">Actual prospect performance</h2><p class="mini">${esc(message)}</p>`;
+  }
   async function loadPerformance(){
     if(!bridge.authenticated)return null;
     try{
@@ -23,7 +29,7 @@
   }
 
   function paintPerformance(performance){
-    const panel=document.querySelector('.actualPerformancePanel');
+    const panel=performancePanel();
     if(!panel||!bridge.authenticated||!performance)return;
     panel.innerHTML=`<h2 style="margin-top:0;color:var(--navy)">Server-synced actual prospect performance</h2>
       <p class="mini">This comes from your persisted Cashh Radar prospect state. Proposed $100 offers are not counted as revenue.</p>
@@ -42,8 +48,11 @@
     priorRenderStats();
     if(!bridge.authenticated)return;
     if(bridge.performance)paintPerformance(bridge.performance);
+    else paintLoading();
     loadPerformance().then(performance=>{
-      if(currentTab==='stats'&&performance)paintPerformance(performance);
+      if(currentTab!=='stats')return;
+      if(performance)paintPerformance(performance);
+      else if(bridge.authenticated)paintLoading('Server performance could not be loaded. No local placeholder has been substituted.');
     });
   };
 
