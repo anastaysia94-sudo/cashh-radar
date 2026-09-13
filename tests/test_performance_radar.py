@@ -88,3 +88,26 @@ def test_learning_is_user_scoped_and_reaches_full_weight_at_ten_sends():
     assert learned['actual_revenue'] == 200.0
     assert learned['confidence'] == 'full'
     assert learned['sample_weight'] == 1.0
+
+
+def test_orphan_reply_and_paid_records_do_not_distort_conversion_learning():
+    conn = make_conn()
+    # Three real sends establish the only cohort Radar is allowed to learn from.
+    add(conn, 1, 'real-1', 'Services', sent=True, replied=True, paid=True, amount=100, minutes=20)
+    add(conn, 1, 'real-2', 'Services', sent=True, replied=False, paid=False, minutes=20)
+    add(conn, 1, 'real-3', 'Services', sent=True, replied=False, paid=False, minutes=20)
+    # Imported/manual records with no sent timestamp may still represent real revenue,
+    # but cannot count as replies/payments for conversion-rate learning.
+    add(conn, 1, 'orphan-1', 'Services', sent=False, replied=True, paid=True, amount=100, minutes=20)
+    add(conn, 1, 'orphan-2', 'Services', sent=False, replied=True, paid=True, amount=100, minutes=20)
+
+    learned = segment_learning(conn, 1)['Services']
+    assert learned['sent_count'] == 3
+    assert learned['replied_count'] == 1
+    assert learned['paid_count'] == 1
+    assert learned['reply_rate_pct'] == 33.33
+    assert learned['paid_rate_pct'] == 33.33
+    assert learned['actual_revenue'] == 300.0
+    assert learned['tracked_minutes'] == 100
+    assert learned['confidence'] == 'growing'
+    assert abs(learned['score_adjustment']) <= 10

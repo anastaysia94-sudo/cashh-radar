@@ -57,6 +57,7 @@ def test_performance_counts_actual_paid_revenue_and_all_tracked_effort():
     assert combined['last_activity_at'] == '2026-09-12T23:00:00+00:00'
     assert 'proposed offers' in combined['basis'].lower()
     assert 'all tracked' in combined['basis'].lower()
+    assert 'sent-outreach cohort' in combined['basis'].lower()
 
 
 def test_performance_is_user_scoped_and_null_when_no_time_exists():
@@ -75,3 +76,21 @@ def test_performance_is_user_scoped_and_null_when_no_time_exists():
     assert result['paid_rate_pct'] is None
     assert result['realized_portfolio_hourly'] is None
     assert result['last_activity_at'] is None
+
+
+def test_conversion_rates_ignore_orphan_reply_or_paid_records_without_sent_timestamp():
+    conn = make_conn()
+    conn.execute(
+        'INSERT INTO prospect_user_state VALUES(?,?,?,?,?,?,?,?)',
+        (1, 'imported-paid-without-send', None, '2026-09-12T20:00:00+00:00', 'paid', 100, 30, '2026-09-12T21:00:00+00:00'),
+    )
+    result = summarize(conn, 1)
+    assert result['sent_count'] == 0
+    assert result['replied_count'] == 0
+    assert result['paid_count'] == 0
+    assert result['reply_rate_pct'] is None
+    assert result['paid_rate_pct'] is None
+    # The payment remains real revenue and its tracked work still belongs in realized yield.
+    assert result['actual_revenue'] == 100.0
+    assert result['tracked_minutes'] == 30
+    assert result['realized_portfolio_hourly'] == 200.0
