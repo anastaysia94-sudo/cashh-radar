@@ -6,8 +6,10 @@ from typing import Any
 
 BASIS = (
     "Actual revenue includes only prospects explicitly recorded as paid; proposed offers "
-    "and estimates are excluded. Realized portfolio hourly yield divides actual paid "
-    "revenue by all tracked prospect work minutes, including unsuccessful work."
+    "and estimates are excluded. Reply and paid conversion rates use the sent-outreach "
+    "cohort only, so incomplete imported/manual records cannot push conversion above 100%. "
+    "Realized portfolio hourly yield divides actual paid revenue by all tracked prospect "
+    "work minutes, including unsuccessful work."
 )
 
 
@@ -16,8 +18,8 @@ def summarize(conn: Any, user_id: int) -> dict[str, Any]:
         """
         SELECT
           COALESCE(SUM(CASE WHEN sent_at IS NOT NULL THEN 1 ELSE 0 END),0) sent_count,
-          COALESCE(SUM(CASE WHEN replied_at IS NOT NULL THEN 1 ELSE 0 END),0) replied_count,
-          COALESCE(SUM(CASE WHEN outcome_stage='paid' THEN 1 ELSE 0 END),0) paid_count,
+          COALESCE(SUM(CASE WHEN sent_at IS NOT NULL AND replied_at IS NOT NULL THEN 1 ELSE 0 END),0) replied_count,
+          COALESCE(SUM(CASE WHEN sent_at IS NOT NULL AND outcome_stage='paid' THEN 1 ELSE 0 END),0) paid_count,
           COALESCE(SUM(CASE WHEN outcome_stage='paid' THEN COALESCE(outcome_amount,0) ELSE 0 END),0) actual_revenue,
           COALESCE(SUM(COALESCE(minutes_spent,0)),0) tracked_minutes,
           MAX(updated_at) last_activity_at
