@@ -30,17 +30,20 @@ jobs:
       - name: Run Python tests
         run: python -m pytest -q
 
-      - name: Validate deployment files and Android prospect bundle
+      - name: Validate deployment files and prospect PWA bundle
         run: |
           python - <<'PY'
           from pathlib import Path
+          import base64
+          import gzip
           import json
+          import re
           import yaml
 
           dockerfile = Path('Dockerfile').read_text(encoding='utf-8')
           assert '0.0.0.0' in dockerfile, 'Dockerfile must bind to 0.0.0.0 for container platforms'
           assert '${PORT:-8000}' in dockerfile, 'Dockerfile must honor platform PORT'
-          assert 'uvicorn launcher:app' in dockerfile, 'Dockerfile must expose the /prospects Android app mount'
+          assert 'uvicorn launcher:app' in dockerfile, 'Dockerfile must expose the /prospects app mount'
 
           for path in ('render.yaml', 'deploy/render.yaml'):
               data = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
@@ -64,14 +67,46 @@ jobs:
 
           app_dir = Path('prospect-android-app')
           required = [
-              'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-core.js',
-              'easy-ui.js', 'easy-send.js', 'easy-v3.js', 'prospects.js', 'sw.js',
-              'manifest.webmanifest', 'icon.svg', 'README.md',
-              '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
+              'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-v4.css',
+              'easy-core.js', 'easy-v4-core.js', 'easy-ui.js', 'easy-send.js',
+              'easy-v3.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'bootstrap-v4.js',
+              'pwa-runtime.js', 'prospects.js', 'sw.js', 'manifest.webmanifest',
+              'icon.svg', 'README.md', '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
+              'data/p500-gz-1.js', 'data/p500-gz-2.js', 'data/p500-gz-3.js',
+              'data/p500-gz-4.js', 'data/p500-loader.js',
           ]
           missing = [name for name in required if not (app_dir / name).exists()]
-          assert not missing, f'Prospect Android app files missing: {missing}'
-          assert (app_dir / 'index.html').stat().st_size > 1000, 'index.html must contain the full Android app shell'
+          assert not missing, f'Prospect PWA files missing: {missing}'
+
+          index = (app_dir / 'index.html').read_text(encoding='utf-8')
+          easy = (app_dir / 'easy.html').read_text(encoding='utf-8')
+          sw = (app_dir / 'sw.js').read_text(encoding='utf-8')
+          manifest = json.loads((app_dir / 'manifest.webmanifest').read_text(encoding='utf-8'))
+          for shell_name, shell in (('index.html', index), ('easy.html', easy)):
+              assert 'data/p500-loader.js' in shell, f'{shell_name} must load the 500-prospect integrity loader'
+              assert 'bootstrap-v4.js' in shell, f'{shell_name} must boot the v4 prospect runtime'
+              assert 'easy-v4.css' in shell, f'{shell_name} must load v4 styles'
+              assert 'pwa-runtime.js' in shell, f'{shell_name} must register the install/update runtime'
+          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'pwa-runtime.js', 'data/p500-loader.js'):
+              assert asset in sw, f'service worker must cache {asset}'
+          assert manifest['name'] == 'Cashh Radar Prospect Engine'
+          assert manifest['start_url'] == './'
+          assert manifest['scope'] == './'
+
+          chunks = []
+          for number in range(1, 5):
+              text = (app_dir / 'data' / f'p500-gz-{number}.js').read_text(encoding='utf-8')
+              match = re.search(r"\+'([^']*)';?\s*$", text)
+              assert match, f'Could not parse compressed prospect chunk {number}'
+              chunks.append(match.group(1))
+          payload = json.loads(gzip.decompress(base64.b64decode(''.join(chunks))).decode('utf-8'))
+          fields = payload.get('fields') or []
+          rows = payload.get('rows') or []
+          assert len(rows) == 500, f'Expected 500 source-backed prospects, got {len(rows)}'
+          email_index = fields.index('e')
+          emails = [str(row[email_index] or '').strip().lower() for row in rows]
+          assert all(emails), 'Every source-backed prospect must retain a public email in the packed dataset'
+          assert len(set(emails)) == 500, 'Packed prospect emails must remain unique'
           PY
 
       - name: Set up Node
@@ -84,9 +119,15 @@ jobs:
           node --check static/app.js
           node --check static/loop-ui.js
           node --check prospect-android-app/easy-core.js
+          node --check prospect-android-app/easy-v4-core.js
           node --check prospect-android-app/easy-ui.js
           node --check prospect-android-app/easy-send.js
           node --check prospect-android-app/easy-v3.js
+          node --check prospect-android-app/easy-v4-ui.js
+          node --check prospect-android-app/easy-v4-image.js
+          node --check prospect-android-app/bootstrap-v4.js
+          node --check prospect-android-app/pwa-runtime.js
+          node --check prospect-android-app/data/p500-loader.js
           node --check prospect-android-app/prospects.js
 
       - name: Check service worker JavaScript syntax
