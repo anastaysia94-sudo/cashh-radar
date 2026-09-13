@@ -1,0 +1,5 @@
+Business,Email,Website,City,Disposition,Reason,CheckDate,Note
+45 Minutes Garage Door Repair,info@morganhillgaragedoorrepair.org,https://morganhillgaragedoorrepair.org/,Morgan Hill CA,REJECT,historical_identity_email_domain_match,2026-09-13,"Already present in V3 canonical exclusion data by normalized business identity, public email and business domain."
+One Stop Garage Doors & Gates,info@onestopgaragegates.com,https://onestopgaragegates.com/,San Jose CA,REJECT,historical_identity_email_domain_match,2026-09-13,"Already present in V2 canonical exclusion data by normalized business identity, public email and business domain."
+Cali Rollin Electric,info@calirollinelectric.com,https://calirollinelectric.com/,San Jose / Morgan Hill CA,REJECT,historical_identity_email_domain_match,2026-09-13,"Current 2026 evidence is excellent, but the identity already exists in V3 and therefore cannot be counted as new V5/V6."
+Cafe Primavera,info@cafeprimavera.com,https://cafeprimavera.com/,Campbell CA,REJECT,historical_identity_email_domain_match,2026-09-13,"Current catering evidence remains useful, but the identity already exists in V4 and is excluded from fresh V5/V6 staging."
