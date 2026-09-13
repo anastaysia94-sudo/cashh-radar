@@ -10,25 +10,44 @@ Cashh Radar is deployed and healthy in production.
 - GitHub repository: `anastaysia94-sudo/cashh-radar`
 - Railway project: `cashh-radar`
 - Railway service: `cashh-radar-web`
-- Canonical production merge: `ff67612e621707bc02cad38e3dcd7f8249baa29c`
-- Unified production deployment: `63d3048d-d78b-4398-af8e-d96ec5eff691` — **SUCCESS**
+- Production URL: `https://cashh-radar-web-production.up.railway.app/`
+- Latest verified production commit: `213cc0e20947a509af3b5329fa5aec1c842ee8f0`
+- Latest verified deployment: `3a3a70f0-5884-4415-8d94-76d5c626e1d7` — **SUCCESS**
+- Deployment commit message: `Add performance-aware Radar ranking`
 - Canonical prospect entrypoint: `/prospects/`
 - Database schema: **v6**
 - Launch datastore: SQLite on persistent Railway storage
 - Persistent volume: `cashh-radar-db`, 1 GB, mounted at `/app/data`
 - Replica count: 1 while SQLite is the datastore
+- Railway builder: Dockerfile
+- Railway start command: `uvicorn launcher:app --host 0.0.0.0 --port 8000 --proxy-headers`
+- Railway healthcheck: `/api/health/ready`
+- Railway public domain target port: `8000`
 
-Verified live after deployment:
+Verified live after the latest production deployment:
 
 - `/api/health/ready`: HTTP 200
-- `/api/health`: schema v6, database healthy
-- `/api/prospects/status`: unified bridge active
-- `/api/opportunities?category=Client%20Prospect`: 500 mapped source-backed client prospects
-- unauthenticated `/api/prospects/state`: HTTP 401
-- unauthenticated `/api/radar/unified`: HTTP 401
-- `/prospects/`: current PWA shell live
-- `/prospects/sw.js`: unified cache and authenticated-API bypass live
-- persistent SQLite database and verified backup present under `/app/data`
+- `/api/prospects/status`: HTTP 200
+- `/api/prospects/performance`: HTTP 401 when unauthenticated, correctly protected
+- `/api/radar/performance-aware`: HTTP 401 when unauthenticated, correctly protected
+- `/prospects/server-performance.js`: HTTP 200
+- `/prospects/sw.js`: HTTP 200
+- Uvicorn server process started successfully on `0.0.0.0:8000`
+- authenticated API responses remain outside the service-worker cache boundary
+
+## Latest production capability: performance-aware Radar ranking
+
+The live production deployment now includes bounded, sample-aware industry learning from persisted prospect outcomes.
+
+The system can use recorded prospect performance to improve prioritization while keeping the distinction between modeled value and realized outcomes clear. This prevents the product from pretending a projected offer is already real money, a small act of honesty in a world apparently allergic to labels.
+
+Current behavior:
+
+- persisted prospect performance metrics are available to authenticated users;
+- performance-aware ranking is exposed through the protected Radar endpoint;
+- learned segment results are surfaced in Prospect Progress;
+- endpoints are protected from unauthenticated access;
+- CI/tests protect the behavior.
 
 ## Unified prospect architecture
 
@@ -118,7 +137,7 @@ Unified lifecycle pull request: **#6 — merged**.
 
 GitHub Actions validation on the reconciled branch passed completely:
 
-- **41 automated tests passed**;
+- automated tests passed;
 - Python compilation passed;
 - packed prospect data validation passed: exactly 500 rows / 500 unique public emails;
 - frontend JavaScript syntax passed;
@@ -126,18 +145,18 @@ GitHub Actions validation on the reconciled branch passed completely:
 - deployment configuration checks passed;
 - Docker build smoke test passed.
 
-The test suite covers the full prospect `SENT → REPLIED → PAID → learned` path, server-state persistence, duplicate-outcome protection, realized/modelled value semantics, and mixed prospect/non-prospect unified Radar behavior.
+The test suite covers the prospect `SENT → REPLIED → PAID → learned` path, server-state persistence, duplicate-outcome protection, realized/modelled value semantics, mixed prospect/non-prospect unified Radar behavior, and performance-aware ranking boundaries.
 
 ## Persistent production storage
 
 Production SQLite was migrated from ephemeral container storage to a 1 GB persistent Railway volume before the unified server-state release was deployed.
 
-Current verified files after the unified deployment:
+Current production persistence requirements:
 
-- `/app/data/cashh_radar.db` — 2,007,040 bytes at final smoke test;
-- `/app/data/backups/cashh-radar-20260913-011751.db` — matching verified backup size.
-
-Do not remove `/app/data` persistence while SQLite remains the production datastore.
+- keep `/app/data/cashh_radar.db` on persistent Railway storage;
+- keep `/app/data/backups/` available for verified backups;
+- keep replica count at 1 while SQLite remains the datastore;
+- do not remove `/app/data` persistence while SQLite remains production storage.
 
 ## V5 + V6 ethical expansion
 
