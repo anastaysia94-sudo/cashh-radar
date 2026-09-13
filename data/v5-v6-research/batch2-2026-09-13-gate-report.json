@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-13",
+  "status": "staging_only_not_final_v5_v6",
+  "canonical_v1_v4_rows": 747,
+  "prior_seed_accepted": 36,
+  "combined_exclusion_rows": 783,
+  "combined_exclusion_unique_names": 768,
+  "combined_exclusion_unique_emails": 758,
+  "combined_exclusion_unique_domains": 540,
+  "candidate_rows": 17,
+  "accepted_rows": 11,
+  "rejected_rows": 6,
+  "cumulative_staging_accepted": 47,
+  "note": "The gate's historical_rows field is 783 here because this pass intentionally treats the 747 canonical V1-V4 exclusion rows plus the 36 previously accepted staging prospects as one exclusion input.",
+  "rejections": [
+    {
+      "business": "Oliveira Fence Inc.",
+      "reasons": "historical_name_match"
+    },
+    {
+      "business": "McKim Corporation",
+      "reasons": "historical_name_match"
+    },
+    {
+      "business": "Environmental Systems, Inc.",
+      "reasons": "historical_name_match"
+    },
+    {
+      "business": "Galeb Paving, Inc.",
+      "reasons": "historical_name_match"
+    },
+    {
+      "business": "Waterproofing Associates, Inc.",
+      "reasons": "historical_name_match;historical_domain_match"
+    },
+    {
+      "business": "Strawn Construction, Inc.",
+      "reasons": "historical_name_match;historical_email_match"
+    }
+  ]
+}
