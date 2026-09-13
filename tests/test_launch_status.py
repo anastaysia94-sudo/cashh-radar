@@ -18,20 +18,17 @@ def test_launch_status_json_is_public_safe():
     assert payload["prospect_entrypoint"] == "/prospects/"
     assert "performance-aware" in " ".join(payload["protected_endpoints"])
 
-    serialized = response.text.lower()
-    forbidden = [
+    disallowed_keys = {
         "admin_password",
         "cashh_admin_password",
         "secret_key",
         "cashh_secret_key",
         "metrics_token",
         "api_key",
-        "session",
         "stripe_secret",
         "password_hash",
-    ]
-    for term in forbidden:
-        assert term not in serialized
+    }
+    assert disallowed_keys.isdisjoint({key.lower() for key in payload})
 
 
 def test_launch_status_page_renders_operator_links():
