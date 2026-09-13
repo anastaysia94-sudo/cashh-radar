@@ -5,57 +5,43 @@ Current production architecture: **Unified Opportunity + Prospect Lifecycle, sch
 
 ## Production state
 
-Cashh Radar is deployed and healthy in production.
+Cashh Radar is deployed in production on Railway.
 
 - GitHub repository: `anastaysia94-sudo/cashh-radar`
 - Railway project: `cashh-radar`
 - Railway service: `cashh-radar-web`
 - Production URL: `https://cashh-radar-web-production.up.railway.app/`
-- Latest verified production commit: `213cc0e20947a509af3b5329fa5aec1c842ee8f0`
-- Latest verified deployment: `3a3a70f0-5884-4415-8d94-76d5c626e1d7` — **SUCCESS**
-- Deployment commit message: `Add performance-aware Radar ranking`
+- Latest verified production deployment commit: `d442eeb848088759f64fb7917213fef8d8987376`
+- Latest verified Railway deployment: `3691f900-c6a4-4802-8cf1-758b18b09fe6` — **SUCCESS**
+- Deployment commit message: `Update smoke test docs for Railway launch status checks`
 - Canonical prospect entrypoint: `/prospects/`
 - Database schema: **v6**
-- Launch datastore: SQLite on persistent Railway storage
-- Persistent volume: `cashh-radar-db`, 1 GB, mounted at `/app/data`
+- Launch datastore: SQLite under `/app/data`
 - Replica count: 1 while SQLite is the datastore
 - Railway builder: Dockerfile
 - Railway start command: `uvicorn launcher:app --host 0.0.0.0 --port 8000 --proxy-headers`
 - Railway healthcheck: `/api/health/ready`
 - Railway public domain target port: `8000`
 
-Verified live after the latest production deployment:
+The latest Railway build and deployment logs show:
 
-- `/api/health/ready`: HTTP 200
-- `/api/prospects/status`: HTTP 200
-- `/api/prospects/performance`: HTTP 401 when unauthenticated, correctly protected
-- `/api/radar/performance-aware`: HTTP 401 when unauthenticated, correctly protected
-- `/prospects/server-performance.js`: HTTP 200
-- `/prospects/sw.js`: HTTP 200
-- Uvicorn server process started successfully on `0.0.0.0:8000`
-- authenticated API responses remain outside the service-worker cache boundary
+- container build completed successfully;
+- Uvicorn server process started on `0.0.0.0:8000`;
+- application startup completed;
+- Railway called `/api/health/ready` and received HTTP 200;
+- Railway's deployment healthcheck succeeded.
 
-## Latest production capability: performance-aware Radar ranking
+The current deployed commit lineage also contains the public-safe launch-status work and production smoke-test coverage for `/api/launch/status` and `/launch-status`. Do not treat documentation alone as proof of a future deployment; the Railway deployment above is the verified production snapshot.
 
-The live production deployment now includes bounded, sample-aware industry learning from persisted prospect outcomes.
+## Current production capabilities
 
-The system can use recorded prospect performance to improve prioritization while keeping the distinction between modeled value and realized outcomes clear. This prevents the product from pretending a projected offer is already real money, a small act of honesty in a world apparently allergic to labels.
+### Unified prospect architecture
 
-Current behavior:
+The Prospect Engine is not a parallel local-only CRM.
 
-- persisted prospect performance metrics are available to authenticated users;
-- performance-aware ranking is exposed through the protected Radar endpoint;
-- learned segment results are surfaced in Prospect Progress;
-- endpoints are protected from unauthenticated access;
-- CI/tests protect the behavior.
+The 500 source-backed business records are validated from the packed dataset and mapped into the canonical Cashh Radar `opportunities` table as `Client Prospect` opportunities. The 200 legacy PWA rows remain available for operator continuity, but only the source-backed catalog participates in the server bridge automatically.
 
-## Unified prospect architecture
-
-The Prospect Engine is no longer a parallel local-only CRM.
-
-The 500 source-backed business records are validated from the packed dataset and mapped into the canonical Cashh Radar `opportunities` table as `Client Prospect` opportunities. The 200 legacy PWA rows remain available for operator continuity, but only the source-backed catalog participates in the new server bridge automatically.
-
-Authenticated source-backed prospect execution state is persisted server-side. The bridge stores:
+Authenticated prospect state persists server-side, including:
 
 - status and verification state;
 - public/business-intended contact email;
@@ -67,9 +53,9 @@ Authenticated source-backed prospect execution state is persisted server-side. T
 
 Local browser state remains an offline-resilience layer and reconciles with the server when the authenticated device reconnects.
 
-## One canonical opportunity lifecycle
+### One canonical opportunity lifecycle
 
-Source-backed prospect activity now feeds the same bounded Cashh Radar lifecycle used by other opportunities:
+Source-backed prospect activity feeds the same bounded Cashh Radar lifecycle used by other opportunities:
 
 `discovered → verified → scored → explained → action_ready → acted → responded → outcome_recorded → learned`
 
@@ -81,9 +67,32 @@ Important prospect transitions:
 
 Identical repeated outcome synchronization is guarded against duplicate outcome creation.
 
+### Performance-aware Radar ranking
+
+Production includes bounded, sample-aware industry learning from persisted prospect outcomes.
+
+The system can use recorded prospect performance to improve prioritization while keeping modeled offer value separate from realized money. Tiny samples are deliberately prevented from dominating the ranking model.
+
+Current behavior includes:
+
+- persisted prospect performance metrics for authenticated users;
+- protected performance-aware Radar ranking;
+- learned segment results in Prospect Progress;
+- sample-aware score adjustments with bounded influence;
+- regression coverage protecting modeled-versus-realized semantics.
+
+### Public-safe launch status
+
+The current main/deployed lineage includes a public-safe launch-status surface intended to expose operational readiness without leaking secrets. Production smoke-test documentation now checks both:
+
+- `/api/launch/status`
+- `/launch-status`
+
+Sensitive values such as metrics tokens remain private and must never be copied into public documentation, screenshots or chat logs.
+
 ## Evidence freshness
 
-Source-backed prospects have a canonical server catalog tied to the corresponding opportunity. Freshness can be checked manually or by the in-process bounded scheduler.
+Source-backed prospects have a canonical server catalog tied to the corresponding opportunity. Freshness can be checked manually or by the bounded scheduler.
 
 States include:
 
@@ -94,80 +103,75 @@ States include:
 - unavailable;
 - error.
 
-The checker refuses private/local/link-local/reserved targets, records the result instead of inventing verification, and updates canonical `last_seen` only when the public source remains reachable.
+The checker refuses private/local/link-local/reserved targets, records uncertainty rather than inventing verification, and updates canonical `last_seen` only when the public source remains reachable.
 
-Production refresh configuration:
+Production defaults remain:
 
-- batch: 8 records;
+- refresh batch: 8 records;
 - interval: 900 seconds;
 - HTTP timeout: 5 seconds.
 
-The first verified production refresh run checked 8 prospects: 7 reachable/current-or-redirected and 1 error. That error remains an evidence state, not a fabricated success.
+## Earnings / value-per-hour semantics
 
-## Earnings / value-per-hour prioritization
-
-Cashh Radar now distinguishes:
+Cashh Radar distinguishes:
 
 1. **Modeled offer value** — proposed offer divided by modeled outreach + fulfillment time. This is a financial-model assumption used for ranking, not guaranteed or expected earnings.
 2. **Realized value** — actual user-recorded amount divided by tracked work time. Only this is treated as realized value per hour.
 
-Prospect queue priority combines lifecycle urgency, learned fit, deliverability, evidence freshness and value density. Replies and due follow-ups can outrank new outreach; recorded outcomes can influence future bounded learning.
+Prospect queue priority can combine lifecycle urgency, learned fit, deliverability, evidence freshness and value density. Replies and due follow-ups can outrank new outreach; recorded outcomes can influence future bounded learning.
 
 ## Broader money-opportunity Radar
 
-`/api/radar/unified` ranks client prospects alongside other normalized jobs, grants, contracts and money/work opportunities. The Prospect Engine Progress screen also surfaces a compact broader-Radar view, so the prospect queue is one execution lane rather than the entire Cashh Radar product.
+`/api/radar/unified` ranks client prospects alongside other normalized jobs, grants, contracts and money/work opportunities. The Prospect Engine Progress screen surfaces a compact broader-Radar view, so the prospect queue remains one execution lane inside Cashh Radar rather than the entire product.
 
 ## PWA / security state
 
-The live Prospect Engine remains:
+The Prospect Engine remains:
 
 - email-first;
 - Reddit-disabled for untouched prospect prioritization;
 - mobile-first;
 - installable/offline-capable;
-- protected by a commercial-email physical-postal-address gate;
+- protected by the commercial-email physical-postal-address gate;
 - optionally able to create Gmail drafts for review;
 - unable to silently press Send.
 
-The service worker now explicitly bypasses `/api/*`. Authenticated API responses are never written to the PWA cache, preventing stale or cross-account user-state caching on shared devices.
+The service worker explicitly bypasses `/api/*`. Authenticated API responses are never written to the PWA cache, preventing stale or cross-account user-state caching on shared devices.
 
-## Verified repository / test state
+## Validation standards
 
-Unified lifecycle pull request: **#6 — merged**.
+Meaningful software changes must continue to run the repository's required validation before being called complete, including Python tests/compilation, frontend and service-worker syntax checks, packed-data integrity, preflight checks and deployment smoke validation when production behavior changes.
 
-GitHub Actions validation on the reconciled branch passed completely:
-
-- automated tests passed;
-- Python compilation passed;
-- packed prospect data validation passed: exactly 500 rows / 500 unique public emails;
-- frontend JavaScript syntax passed;
-- service-worker JavaScript syntax passed;
-- deployment configuration checks passed;
-- Docker build smoke test passed.
-
-The test suite covers the prospect `SENT → REPLIED → PAID → learned` path, server-state persistence, duplicate-outcome protection, realized/modelled value semantics, mixed prospect/non-prospect unified Radar behavior, and performance-aware ranking boundaries.
-
-## Persistent production storage
-
-Production SQLite was migrated from ephemeral container storage to a 1 GB persistent Railway volume before the unified server-state release was deployed.
-
-Current production persistence requirements:
-
-- keep `/app/data/cashh_radar.db` on persistent Railway storage;
-- keep `/app/data/backups/` available for verified backups;
-- keep replica count at 1 while SQLite remains the datastore;
-- do not remove `/app/data` persistence while SQLite remains production storage.
+Do not claim a live deployment merely because code exists in GitHub. Verify the real Railway deployment/status first.
 
 ## V5 + V6 ethical expansion
 
-The separate V5/V6 research program remains a future prospect-universe expansion, not a relabeling of the existing 500 source-backed records.
+The V5/V6 research program remains a separate future prospect-universe expansion, not a relabeling of the existing 500 source-backed production records.
 
 Goal:
 
 - V5: 200 genuinely new prospects — **Show the work + clear value**
 - V6: 200 additional genuinely new prospects — **Show the work + choice + control**
 
-The recovered 500-row expert workbook overlaps the historical V1–V4 universe and therefore must not be presented as 400 new V5/V6 leads. New V5/V6 records must pass the dedupe/evidence gate documented in `V5_V6_STATUS.md`.
+Historical exclusion universe:
+
+- raw V1–V4 rows: 750;
+- canonical historical identities: 747;
+- recovered 500-row expert workbook: 0 genuinely new V5/V6 identities after audit.
+
+Fresh staging has advanced through **Batch 12**:
+
+- accepted staging prospects: **193**;
+- remaining to the 400 accepted-candidate threshold: **207**;
+- next exclusion universe: **940 identities** (747 historical + 193 staging).
+
+The staging pool is still not a final V5/V6 package. Finalization waits for sufficient over-research, rank/prune, the deliberate 200/200 split, enrichment, individualized emails, business-specific preview graphics, matching `.eml` files, trackers, portals and final QA.
+
+The newest research checkpoint is documented under:
+
+- `data/v5-v6-research/batch12-2026-09-13.md`
+- `data/v5-v6-research/batch12-2026-09-13-gate-report.json`
+- `V5_V6_STATUS.md`
 
 ## Outreach policy
 
@@ -181,13 +185,15 @@ The recovered 500-row expert workbook overlaps the historical V1–V4 universe a
 - No fake scarcity, fabricated urgency, invented testimonials, fabricated outcomes or guaranteed-response claims.
 - Current campaign payment route: PayPal invoice only.
 
-## Scaling boundary
+## Production persistence / scaling boundary
 
-The launch system is intentionally one application replica with persistent SQLite. Before multi-instance/high-volume scaling:
+The launch architecture remains intentionally single-replica SQLite. The production design requires `/app/data` persistence and verified backups while SQLite remains the datastore. Do not increase replicas casually while writes still target one SQLite database.
+
+Before multi-instance/high-volume scaling:
 
 1. migrate persistent state to managed PostgreSQL;
 2. deliberately test tenant isolation under the new datastore;
 3. move scheduled refresh/jobs to shared worker infrastructure;
 4. verify concurrency and migration/rollback behavior before increasing replica count.
 
-That is the next architectural scaling boundary. It is not required for the completed single-replica production integration described above.
+That remains the next major architectural scaling boundary; it is not required for the current single-replica production launch.
