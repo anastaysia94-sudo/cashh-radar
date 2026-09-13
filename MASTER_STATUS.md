@@ -1,50 +1,113 @@
 # Cashh Radar — Master Project Status
 
-Build date: 2026-09-03  
-Release candidate: **v2.2.0 — Launch Completion**
+Updated: 2026-09-12  
+Current production prospect runtime: **v4 — 700-prospect PWA**
 
-## Launch-ready software
+## Production state
 
-The consumer/Team product is code-complete for an initial public launch:
+Cashh Radar is no longer waiting on its first deployment.
 
-- opportunity discovery, normalized database and provenance;
-- evidence/freshness lifecycle and material-change tracking;
-- personalized ranking and explainable Opportunity Advisor;
-- watchlists, saved searches, Pulse, alerts and digest composition/delivery;
-- roadmaps, outreach and outcome tracking;
-- account/session/security/privacy lifecycle;
-- owner admin/source/review/analytics/audit tools;
-- user opportunity submissions and review queue;
-- Free/Pro/Team entitlements and Stripe Checkout/webhook integration;
-- referrals and provider-lead workflow;
-- Team roles, invitations, shared watchlist, ownership controls, SCIM-style provisioning, tenant metadata and signed webhooks;
-- commercial scoped API, metering and rate limits;
-- Docker/Render deployment, PWA/SEO, first-party analytics;
-- liveness/readiness/health, protected metrics, migration tracking, verified backups, preflight and automated scheduler.
+- GitHub repository: `anastaysia94-sudo/cashh-radar`
+- Railway project: `cashh-radar`
+- Railway service: `cashh-radar-web`
+- Production environment: active
+- Latest checked Railway deployment: **SUCCESS**
+- Canonical prospect entrypoint: `/prospects/`
 
-## Verified current test state
+The production launcher mounts the prospect PWA with the main Cashh Radar service rather than relying on a separate static-site deployment.
 
-- Automated suite: **20 passed**.
-- Python compilation: passed.
-- Browser JavaScript syntax: passed.
-- Service-worker JavaScript syntax: passed.
+## Current prospect runtime
 
-See `TEST_REPORT.md` for the final go-live validation results after packaging.
+The active v4 prospect engine combines:
 
-## External activation — not missing application code
+- **500 source-backed Santa Clara County business records** with public email values and integrity checks;
+- **200 legacy prospect records** retained for lifecycle continuity;
+- next-best-action ranking;
+- email-first outreach policy;
+- Reddit disabled for prospect prioritization;
+- business-specific outreach-image generation;
+- mobile-first queue and sprint UI;
+- follow-up state and local persistence;
+- PWA installation/offline runtime;
+- optional Gmail draft creation when configured;
+- compliance gate requiring a valid physical postal address before commercial send actions.
 
-These cannot truthfully be created from source code alone:
+The packed-data CI check refuses to accept the source-backed dataset unless it expands to exactly 500 rows with 500 unique public email values.
 
-1. Dedicated GitHub repository and publication.
-2. Render/other hosting account deployment.
-3. Actual public URL/domain and DNS.
-4. Production owner/support emails and strong secrets.
-5. Stripe account keys, webhook signing secret and real Pro/Team Price IDs if paid plans are enabled.
-6. SMTP credentials if password reset, verification, two-step email login, invitations and live email digests are to be delivered.
-7. USAJOBS credentials and/or explicitly chosen Lever employer site tokens if those sources are enabled.
-8. Uptime/error monitoring account and any off-platform backup copy target.
-9. Commercial referral/provider/enterprise agreements and jurisdiction-specific legal review.
+## Verified current repository state
+
+Latest production wiring commit checked:
+
+`4e7fefbcfc578a86012337d31f33b722f8d59821` — **Wire Prospect Engine v4 into production PWA**
+
+Recent supporting work includes:
+
+- 700-prospect bootstrap and mapping;
+- 700-prospect ranking/outreach/follow-up core;
+- mobile queue, sprint and compliance UI;
+- business-specific outreach image generation;
+- 700-prospect mobile styling;
+- split v4 expansion layers;
+- packed 500-record integrity loader;
+- service-worker/PWA cache protection;
+- CI syntax/integrity checks.
+
+## V5 + V6 ethical expansion
+
+The next major boundary is the **400-new-prospect Ethical Prospect Engine**:
+
+- V5: 200 new prospects — **Show the work + clear value**
+- V6: 200 additional new prospects — **Show the work + choice + control**
+
+Required V5/V6 outputs remain:
+
+- canonical dedupe against every prior V1–V4 business;
+- 400 genuinely new source-backed prospect records;
+- 400 individualized first emails;
+- 400 business-specific preview graphics;
+- 400 ready-to-review `.eml` files with the matching preview attached;
+- V5 and V6 Excel trackers;
+- V5, V6 and combined 400-lead portals;
+- V5, V6 and combined ZIP bundles;
+- source audit and QA reports;
+- real outcome tracking for sent/replied/interested/invoice/paid/fulfilled/bounce/opt-out.
+
+### Current V5/V6 evidence boundary
+
+A 500-row expert-verified workbook has been recovered and inspected. It is useful as the normalized historical/exclusion universe, but it overlaps the earlier prospect batches and therefore **must not be mislabeled as 400 new V5/V6 leads**.
+
+The V5/V6 build must continue from fresh public evidence and dedupe against the full prior universe. No invented businesses, inferred email patterns, fabricated replies or fake conversion results are permitted to fill the quota.
+
+## Outreach policy
+
+- Email-first.
+- No Reddit prospecting.
+- Individual sends, not bulk BCC.
+- One unanswered follow-up maximum for the V5/V6 local-business workflow.
+- Use only public/business-intended contact evidence.
+- Do not retry a bouncing address without re-verification.
+- Honor opt-outs immediately.
+- No fake scarcity, fabricated urgency, invented testimonials or guaranteed outcomes.
+- Current payment route: PayPal invoice only.
+
+## Payment
+
+Current $100 one-time package invoice:
+
+`https://www.paypal.com/invoice/p/#7T6DC9A6WFH3XXCT`
+
+Do not reintroduce Venmo into this campaign unless explicitly requested.
+
+## Immediate implementation boundary
+
+1. Finish the canonical V1–V4 exclusion index using normalized business name, email, domain/website, phone/address where available and reasonable DBA aliases.
+2. Expand the current public-source candidate pool until 400 genuinely new V5/V6 records pass the evidence gate.
+3. Split the final ranked records into V5 and V6 experiments.
+4. Generate their unique first-email copy, previews and attached `.eml` files.
+5. Build the two trackers, combined master tracker and three portals.
+6. Run exact-count, dedupe, source, attachment, spreadsheet, JavaScript and ZIP-integrity QA.
+7. Publish lightweight V5/V6 runtime data/portals to GitHub only after the records pass QA.
 
 ## Scaling boundary
 
-The launch configuration intentionally uses one application instance plus persistent SQLite storage. It is simple and appropriate for initial traffic. Before multi-instance/high-volume enterprise scaling, migrate to managed PostgreSQL and adopt a deliberately tested tenant-isolation model. The in-process scheduler should then be moved to a dedicated worker/shared-database job system.
+The core consumer/Team product still uses an intentionally simple single-service architecture for initial operation. Before multi-instance/high-volume enterprise scaling, migrate persistent state to managed PostgreSQL, deliberately test tenant isolation, and move in-process scheduled work to a dedicated worker/shared-database job system.
