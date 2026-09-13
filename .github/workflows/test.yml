@@ -98,10 +98,15 @@ jobs:
           for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'prospect-bridge.js', 'pwa-runtime.js', 'data/p500-loader.js'):
               assert asset in sw, f'service worker must cache {asset}'
           assert "url.pathname.startsWith('/api/')" in sw, 'service worker must bypass authenticated API caching'
-          assert 'cashh-radar-prospects-v6-unified-20260912' in sw
+          assert 'cashh-radar-prospects-v7-truthful-timing-20260912' in sw
           assert 'easy-v4-policy.js' in bootstrap, 'v4 bootstrap must enforce outreach policy before UI startup'
           assert 'prospect-bridge.js' in bootstrap, 'v4 bootstrap must load the unified server lifecycle bridge'
           assert '/api/prospects/state/' in bridge and '/api/radar/unified' in bridge
+          assert 'TIMER_IDLE_MS=120000' in bridge, 'work timer must pause after two minutes without activity'
+          assert 'data-bridge="timer"' in bridge, 'prospect focus must expose explicit Start/Stop work timer control'
+          assert 'Math.floor(workTimer.activeSeconds/60)' in bridge, 'partial timer minutes must never be rounded up'
+          assert '60000' not in bridge, 'implicit one-minute focus-tab effort timer must not return'
+          assert 'Proposed $100 offers are not revenue.' in bridge, 'actual performance must stay separate from modeled offer value'
           assert 'reddit:false' in policy and 'emailOnly:true' in policy, 'email-only/no-Reddit policy flags must remain enabled'
           assert manifest['name'] == 'Cashh Radar Prospect Engine'
           assert manifest['start_url'] == './'
