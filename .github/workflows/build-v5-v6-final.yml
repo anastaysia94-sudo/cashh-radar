@@ -104,7 +104,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add prospect-portal/
+          git add -f prospect-portal/
           if ! git diff --cached --quiet; then
             git commit -m "Publish final V5/V6 lightweight prospect portals"
             git push
