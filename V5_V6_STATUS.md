@@ -1,10 +1,10 @@
 # Cashh Radar — V5 + V6 Ethical Expansion Checkpoint
 
-Updated: 2026-09-13
+Updated: 2026-09-15
 
 ## Goal
 
-Build **400 genuinely new Santa Clara County business prospects**:
+Build **400 genuinely new Santa Clara County business prospects** and deliberately over-research beyond 400 before the final rank/prune split:
 
 - V5: 200 — **Show the work + clear value**
 - V6: 200 — **Show the work + choice + control**
@@ -25,27 +25,17 @@ Recovered V1–V4 files contain:
 - Unique public email values: **722**
 - Unique website/domain values observed: **506**
 
-Known cross-version duplicate identities are treated as one exclusion identity rather than a fresh prospect:
+Known cross-version duplicate identities are treated as one exclusion identity rather than a fresh prospect: Blue's Roofing, South Bay Design & Landscaping, and D&D Electrical Construction.
 
-1. Blue's Roofing — V3 + V4
-2. South Bay Design & Landscaping — V3 + V4
-3. D&D Electrical Construction — V3 + V4
+The recovered canonical exclusion workbook remains authoritative. Current activity, a changed employee email, a new website page or a refreshed directory listing never turns an old business into a fresh V5/V6 identity.
 
-The canonical exclusion workbook remains authoritative. The repo gate applies stricter normalization on top of it, so a changed employee email does not magically turn an old business into a fresh lead.
+## Recovered / production 500-row universe
 
-## Recovered 500-row expert workbook
-
-`500_EXPERT_VERIFIED_INDIVIDUALIZED_EMAILS_2026-09-07.xlsx` was audited against the historical universe:
-
-- 500 rows inspected
-- **0 genuinely new V5/V6 identities**
-- all 500 matched the historical universe by normalized business name, public email, and/or website/domain
-
-It remains useful as a copy-quality and exclusion reference, but it must **not** be relabeled as V5/V6.
+The recovered `500_EXPERT_VERIFIED_INDIVIDUALIZED_EMAILS_2026-09-07.xlsx` and the 500 source-backed production prospect bundle use the same historical campaign families (`SCCV3`, `SCCV4`, `SJ2`). The workbook audit found **0 genuinely new V5/V6 identities**: all 500 collide with the historical universe by normalized business identity, public email and/or website/domain. The production bundle therefore remains useful for application continuity and copy-quality reference, but it must not be relabeled as V5/V6.
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now advanced through **Batch 12**.
+The fresh-source pipeline has now advanced through **Batch 13**.
 
 | Pass | Accepted | Cumulative |
 |---|---:|---:|
@@ -60,59 +50,39 @@ The fresh-source pipeline has now advanced through **Batch 12**.
 | Batch 9 | 15 | 149 |
 | Batch 10 | 15 | 164 |
 | Batch 11 | 14 | 178 |
-| Batch 12 | 15 | **193** |
+| Batch 12 | 15 | 193 |
+| Batch 13 | 28 | **221** |
 
 ### Current checkpoint
 
-- **Accepted staging pool: 193 genuinely new, source-backed prospects**
-- Remaining to the 400 accepted-candidate threshold: **207**
-- Current exclusion universe for the next pass: **940 records**
+- **Accepted staging pool: 221 genuinely new, source-backed prospects**
+- Remaining to the bare 400 accepted-candidate threshold: **179**
+- Current exclusion universe for the next pass: **968 records**
   - 747 canonical historical identities
-  - 193 accepted staging prospects
+  - 221 accepted staging prospects
+- Working over-research target before final pruning: **425–450 accepted prospects**
+- Remaining to that over-research range: **204–229**
 
-These records are still **STAGING ONLY**. They are not yet labeled final V5 or V6 and are not yet a send-ready 400-lead package.
+These records remain **STAGING ONLY**. They are not final V5 or V6 assignments and are not yet a send-ready 400-lead package.
 
-The research program intentionally continues beyond narrow contractor/home-service categories. Recent accepted batches also include property management, ceramics/art instruction, retail, pet care, interior design, photography, salon/beauty, restaurants/private events, floral, bakery, yoga, cleaning, dance, martial arts, moving, music instruction, home organization and tutoring.
+Batch 13 increased the batch size while preserving rejects and holds. It accepted 28 of 35 discovery finalists, retained four historical rejects, one current-staging collision and two evidence/quality holds. The accepted mix now spans home technology, design, painting, jewelry, art, dance, theater, restaurants, catering, events, coffee, construction, signs/printing, photography and local business services.
 
 ## Latest research audit files
 
-Earlier batch artifacts remain under `data/v5-v6-research/`. The newest checkpoints are:
+Recent checkpoints under `data/v5-v6-research/` include:
 
-- `data/v5-v6-research/batch8-2026-09-13.md`
-- `data/v5-v6-research/batch8-2026-09-13-gate-report.json`
-- `data/v5-v6-research/batch8-2026-09-13-accepted.csv`
-- `data/v5-v6-research/batch9-2026-09-13.md`
-- `data/v5-v6-research/batch9-2026-09-13-gate-report.json`
-- `data/v5-v6-research/batch10-2026-09-13.md`
-- `data/v5-v6-research/batch11-2026-09-13.md`
-- `data/v5-v6-research/batch11-2026-09-13-gate-report.json`
-- `data/v5-v6-research/batch12-2026-09-13.md`
-- `data/v5-v6-research/batch12-2026-09-13-gate-report.json`
+- `batch8-2026-09-13-accepted.csv` and gate report
+- `batch9-2026-09-13-accepted.csv` and gate report
+- `batch10-2026-09-13.md`
+- `batch11-2026-09-13.md` and gate report
+- `batch12-2026-09-13-accepted.csv` and gate report
+- `batch13-2026-09-15-accepted.csv`
+- `batch13-2026-09-15-gate-report.json`
+- `batch13-2026-09-15.md`
 
-Raw/public contact fields are retained only where supported by current business evidence. A missing CSV is not permission to reconstruct or guess an address.
+Raw/public contact fields are retained only where supported by current business evidence. A missing value is not permission to reconstruct or guess it.
 
-## Current production runtime
-
-Cashh Radar production already runs the unified Prospect Engine with 500 source-backed server-integrated prospects plus legacy browser records used for continuity. That existing production universe cannot automatically be relabeled as V5/V6 without passing the fresh-identity gate.
-
-V5/V6 staging remains a separate research boundary until the 400-new-prospect gate, enrichment, ranking, QA and final package build are complete. Research/documentation commits are not evidence that the Railway production service has deployed them.
-
-## Fresh-source expansion
-
-Current public research sources include:
-
-- Builders' Exchange of Santa Clara County membership directory;
-- current official business sites/contact pages;
-- current contractor qualification / CUPCCAA lists where suitable;
-- current city bid/planholder records;
-- current licensing, permit, carrier or procurement records when they materially support identity/activity;
-- municipal approved-vendor/caterer lists when they expose legitimate business contact evidence;
-- local chamber and event-vendor sources when they materially corroborate location or current activity;
-- other legitimate public business directories only when they provide usable business-contact evidence.
-
-Official/current business pages are preferred for personalization. Government, chamber or procurement records are corroborating evidence when they establish current activity, location, qualification or public business-intended contact information.
-
-## Required record gate for V5/V6
+## Required record gate
 
 A record is not V5/V6-ready until it has:
 
@@ -120,22 +90,20 @@ A record is not V5/V6-ready until it has:
 - no identity/email/business-domain/phone collision with accepted V5/V6 staging;
 - business name;
 - public/business-intended email;
-- source URL;
-- city/service area;
+- public source URL;
+- Santa Clara County city/service connection;
 - industry/service focus;
-- current observation suitable for personalization;
+- a current, business-specific observation suitable for personalization;
 - source/check date;
 - no known opt-out/bounce prohibition;
 - no fabricated details;
-- sufficient fit for the $100 package or a documented reason to hold rather than force it into quota.
+- sufficient fit for the $100 package or a documented hold reason.
 
-Shared hosts such as `sites.google.com` or Wix are evidence URLs, not business-domain fingerprints. Free/ISP email domains are not treated as owned business domains. Masked email addresses are not reconstructed from naming conventions. Stale local listings do not override stronger current evidence. When a current owned-domain contact supersedes an older alias, the current address is re-gated before use.
+Shared hosts such as Wix or `sites.google.com` are evidence URLs, not business-domain fingerprints. Free/ISP email domains are not treated as owned business domains. Masked emails are never reconstructed. Stale local listings do not override stronger current evidence. Current Chamber, municipal, procurement and licensing sources may corroborate identity/activity/contact, but weak or conflicting evidence remains held.
 
-Research holds are not force-promoted. Businesses with hidden/unverified email addresses, weak fit, ambiguous or out-of-scope location, identity conflicts, licensing concerns, heavy compliance concerns, temporary closure evidence or poor personalization quality remain outside the accepted pool until resolved.
+## Required build after over-research and final rank/prune
 
-## Required build after the 400-record gate passes
-
-Only after the fresh-prospect gate passes and deliberate over-research/rank/prune is complete:
+Only after the accepted pool materially exceeds 400 and the strongest 400 are selected:
 
 - 400 individualized first emails
 - 400 business-specific 1600×1000 preview graphics
@@ -150,8 +118,6 @@ Only after the fresh-prospect gate passes and deliberate over-research/rank/prun
 - V5 ZIP
 - V6 ZIP
 - combined ZIP
-
-Research should materially exceed 400 accepted candidates before the final split so the system can rank and prune instead of treating the first 400 survivors as sacred tablets. Humanity has suffered enough from sacred spreadsheets.
 
 ## Payment
 
@@ -170,8 +136,8 @@ No Venmo references in this campaign.
 - One unanswered follow-up maximum
 - Honor opt-outs immediately
 - Do not repeatedly retry bounced addresses
-- No fake scarcity
-- No fabricated urgency
-- No invented testimonials or outcomes
+- No fake scarcity or fabricated urgency
+- No invented testimonials, problems, outcomes, payments or replies
 - No guaranteed-response or guaranteed-revenue claims
+- Wellness/fitness/coaching/pet-training observations remain educational and do not make medical, behavioral or outcome guarantees
 - Preview images and copy must remain truthful to public business evidence
