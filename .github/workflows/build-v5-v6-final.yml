@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-v5-v6-final.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-v5-v6:
@@ -39,8 +39,9 @@ jobs:
           if old not in s:
               raise RuntimeError('Expected builder compatibility target was not found; refusing a silent CI mutation')
           s=s.replace(old,new)
+          s=s.replace('msg=EmailMessage(policy=SMTP)', 'msg=EmailMessage(policy=SMTP.clone(max_line_length=998))')
           p.write_text(s)
-          print('final builder compatibility patch applied: canonical deduped accepted CSV set only')
+          print('final builder compatibility patch applied: canonical accepted CSV set + Unicode-safe EML subjects')
           PY
 
       - name: Build V5 and V6 assets
@@ -54,9 +55,62 @@ jobs:
           qa=json.loads(Path('dist-v5-v6/combined/QA-Report.json').read_text())
           assert qa['status']=='PASS', qa
           assert qa['records']==400 and qa['v5']==200 and qa['v6']==200, qa
+          assert qa['unique_businesses']==400 and qa['unique_emails']==400, qa
           assert qa['graphics']==400 and qa['eml']==400, qa
           print(json.dumps(qa, indent=2))
           PY
+
+      - name: Publish lightweight GitHub portals and datasets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          targets = [
+              ('V5', Path('prospect-portal/santa-clara-v5')),
+              ('V6', Path('prospect-portal/santa-clara-v6')),
+              ('combined', Path('prospect-portal/santa-clara-v5-v6')),
+          ]
+
+          for src_name, dst in targets:
+              src = Path('dist-v5-v6') / src_name
+              dst.mkdir(parents=True, exist_ok=True)
+              if src_name == 'V5':
+                  portal = src / 'Prospect-Portal-V5.html'
+                  files = ['V5-200-Leads.csv','prospects-v5.json','Why-V5-Wins.csv','TOP-25-FIRST.txt','README.md']
+              elif src_name == 'V6':
+                  portal = src / 'Prospect-Portal-V6.html'
+                  files = ['V6-200-Leads.csv','prospects-v6.json','Why-V6-Wins.csv','TOP-25-FIRST.txt','README.md']
+              else:
+                  portal = src / 'Prospect-Portal-V5-V6-Combined.html'
+                  files = ['V5-V6-400-Leads.csv','prospects-v5-v6.json','RESEARCH-NOTES.md','QA-Report.json']
+
+              html = portal.read_text(encoding='utf-8')
+              html = html.replace(
+                  '<img loading="lazy" src="graphics/${esc(r.GraphicFilename)}">',
+                  '<div class="preview" style="display:flex;align-items:center;justify-content:center;padding:28px;text-align:center;background:linear-gradient(135deg,#10283d,#153d38);font-size:18px;font-weight:800">PRIVATE PREVIEW • ${esc(r.Business)} • ${esc(r.ServiceFocus)}</div>'
+              )
+              html = html.replace(
+                  '<a href="ready-emails/${esc(r.EMLFilename)}">Ready .eml</a>',
+                  '<span class="pill">Full attached .eml is in the downloadable build artifact</span>'
+              )
+              (dst / 'index.html').write_text(html, encoding='utf-8')
+              for f in files:
+                  if (src / f).exists():
+                      shutil.copy2(src / f, dst / f)
+
+          Path('prospect-portal/README.md').write_text('''# Cashh Radar Prospect Portals\n\n- `santa-clara-v5/` — 200-lead ethical V5 experiment: show the work + clear value.\n- `santa-clara-v6/` — 200-lead ethical V6 experiment: show the work + choice/control.\n- `santa-clara-v5-v6/` — combined 400-lead operator portal and source datasets.\n\nThe repository portals are intentionally lightweight. The 400 full-resolution preview JPGs and attached `.eml` files remain in the downloadable build artifact / complete ZIP packages instead of bloating the repository.\n''', encoding='utf-8')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prospect-portal/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish final V5/V6 lightweight prospect portals"
+            git push
+          else
+            echo "No portal publication changes to commit."
+          fi
 
       - name: Upload complete V5 V6 build artifact
         uses: actions/upload-artifact@v4
