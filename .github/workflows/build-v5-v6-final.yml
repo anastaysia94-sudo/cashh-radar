@@ -35,12 +35,12 @@ jobs:
           s=p.read_text()
           s=s.replace('if not k.startswith("_")','if k and not k.startswith("_")')
           old='''    for batch in (10,11):\n        rows.extend(parse_roster(RESEARCH/f"batch{batch}-2026-09-13.md", batch))\n'''
-          new='''    # Batch 11 has a canonical accepted CSV. Batch 10 intentionally does not;\n    # retain its 15 gate-accepted records by re-reading the verified public roster.\n    rows.extend(parse_roster(RESEARCH/"batch10-2026-09-13.md", 10))\n'''
+          new='''    # Final build uses only canonical accepted CSV snapshots.\n    # Batch 10 duplicated Batch 9 and was replaced by 15 unique Batch 24 records;\n    # Batch 11 already has its own canonical accepted CSV.\n'''
           if old not in s:
               raise RuntimeError('Expected builder compatibility target was not found; refusing a silent CI mutation')
           s=s.replace(old,new)
           p.write_text(s)
-          print('final builder compatibility patch applied: Batch 10 retained, Batch 11 sourced from CSV')
+          print('final builder compatibility patch applied: canonical deduped accepted CSV set only')
           PY
 
       - name: Build V5 and V6 assets
