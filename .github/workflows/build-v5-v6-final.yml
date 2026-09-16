@@ -27,6 +27,19 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --upgrade pip pillow beautifulsoup4
 
+      - name: Normalize legacy CSV parser edge case
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/build_v5_v6_assets.py')
+          s=p.read_text()
+          old='if not k.startswith("_")'
+          new='if k and not k.startswith("_")'
+          if old in s:
+              p.write_text(s.replace(old,new))
+          print('legacy CSV parser normalized')
+          PY
+
       - name: Build V5 and V6 assets
         run: python scripts/build_v5_v6_assets.py
 
