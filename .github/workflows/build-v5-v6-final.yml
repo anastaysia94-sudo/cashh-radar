@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: cashh-radar-v5-v6-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-v5-v6:
     runs-on: ubuntu-latest
@@ -23,9 +27,12 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: '3.12'
+          cache: pip
 
       - name: Install build dependencies
-        run: python -m pip install --upgrade pip pillow beautifulsoup4
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pillow beautifulsoup4
 
       - name: Normalize final builder compatibility
         run: |
@@ -35,7 +42,7 @@ jobs:
           s=p.read_text()
           s=s.replace('if not k.startswith("_")','if k and not k.startswith("_")')
           old='''    for batch in (10,11):\n        rows.extend(parse_roster(RESEARCH/f"batch{batch}-2026-09-13.md", batch))\n'''
-          new='''    # Final build uses only canonical accepted CSV snapshots.\n    # Batch 10 duplicated Batch 9 and was replaced by 15 unique Batch 24 records;\n    # Batch 11 already has its own canonical accepted CSV.\n'''
+          new='''    # Final build uses only canonical accepted CSV snapshots.\n          # Batch 10 duplicated Batch 9 and was replaced by 15 unique Batch 24 records;\n          # Batch 11 already has its own canonical accepted CSV.\n'''
           if old not in s:
               raise RuntimeError('Expected builder compatibility target was not found; refusing a silent CI mutation')
           s=s.replace(old,new)
@@ -63,7 +70,7 @@ jobs:
       - name: Upload complete V5 V6 build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: cashh-radar-v5-v6-assets
+          name: cashh-radar-v5-v6-assets-${{ github.sha }}
           path: dist-v5-v6/
           if-no-files-found: error
           retention-days: 30
