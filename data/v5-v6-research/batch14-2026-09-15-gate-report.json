@@ -1,0 +1,34 @@
+{
+  "batch": 14,
+  "checked": "2026-09-15",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 221,
+  "discovery_finalists_reviewed": 39,
+  "accepted": 32,
+  "historical_rejected": 1,
+  "staging_collision_rejected": 3,
+  "evidence_or_quality_holds": 3,
+  "new_staging_total": 253,
+  "remaining_to_400": 147,
+  "next_exclusion_universe": 1000,
+  "historical_rejects": ["Pizzeria Delfina Palo Alto"],
+  "staging_collision_rejects": ["Westmoor Florist", "MiDa Interior Design Studio", "BÁNH BAKERY"],
+  "holds": ["Maji Palace", "Small Fry Dance Club", "West Coast Self-Storage Santa Clara"],
+  "controls": {
+    "canonical_v1_v4_identity_email_domain_gate": true,
+    "current_staging_owned_domain_search": true,
+    "current_public_business_contact_required": true,
+    "santa_clara_county_connection_required": true,
+    "masked_or_inferred_email_allowed": false,
+    "shared_host_as_business_domain": false,
+    "current_activity_overrides_historical_identity": false
+  },
+  "notes": [
+    "All 32 accepted finalists cleared the canonical historical name/email/domain gate and the current repository staging-domain sweep.",
+    "Pizzeria Delfina Palo Alto remained historical because its location-specific current evidence still belongs to an existing historical email/domain family.",
+    "Maji Palace retained a masked email and was held rather than reconstructed.",
+    "Small Fry Dance Club was held for weaker county-specific fit, and West Coast Self-Storage Santa Clara was held because current owned pages exposed a form/phone but not the exact location email used by the discovery source.",
+    "The accepted mix broadens design/build, technology, restaurants, private events, bakeries, floral, photography, arts, dance and studio services."
+  ]
+}
