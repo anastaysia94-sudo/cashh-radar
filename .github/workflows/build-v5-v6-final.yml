@@ -1,0 +1,51 @@
+name: Build V5 V6 Ethical Prospect Assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/build_v5_v6_assets.py'
+      - 'data/v5-v6-research/**'
+      - '.github/workflows/build-v5-v6-final.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-v5-v6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: python -m pip install --upgrade pip pillow beautifulsoup4
+
+      - name: Build V5 and V6 assets
+        run: python scripts/build_v5_v6_assets.py
+
+      - name: Verify generated asset counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          qa=json.loads(Path('dist-v5-v6/combined/QA-Report.json').read_text())
+          assert qa['status']=='PASS', qa
+          assert qa['records']==400 and qa['v5']==200 and qa['v6']==200, qa
+          assert qa['graphics']==400 and qa['eml']==400, qa
+          print(json.dumps(qa, indent=2))
+          PY
+
+      - name: Upload complete V5 V6 build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashh-radar-v5-v6-assets
+          path: dist-v5-v6/
+          if-no-files-found: error
+          retention-days: 30
