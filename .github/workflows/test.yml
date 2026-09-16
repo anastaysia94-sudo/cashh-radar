@@ -85,9 +85,11 @@ jobs:
             grep -q 'loader\|bootstrap\|runtime' "$f"
           done
 
-          test -f sw.js
-          grep -q 'cashh-radar-prospects-v7-truthful-timing-20260912' sw.js
-          grep -q '/api/' sw.js
+          # The canonical PWA lives under prospect-android-app. Validate its service
+          # worker there rather than a removed root-level alias.
+          test -f prospect-android-app/sw.js
+          grep -q 'cashh-radar-prospects-v7-truthful-timing-20260912' prospect-android-app/sw.js
+          grep -q '/api/' prospect-android-app/sw.js
 
           # Validate the canonical prospect app filenames instead of stale aliases.
           test -f prospect-android-app/prospect-bridge.js
@@ -134,7 +136,7 @@ jobs:
           done < <(find . -path './.git' -prune -o -path './node_modules' -prune -o -name '*.js' -type f -print0)
 
       - name: Check service worker JavaScript syntax
-        run: node --check sw.js
+        run: node --check prospect-android-app/sw.js
 
       - name: Docker build smoke test
         run: docker build --pull -t cashh-radar-ci:smoke .
