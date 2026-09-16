@@ -1,5 +1,0 @@
-# Ethical persuasion research used in V5/V6
-
-V5/V6 deliberately avoids coercion, fake scarcity, fabricated results and guaranteed-sale language. The copy uses: (1) processing fluency — concise, easy-to-process offer language (Alter & Oppenheimer, 2009, https://doi.org/10.1177/1088868309341564); (2) autonomy-supportive wording — high freedom-threatening language increases reactance and reactance is negatively associated with persuasion outcomes (Human Communication Research meta-analysis, 2025, https://academic.oup.com/hcr/article/52/1/38/8178818); (3) reduced decision complexity — choice overload is moderated by task difficulty, preference uncertainty and choice-set complexity (Chernev, Böckenholt & Goodman, 2015, https://doi.org/10.1016/j.jcps.2014.08.002); and (4) concrete proof — every email includes a business-specific preview so the recipient can evaluate the work rather than relying on unsupported claims.
-
-These findings do not guarantee response, purchase or revenue. V5 and V6 should be compared using actual campaign outcomes.
