@@ -49,123 +49,33 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64
-          import gzip
-          import json
-          import re
-          import yaml
-
-          dockerfile = Path('Dockerfile').read_text(encoding='utf-8')
-          assert '0.0.0.0' in dockerfile
-          assert '${PORT:-8000}' in dockerfile
-          assert 'uvicorn launcher:app' in dockerfile
-
-          for path in ('render.yaml', 'deploy/render.yaml'):
-              data = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
-              assert isinstance(data, dict)
-              services = data.get('services')
-              assert isinstance(services, list) and services
-              web = services[0]
-              assert web.get('type') == 'web'
-              assert web.get('runtime') == 'docker'
-              assert web.get('healthCheckPath') == '/api/health/ready'
-
-          vercel = json.loads(Path('vercel.json').read_text(encoding='utf-8'))
-          assert vercel['routes'] == [{'src': '/(.*)', 'dest': 'api/index.py'}]
-          assert 'api/index.py' in vercel.get('functions', {})
-
-          railway = json.loads(Path('railway.json').read_text(encoding='utf-8'))
-          assert railway['$schema'] == 'https://railway.com/railway.schema.json'
-          assert railway['build']['builder'] == 'DOCKERFILE'
-          assert railway['deploy']['healthcheckPath'] == '/api/health/ready'
-          assert 'uvicorn launcher:app' in railway['deploy']['startCommand']
-
-          launcher = Path('launcher.py').read_text(encoding='utf-8')
-          assert 'register_prospect_bridge(core_app)' in launcher
-          assert 'register_performance_radar(core_app)' in launcher
-          assert 'start_prospect_bridge_scheduler(core)' in launcher
-          assert '/api/prospects/performance' in launcher
-          assert 'summarize_prospect_performance' in launcher
-
-          learned = Path('cashh_performance_radar.py').read_text(encoding='utf-8')
-          assert 'MIN_SEGMENT_SENT = 3' in learned
-          assert 'FULL_WEIGHT_SENT = 10' in learned
-          assert 'MAX_SEGMENT_ADJUSTMENT = 10.0' in learned
-          assert '/api/radar/performance-aware' in learned
-          assert 'prospect_performance' in learned
-          assert 'segment_learning' in learned
-
-          app_dir = Path('prospect-android-app')
-          required = [
-              'index.html', 'easy.html', 'easy.css', 'easy-v3.css', 'easy-v4.css',
-              'easy-core.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-ui.js',
-              'easy-send.js', 'easy-v3.js', 'easy-v4-ui.js', 'easy-v4-image.js',
-              'prospect-bridge.js', 'server-performance.js', 'bootstrap-v4.js', 'pwa-runtime.js', 'prospects.js', 'sw.js',
-              'manifest.webmanifest', 'icon.svg', 'README.md',
-              '200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx',
-              'data/p500-gz-1.js', 'data/p500-gz-2.js', 'data/p500-gz-3.js',
-              'data/p500-gz-4.js', 'data/p500-loader.js',
-          ]
-          missing = [name for name in required if not (app_dir / name).exists()]
-          assert not missing, f'Prospect PWA files missing: {missing}'
-
-          index = (app_dir / 'index.html').read_text(encoding='utf-8')
-          easy = (app_dir / 'easy.html').read_text(encoding='utf-8')
-          sw = (app_dir / 'sw.js').read_text(encoding='utf-8')
-          bootstrap = (app_dir / 'bootstrap-v4.js').read_text(encoding='utf-8')
-          policy = (app_dir / 'easy-v4-policy.js').read_text(encoding='utf-8')
-          bridge = (app_dir / 'prospect-bridge.js').read_text(encoding='utf-8')
-          performance_ui = (app_dir / 'server-performance.js').read_text(encoding='utf-8')
-          manifest = json.loads((app_dir / 'manifest.webmanifest').read_text(encoding='utf-8'))
-          for shell_name, shell in (('index.html', index), ('easy.html', easy)):
-              assert 'data/p500-loader.js' in shell
-              assert 'bootstrap-v4.js' in shell
-              assert 'easy-v4.css' in shell
-              assert 'pwa-runtime.js' in shell
-          for asset in ('bootstrap-v4.js', 'easy-v4-core.js', 'easy-v4-policy.js', 'easy-v4-ui.js', 'easy-v4-image.js', 'prospect-bridge.js', 'server-performance.js', 'pwa-runtime.js', 'data/p500-loader.js'):
-              assert asset in sw
-          assert "url.pathname.startsWith('/api/')" in sw
-          assert 'cashh-radar-prospects-v7-truthful-timing-20260912' in sw
-          assert 'easy-v4-policy.js' in bootstrap
-          assert 'prospect-bridge.js' in bootstrap
-          assert 'server-performance.js' in bootstrap
-          assert '/api/prospects/state/' in bridge and '/api/radar/unified' in bridge
-          assert 'TIMER_IDLE_MS=120000' in bridge
-          assert 'data-bridge="timer"' in bridge
-          assert 'Math.floor(workTimer.activeSeconds/60)' in bridge
-          assert '60000' not in bridge
-          assert 'Proposed $100 offers are not revenue.' in bridge
-          assert '/api/prospects/performance' in performance_ui
-          assert '/api/radar/performance-aware' in performance_ui
-          assert 'Server-synced actual prospect performance' in performance_ui
-          assert 'What your actual outreach is teaching Radar' in performance_ui
-          assert 'Tiny samples do not get to run the company.' in performance_ui
-          assert 'reddit:false' in policy and 'emailOnly:true' in policy
-          assert manifest['name'] == 'Cashh Radar Prospect Engine'
-          assert manifest['start_url'] == './'
-          assert manifest['scope'] == './'
-
-          chunks = []
-          for number in range(1, 5):
-              text = (app_dir / 'data' / f'p500-gz-{number}.js').read_text(encoding='utf-8')
-              match = re.search(r"\+'([^']*)';?\s*$", text)
-              assert match
-              chunks.append(match.group(1))
-          payload = json.loads(gzip.decompress(base64.b64decode(''.join(chunks))).decode('utf-8'))
-          fields = payload.get('fields') or []
-          rows = payload.get('rows') or []
-          assert len(rows) == 500
-          email_index = fields.index('e')
-          emails = [str(row[email_index] or '').strip().lower() for row in rows]
-          assert all(emails)
-          assert len(set(emails)) == 500
+          import base64, gzip, json, re, yaml
+          dockerfile=Path('Dockerfile').read_text(encoding='utf-8'); assert '0.0.0.0' in dockerfile and '${PORT:-8000}' in dockerfile and 'uvicorn launcher:app' in dockerfile
+          for path in ('render.yaml','deploy/render.yaml'):
+              data=yaml.safe_load(Path(path).read_text(encoding='utf-8')); assert isinstance(data,dict); services=data.get('services'); assert isinstance(services,list) and services; web=services[0]; assert web.get('type')=='web' and web.get('runtime')=='docker' and web.get('healthCheckPath')=='/api/health/ready'
+          vercel=json.loads(Path('vercel.json').read_text(encoding='utf-8')); assert vercel['routes']==[{'src':'/(.*)','dest':'api/index.py'}] and 'api/index.py' in vercel.get('functions',{})
+          railway=json.loads(Path('railway.json').read_text(encoding='utf-8')); assert railway['$schema']=='https://railway.com/railway.schema.json' and railway['build']['builder']=='DOCKERFILE' and railway['deploy']['healthcheckPath']=='/api/health/ready' and 'uvicorn launcher:app' in railway['deploy']['startCommand']
+          launcher=Path('launcher.py').read_text(encoding='utf-8'); assert all(x in launcher for x in ('register_prospect_bridge(core_app)','register_performance_radar(core_app)','start_prospect_bridge_scheduler(core)','/api/prospects/performance','summarize_prospect_performance'))
+          learned=Path('cashh_performance_radar.py').read_text(encoding='utf-8'); assert all(x in learned for x in ('MIN_SEGMENT_SENT = 3','FULL_WEIGHT_SENT = 10','MAX_SEGMENT_ADJUSTMENT = 10.0','/api/radar/performance-aware','prospect_performance','segment_learning'))
+          app_dir=Path('prospect-android-app'); required=['index.html','easy.html','easy.css','easy-v3.css','easy-v4.css','easy-core.js','easy-v4-core.js','easy-v4-policy.js','easy-ui.js','easy-send.js','easy-v3.js','easy-v4-ui.js','easy-v4-image.js','prospect-bridge.js','server-performance.js','bootstrap-v4.js','pwa-runtime.js','prospects.js','sw.js','manifest.webmanifest','icon.svg','README.md','200_PROSPECT_SALES_ENGINE_LIVE_CRM_MASTER.xlsx','data/p500-gz-1.js','data/p500-gz-2.js','data/p500-gz-3.js','data/p500-gz-4.js','data/p500-loader.js']; missing=[x for x in required if not (app_dir/x).exists()]; assert not missing, f'Prospect PWA files missing: {missing}'
+          index=(app_dir/'index.html').read_text(encoding='utf-8'); easy=(app_dir/'easy.html').read_text(encoding='utf-8'); sw=(app_dir/'sw.js').read_text(encoding='utf-8'); bootstrap=(app_dir/'bootstrap-v4.js').read_text(encoding='utf-8'); policy=(app_dir/'easy-v4-policy.js').read_text(encoding='utf-8'); bridge=(app_dir/'prospect-bridge.js').read_text(encoding='utf-8'); performance_ui=(app_dir/'server-performance.js').read_text(encoding='utf-8'); manifest=json.loads((app_dir/'manifest.webmanifest').read_text(encoding='utf-8'))
+          for shell in (index,easy): assert all(x in shell for x in ('data/p500-loader.js','bootstrap-v4.js','easy-v4.css','pwa-runtime.js'))
+          for asset in ('bootstrap-v4.js','easy-v4-core.js','easy-v4-policy.js','easy-v4-ui.js','easy-v4-image.js','prospect-bridge.js','server-performance.js','pwa-runtime.js','data/p500-loader.js'): assert asset in sw
+          assert "url.pathname.startsWith('/api/')" in sw and 'cashh-radar-prospects-v7-truthful-timing-20260912' in sw
+          assert all(x in bootstrap for x in ('easy-v4-policy.js','prospect-bridge.js','server-performance.js'))
+          assert '/api/prospects/state/' in bridge and '/api/radar/unified' in bridge and 'TIMER_IDLE_MS=120000' in bridge and 'data-bridge="timer"' in bridge and 'Math.floor(workTimer.activeSeconds/60)' in bridge and '60000' not in bridge and 'Proposed $100 offers are not revenue.' in bridge
+          assert all(x in performance_ui for x in ('/api/prospects/performance','/api/radar/performance-aware','Server-synced actual prospect performance','What your actual outreach is teaching Radar','Tiny samples do not get to run the company.'))
+          assert 'reddit:false' in policy and 'emailOnly:true' in policy and manifest['name']=='Cashh Radar Prospect Engine' and manifest['start_url']=='./' and manifest['scope']=='./'
+          chunks=[]
+          for n in range(1,5):
+              text=(app_dir/'data'/f'p500-gz-{n}.js').read_text(encoding='utf-8'); m=re.search(r"\+'([^']*)';?\s*$",text); assert m; chunks.append(m.group(1))
+          payload=json.loads(gzip.decompress(base64.b64decode(''.join(chunks))).decode('utf-8')); fields=payload.get('fields') or []; rows=payload.get('rows') or []; assert len(rows)==500; ei=fields.index('e'); emails=[str(r[ei] or '').strip().lower() for r in rows]; assert all(emails) and len(set(emails))==500
           PY
 
       - name: Set up Node
         uses: actions/setup-node@v7
         with:
           node-version: '22'
-          cache: npm
 
       - name: Check frontend JavaScript syntax
         run: |
