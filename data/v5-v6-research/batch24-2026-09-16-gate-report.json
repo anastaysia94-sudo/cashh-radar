@@ -1,0 +1,25 @@
+{
+  "batch": 24,
+  "checked": "2026-09-16",
+  "status": "staging_complete",
+  "correction": "Batch 10 roster duplicated the 15 businesses already accepted in Batch 9. The duplicate Batch 10 accepted CSV was removed and replaced with 15 newly researched businesses in Batch 24.",
+  "historical_canonical_identities": 747,
+  "corrected_previous_unique_staging_accepted": 385,
+  "candidates_reviewed": 15,
+  "accepted": 15,
+  "historical_rejects": 0,
+  "staging_collision_rejects": 0,
+  "new_unique_staging_total": 400,
+  "remaining_to_400": 0,
+  "next_exclusion_universe": 1147,
+  "controls": {
+    "canonical_v1_v4_identity_email_domain_gate": true,
+    "repo_name_email_staging_check": true,
+    "public_business_contact_required": true,
+    "current_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false,
+    "duplicate_business_allowed": false,
+    "duplicate_email_allowed": false
+  }
+}
