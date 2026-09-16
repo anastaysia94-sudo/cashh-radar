@@ -1,106 +1,92 @@
-# Cashh Radar — V5 + V6 Ethical Expansion Checkpoint
+# Cashh Radar — V5 + V6 Ethical Expansion — FINAL BUILD STATUS
 
-Updated: 2026-09-15
+Updated: 2026-09-16
 
-## Goal
+## Final scope
 
-Build **400 genuinely new Santa Clara County business prospects** and deliberately over-research beyond 400 before final rank/prune:
+The V5 + V6 expansion now contains **400 genuinely new Santa Clara County prospect records** split into two balanced outreach experiments:
 
-- V5: 200 — **Show the work + clear value**
-- V6: 200 — **Show the work + choice + control**
+- **V5: 200** — Show the work + clear value
+- **V6: 200** — Show the work + choice/control
 
-Every final record must retain public source evidence and a business-intended email. No prospect may be invented merely to fill quota.
+All final records retain a public source URL and a business-intended email. No guessed email addresses are permitted.
 
 ## Canonical historical exclusion audit
 
-Recovered V1–V4 files contain 750 raw rows and **747 canonical historical identities**. The repo-gate normalization produces 732 normalized names, 722 unique public email values and 506 observed website/domain values. Current activity, a changed employee email, a location page or refreshed listing never turns an old business into a fresh V5/V6 identity.
+Recovered V1–V4 files contain 750 raw rows and **747 canonical historical identities**. Those historical campaign identities remain excluded from V5/V6 even when a later listing, employee address, location page or refreshed website exists.
 
-## Recovered / production 500-row universe
+## Staging correction and final dedupe
 
-The recovered 500-row expert workbook and the 500 source-backed production bundle use the same historical campaign families (`SCCV3`, `SCCV4`, `SJ2`). The workbook audit found **0 genuinely new V5/V6 identities**. Those records remain application/copy-quality references only and must not be relabeled V5/V6.
+A final QA pass found that the old Batch 10 research roster duplicated the 15 businesses already accepted in Batch 9. Rather than hiding the collision behind a cumulative count, the duplicate Batch 10 accepted file was removed and the pool was corrected to **385 unique accepted prospects**.
 
-## Current V5/V6 staging progress
+Batch 24 then added **15 newly researched, source-backed businesses** with repo-level name/email collision checks, returning the final pool to exactly **400 unique business identities and 400 unique public business emails**.
 
-The fresh-source pipeline has now advanced through **Batch 15**.
+Final gate report:
 
-| Pass | Accepted | Cumulative |
-|---|---:|---:|
-| Seed | 36 | 36 |
-| Batch 2 | 11 | 47 |
-| Batch 3 | 12 | 59 |
-| Batch 4 | 15 | 74 |
-| Batch 5 | 15 | 89 |
-| Batch 6 | 15 | 104 |
-| Batch 7 | 15 | 119 |
-| Batch 8 | 15 | 134 |
-| Batch 9 | 15 | 149 |
-| Batch 10 | 15 | 164 |
-| Batch 11 | 14 | 178 |
-| Batch 12 | 15 | 193 |
-| Batch 13 | 28 | 221 |
-| Batch 14 | 32 | 253 |
-| Batch 15 | 29 | **282** |
+- `data/v5-v6-research/batch24-2026-09-16-gate-report.json`
+- Final unique V5/V6 staging: **400**
+- Historical V1–V4 identities: **747**
+- Final exclusion universe: **1,147 identities**
+- Remaining to 400: **0**
 
-### Current checkpoint
+## Final generated production assets
 
-- **Accepted staging pool: 282 genuinely new, source-backed prospects**
-- Remaining to bare 400: **118**
-- Current exclusion universe for the next pass: **1,029 records**
-  - 747 canonical historical identities
-  - 282 accepted staging prospects
-- Working over-research target before final pruning: **425–450 accepted prospects**
-- Remaining to that over-research range: **143–168**
+GitHub Actions workflow:
 
-These records remain **STAGING ONLY**. They are not final V5/V6 assignments and are not yet a send-ready 400-lead package.
+- `.github/workflows/build-v5-v6-final.yml`
+- Latest verified successful build run: `35089378681`
+- Build artifact: `cashh-radar-v5-v6-assets`
 
-Batches 13–15 use the larger research cadence while preserving historical rejects, current-staging collisions and evidence holds. Batch 15 accepted all 29 finalists after current-contact refresh; stale directory contacts were replaced where stronger current owned/public evidence existed.
+The final build generates and QA-checks:
 
-## Latest research audit files
-
-Recent checkpoints under `data/v5-v6-research/` include:
-
-- `batch13-2026-09-15-accepted.csv`, gate report and notes
-- `batch14-2026-09-15-accepted.csv`, gate report and notes
-- `batch15-2026-09-15-accepted.csv`, gate report and notes
-
-Raw/public contact fields are retained only where supported by current business evidence. A missing value is not permission to reconstruct or guess it.
-
-## Required record gate
-
-A record is not V5/V6-ready until it has:
-
-- unique identity after V1–V4 comparison;
-- no identity/email/business-domain/phone collision with accepted V5/V6 staging;
-- business name;
-- public/business-intended email;
-- public source URL;
-- Santa Clara County city/service connection;
-- industry/service focus;
-- a current, business-specific observation suitable for personalization;
-- source/check date;
-- no known opt-out/bounce prohibition;
-- no fabricated details;
-- sufficient fit for the $100 package or a documented hold reason.
-
-Shared hosts such as Wix or `sites.google.com` are evidence URLs, not business-domain fingerprints. Free/ISP email domains are not owned business domains. Masked emails are never reconstructed. Stale listings do not override stronger current evidence. Chamber, municipal, procurement and licensing sources may corroborate identity/activity/contact, but weak or conflicting evidence remains held.
-
-## Required build after over-research and final rank/prune
-
-Only after the accepted pool materially exceeds 400 and the strongest 400 are selected:
-
+- 200 V5 records
+- 200 V6 records
 - 400 individualized first emails
 - 400 business-specific 1600×1000 preview graphics
-- 400 `.eml` files with the matching image attached
-- V5 Excel tracker
-- V6 Excel tracker
-- combined 400-lead tracker
-- V5 portal
-- V6 portal
-- combined portal
-- source/QA reports
-- V5 ZIP
-- V6 ZIP
-- combined ZIP
+- 400 `.eml` files with the matching preview attached
+- V5 searchable local portal
+- V6 searchable local portal
+- combined 400-lead portal
+- V5/V6 CSV + JSON datasets
+- Why-V5/Why-V6 rationale files
+- top-25 priority lists
+- source evidence retained per record
+- ethical persuasion research notes
+- combined QA report
+
+The complete downloadable final packages additionally contain:
+
+- `Santa-Clara-County-200-V5-Ethical-Prospect-Tracker.xlsx`
+- `Santa-Clara-County-200-V6-Ethical-Prospect-Tracker.xlsx`
+- `Santa-Clara-County-400-V5-V6-Ethical-Master-Tracker.xlsx`
+- V5 complete ZIP
+- V6 complete ZIP
+- combined 400-lead master ZIP
+
+## Final QA
+
+Final package QA passed the following checks:
+
+- **400 records**
+- **400 unique normalized business identities**
+- **400 unique public business emails**
+- **400/400 source URLs present**
+- **200 V5 + 200 V6**
+- **400 graphics**
+- **400 unique graphic hashes**
+- **all graphics 1600×1000**
+- **400 ready `.eml` files**
+- correct recipient / subject / body / attachment mapping
+- **400/400 initial emails include the approved PayPal invoice link**
+- **0 Venmo references**
+- portal record counts: 200 / 200 / 400
+- three Excel trackers built with `artifact_tool`
+- Excel formula-error scans passed
+- V5 ZIP integrity passed
+- V6 ZIP integrity passed
+- combined ZIP integrity passed
+
+A Unicode subject-folding edge case found during `.eml` QA was corrected by regenerating the final email files with a long-line SMTP policy and re-running recipient/subject/body/attachment validation.
 
 ## Payment
 
@@ -108,19 +94,34 @@ Use only:
 
 `https://www.paypal.com/invoice/p/#7T6DC9A6WFH3XXCT`
 
-No Venmo references in this campaign.
+No Venmo references are permitted in this campaign.
 
 ## Outreach policy
 
 - Email-first
 - No Reddit prospecting
 - No bulk BCC
-- Individual review
+- Individual review and send
+- Matching preview image in the first email
+- Transparent $100 one-time price and deliverables
+- Optional PayPal buy-now path plus questions-first path
 - One unanswered follow-up maximum
 - Honor opt-outs immediately
 - Do not repeatedly retry bounced addresses
 - No fake scarcity or fabricated urgency
 - No invented testimonials, problems, outcomes, payments or replies
-- No guaranteed-response or guaranteed-revenue claims
-- Wellness/fitness/coaching/pet-training observations remain educational and do not make medical, behavioral or outcome guarantees
-- Preview images and copy must remain truthful to public business evidence
+- No guaranteed-response, guaranteed-customer or guaranteed-revenue claims
+- Use actual V5/V6 outcomes to determine which messaging approach performs better
+
+## Completion state
+
+**Research gate: COMPLETE**  
+**400-record dedupe: COMPLETE**  
+**V5/V6 split: COMPLETE**  
+**Graphics: COMPLETE**  
+**Attached email files: COMPLETE**  
+**Local portals: COMPLETE**  
+**Excel trackers: COMPLETE**  
+**QA: PASS**  
+**ZIP packaging: COMPLETE**  
+**GitHub build workflow: PASS**
