@@ -2,8 +2,20 @@ name: Cashh Radar Tests
 
 on:
   push:
+    paths-ignore:
+      - 'prospect-portal/**'
+      - 'dist-v5-v6/**'
+      - '**/*.md'
   pull_request:
+    paths-ignore:
+      - 'prospect-portal/**'
+      - 'dist-v5-v6/**'
+      - '**/*.md'
   workflow_dispatch:
+
+concurrency:
+  group: cashh-radar-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -26,6 +38,9 @@ jobs:
 
       - name: Compile Python entrypoints
         run: python -m py_compile app.py cashh_loop.py cashh_loop_ui.py cashh_prospect_bridge.py cashh_performance_radar.py prospect_performance.py launcher.py api/index.py scripts/run_jobs.py scripts/preflight.py scripts/production_smoke.py
+
+      - name: Remove generated prospect portal from test workspace
+        run: rm -rf prospect-portal
 
       - name: Run Python tests
         run: python -m pytest -q
@@ -147,9 +162,10 @@ jobs:
           PY
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
+          cache: npm
 
       - name: Check frontend JavaScript syntax
         run: |
