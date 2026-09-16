@@ -4,7 +4,7 @@ Updated: 2026-09-15
 
 ## Goal
 
-Build **400 genuinely new Santa Clara County business prospects** and deliberately over-research beyond 400 before the final rank/prune split:
+Build **400 genuinely new Santa Clara County business prospects** and deliberately over-research beyond 400 before final rank/prune:
 
 - V5: 200 — **Show the work + clear value**
 - V6: 200 — **Show the work + choice + control**
@@ -13,29 +13,17 @@ Every final record must retain public source evidence and a business-intended em
 
 ## Canonical historical exclusion audit
 
-Recovered V1–V4 files contain:
+Recovered V1–V4 files contain 750 raw rows and **747 canonical historical identities**. The repo-gate normalization produces 732 normalized names, 722 unique public email values and 506 observed website/domain values. Blue's Roofing, South Bay Design & Landscaping, and D&D Electrical Construction are the three exact cross-version duplicate identities.
 
-- V1: 150 rows
-- V2: 200 rows
-- V3: 200 rows
-- V4: 200 rows
-- Raw historical rows: **750**
-- Canonical historical identities: **747**
-- Repo-gate normalized business names: **732**
-- Unique public email values: **722**
-- Unique website/domain values observed: **506**
-
-Known cross-version duplicate identities are treated as one exclusion identity rather than a fresh prospect: Blue's Roofing, South Bay Design & Landscaping, and D&D Electrical Construction.
-
-The recovered canonical exclusion workbook remains authoritative. Current activity, a changed employee email, a new website page or a refreshed directory listing never turns an old business into a fresh V5/V6 identity.
+The recovered canonical exclusion workbook remains authoritative. Current activity, a changed employee email, a location page or refreshed listing never turns an old business into a fresh V5/V6 identity.
 
 ## Recovered / production 500-row universe
 
-The recovered `500_EXPERT_VERIFIED_INDIVIDUALIZED_EMAILS_2026-09-07.xlsx` and the 500 source-backed production prospect bundle use the same historical campaign families (`SCCV3`, `SCCV4`, `SJ2`). The workbook audit found **0 genuinely new V5/V6 identities**: all 500 collide with the historical universe by normalized business identity, public email and/or website/domain. The production bundle therefore remains useful for application continuity and copy-quality reference, but it must not be relabeled as V5/V6.
+The recovered 500-row expert workbook and the 500 source-backed production bundle use the same historical campaign families (`SCCV3`, `SCCV4`, `SJ2`). The workbook audit found **0 genuinely new V5/V6 identities**. Those records remain application/copy-quality references only and must not be relabeled V5/V6.
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now advanced through **Batch 13**.
+The fresh-source pipeline has now advanced through **Batch 14**.
 
 | Pass | Accepted | Cumulative |
 |---|---:|---:|
@@ -51,34 +39,30 @@ The fresh-source pipeline has now advanced through **Batch 13**.
 | Batch 10 | 15 | 164 |
 | Batch 11 | 14 | 178 |
 | Batch 12 | 15 | 193 |
-| Batch 13 | 28 | **221** |
+| Batch 13 | 28 | 221 |
+| Batch 14 | 32 | **253** |
 
 ### Current checkpoint
 
-- **Accepted staging pool: 221 genuinely new, source-backed prospects**
-- Remaining to the bare 400 accepted-candidate threshold: **179**
-- Current exclusion universe for the next pass: **968 records**
+- **Accepted staging pool: 253 genuinely new, source-backed prospects**
+- Remaining to bare 400: **147**
+- Current exclusion universe for the next pass: **1,000 records**
   - 747 canonical historical identities
-  - 221 accepted staging prospects
+  - 253 accepted staging prospects
 - Working over-research target before final pruning: **425–450 accepted prospects**
-- Remaining to that over-research range: **204–229**
+- Remaining to that over-research range: **172–197**
 
-These records remain **STAGING ONLY**. They are not final V5 or V6 assignments and are not yet a send-ready 400-lead package.
+These records remain **STAGING ONLY**. They are not final V5/V6 assignments and are not yet a send-ready 400-lead package.
 
-Batch 13 increased the batch size while preserving rejects and holds. It accepted 28 of 35 discovery finalists, retained four historical rejects, one current-staging collision and two evidence/quality holds. The accepted mix now spans home technology, design, painting, jewelry, art, dance, theater, restaurants, catering, events, coffee, construction, signs/printing, photography and local business services.
+Batch 13 accepted 28 of 35 discovery finalists. Batch 14 accepted 32 of 39 discovery finalists while preserving one historical reject, three staging collisions and three evidence/quality holds. The accepted mix now spans design/build, data-center/IT infrastructure, coffee, restaurants, private events, bakeries, floral, photography, arts, dance, studio/coworking, printing/signage, construction and local business services.
 
 ## Latest research audit files
 
 Recent checkpoints under `data/v5-v6-research/` include:
 
-- `batch8-2026-09-13-accepted.csv` and gate report
-- `batch9-2026-09-13-accepted.csv` and gate report
-- `batch10-2026-09-13.md`
-- `batch11-2026-09-13.md` and gate report
 - `batch12-2026-09-13-accepted.csv` and gate report
-- `batch13-2026-09-15-accepted.csv`
-- `batch13-2026-09-15-gate-report.json`
-- `batch13-2026-09-15.md`
+- `batch13-2026-09-15-accepted.csv`, gate report and research notes
+- `batch14-2026-09-15-accepted.csv`, gate report and research notes
 
 Raw/public contact fields are retained only where supported by current business evidence. A missing value is not permission to reconstruct or guess it.
 
@@ -99,7 +83,7 @@ A record is not V5/V6-ready until it has:
 - no fabricated details;
 - sufficient fit for the $100 package or a documented hold reason.
 
-Shared hosts such as Wix or `sites.google.com` are evidence URLs, not business-domain fingerprints. Free/ISP email domains are not treated as owned business domains. Masked emails are never reconstructed. Stale local listings do not override stronger current evidence. Current Chamber, municipal, procurement and licensing sources may corroborate identity/activity/contact, but weak or conflicting evidence remains held.
+Shared hosts such as Wix or `sites.google.com` are evidence URLs, not business-domain fingerprints. Free/ISP email domains are not owned business domains. Masked emails are never reconstructed. Stale listings do not override stronger current evidence. Chamber, municipal, procurement and licensing sources may corroborate identity/activity/contact, but weak or conflicting evidence remains held.
 
 ## Required build after over-research and final rank/prune
 
