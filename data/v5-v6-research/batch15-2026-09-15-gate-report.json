@@ -1,0 +1,29 @@
+{
+  "batch": 15,
+  "checked": "2026-09-15",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 253,
+  "finalists_reviewed": 29,
+  "accepted": 29,
+  "historical_rejected": 0,
+  "staging_collision_rejected": 0,
+  "evidence_or_quality_holds_after_finalist_gate": 0,
+  "new_staging_total": 282,
+  "remaining_to_400": 118,
+  "next_exclusion_universe": 1029,
+  "controls": {
+    "canonical_v1_v4_identity_email_domain_gate": true,
+    "current_staging_owned_domain_search": true,
+    "current_owned_or_current_public_business_contact_required": true,
+    "stale_directory_contact_replaced_when_current_owned_contact_available": true,
+    "masked_or_inferred_email_allowed": false,
+    "chain_or_location_page_automatically_fresh": false
+  },
+  "notes": [
+    "All 29 finalists cleared the canonical historical gate and current repository staging-domain sweep.",
+    "Holiday Inn Express Santa Clara, Sousa's Garage Doors, Pump It Up Santa Clara and Club Auto Sport use refreshed current contact values rather than older directory contacts.",
+    "Current directory sources were treated as discovery/corroboration evidence, never as permission to override stale or conflicting owned-site evidence.",
+    "The accepted mix broadens hotels, golf, events, boutiques, interior design, restaurants, bakeries, floral, comics/games, kids parties and garden programming."
+  ]
+}
