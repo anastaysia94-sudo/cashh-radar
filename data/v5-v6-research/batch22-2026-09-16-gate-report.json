@@ -1,0 +1,23 @@
+{
+  "batch": 22,
+  "checked": "2026-09-16",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 375,
+  "candidates_reviewed": 21,
+  "accepted": 21,
+  "historical_rejects": 0,
+  "staging_collision_rejects": 0,
+  "new_staging_total": 396,
+  "remaining_to_400": 4,
+  "next_exclusion_universe": 1143,
+  "controls": {
+    "canonical_workbook_local_gate": true,
+    "repo_location_specific_email_staging_check": true,
+    "shared_chain_domains_are_not_identity_fingerprints": true,
+    "public_business_contact_required": true,
+    "current_state_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false
+  }
+}
