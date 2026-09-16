@@ -1,0 +1,44 @@
+{
+  "batch": 13,
+  "checked": "2026-09-15",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 193,
+  "discovery_finalists_reviewed": 35,
+  "accepted": 28,
+  "historical_rejected": 4,
+  "staging_collision_rejected": 1,
+  "evidence_or_quality_holds": 2,
+  "new_staging_total": 221,
+  "remaining_to_400": 179,
+  "next_exclusion_universe": 968,
+  "historical_rejects": [
+    "San Jose Local Catering / San Jose Catering Company",
+    "Eisenhauer's Catering & Events",
+    "Double D's Los Gatos / Double D's Sports Grille",
+    "Pono Wellness Spa"
+  ],
+  "staging_collision_rejects": [
+    "Annarose Monroe Photography"
+  ],
+  "holds": [
+    "Cake Therapy",
+    "Green Bay Janitorial"
+  ],
+  "controls": {
+    "canonical_v1_v4_workbook_gate": true,
+    "repo_staging_owned_domain_check": true,
+    "alternate_public_email_domain_check_where_needed": true,
+    "current_public_business_contact_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false,
+    "shared_host_as_business_domain": false,
+    "regulated_or_outcome_claims_allowed": false
+  },
+  "notes": [
+    "Current activity never overrides an existing historical identity.",
+    "Annarose Monroe Photography was removed after a current staging collision was found in Batch 8.",
+    "Cake Therapy and Green Bay Janitorial remain holds because current evidence was not strong enough for promotion.",
+    "Batch 13 intentionally broadens category coverage across hospitality, arts, retail, design, printing, technology, construction, coffee, photography and local business services."
+  ]
+}
