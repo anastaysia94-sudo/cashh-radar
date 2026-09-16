@@ -1,0 +1,25 @@
+{
+  "batch": 16,
+  "checked": "2026-09-16",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 282,
+  "candidates_reviewed": 25,
+  "accepted": 24,
+  "historical_rejects": 1,
+  "staging_collision_rejects": 0,
+  "new_staging_total": 306,
+  "remaining_to_400": 94,
+  "next_exclusion_universe": 1053,
+  "historical_rejects_detail": [
+    "Williams Party Rentals — historical name/email/domain collision"
+  ],
+  "controls": {
+    "canonical_workbook_local_gate": true,
+    "repo_or_domain_staging_check": true,
+    "public_business_contact_required": true,
+    "current_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false
+  }
+}
