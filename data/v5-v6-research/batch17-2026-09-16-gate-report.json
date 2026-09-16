@@ -1,0 +1,26 @@
+{
+  "batch": 17,
+  "checked": "2026-09-16",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 306,
+  "candidates_reviewed": 19,
+  "accepted": 18,
+  "historical_rejects": 1,
+  "staging_collision_rejects": 0,
+  "new_staging_total": 324,
+  "remaining_to_400": 76,
+  "next_exclusion_universe": 1071,
+  "historical_rejects_detail": [
+    "Mama Mia's Mediterranean Italian Restaurant — historical domain collision"
+  ],
+  "controls": {
+    "canonical_workbook_local_gate": true,
+    "repo_or_domain_staging_check": true,
+    "shared_chain_domains_need_location_identity": true,
+    "public_business_contact_required": true,
+    "current_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false
+  }
+}
