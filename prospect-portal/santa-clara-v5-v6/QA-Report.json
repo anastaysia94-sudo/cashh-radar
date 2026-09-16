@@ -1,0 +1,13 @@
+{
+  "records": 400,
+  "v5": 200,
+  "v6": 200,
+  "unique_businesses": 400,
+  "unique_emails": 400,
+  "graphics": 400,
+  "eml": 400,
+  "missing_source": 0,
+  "guessed_email_allowed": false,
+  "payment": "https://www.paypal.com/invoice/p/#7T6DC9A6WFH3XXCT",
+  "status": "PASS"
+}
