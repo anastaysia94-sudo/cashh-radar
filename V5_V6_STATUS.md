@@ -13,9 +13,7 @@ Every final record must retain public source evidence and a business-intended em
 
 ## Canonical historical exclusion audit
 
-Recovered V1–V4 files contain 750 raw rows and **747 canonical historical identities**. The repo-gate normalization produces 732 normalized names, 722 unique public email values and 506 observed website/domain values. Blue's Roofing, South Bay Design & Landscaping, and D&D Electrical Construction are the three exact cross-version duplicate identities.
-
-The recovered canonical exclusion workbook remains authoritative. Current activity, a changed employee email, a location page or refreshed listing never turns an old business into a fresh V5/V6 identity.
+Recovered V1–V4 files contain 750 raw rows and **747 canonical historical identities**. The repo-gate normalization produces 732 normalized names, 722 unique public email values and 506 observed website/domain values. Current activity, a changed employee email, a location page or refreshed listing never turns an old business into a fresh V5/V6 identity.
 
 ## Recovered / production 500-row universe
 
@@ -23,7 +21,7 @@ The recovered 500-row expert workbook and the 500 source-backed production bundl
 
 ## Current V5/V6 staging progress
 
-The fresh-source pipeline has now advanced through **Batch 14**.
+The fresh-source pipeline has now advanced through **Batch 15**.
 
 | Pass | Accepted | Cumulative |
 |---|---:|---:|
@@ -40,29 +38,30 @@ The fresh-source pipeline has now advanced through **Batch 14**.
 | Batch 11 | 14 | 178 |
 | Batch 12 | 15 | 193 |
 | Batch 13 | 28 | 221 |
-| Batch 14 | 32 | **253** |
+| Batch 14 | 32 | 253 |
+| Batch 15 | 29 | **282** |
 
 ### Current checkpoint
 
-- **Accepted staging pool: 253 genuinely new, source-backed prospects**
-- Remaining to bare 400: **147**
-- Current exclusion universe for the next pass: **1,000 records**
+- **Accepted staging pool: 282 genuinely new, source-backed prospects**
+- Remaining to bare 400: **118**
+- Current exclusion universe for the next pass: **1,029 records**
   - 747 canonical historical identities
-  - 253 accepted staging prospects
+  - 282 accepted staging prospects
 - Working over-research target before final pruning: **425–450 accepted prospects**
-- Remaining to that over-research range: **172–197**
+- Remaining to that over-research range: **143–168**
 
 These records remain **STAGING ONLY**. They are not final V5/V6 assignments and are not yet a send-ready 400-lead package.
 
-Batch 13 accepted 28 of 35 discovery finalists. Batch 14 accepted 32 of 39 discovery finalists while preserving one historical reject, three staging collisions and three evidence/quality holds. The accepted mix now spans design/build, data-center/IT infrastructure, coffee, restaurants, private events, bakeries, floral, photography, arts, dance, studio/coworking, printing/signage, construction and local business services.
+Batches 13–15 use the larger research cadence while preserving historical rejects, current-staging collisions and evidence holds. Batch 15 accepted all 29 finalists after current-contact refresh; stale directory contacts were replaced where stronger current owned/public evidence existed.
 
 ## Latest research audit files
 
 Recent checkpoints under `data/v5-v6-research/` include:
 
-- `batch12-2026-09-13-accepted.csv` and gate report
-- `batch13-2026-09-15-accepted.csv`, gate report and research notes
-- `batch14-2026-09-15-accepted.csv`, gate report and research notes
+- `batch13-2026-09-15-accepted.csv`, gate report and notes
+- `batch14-2026-09-15-accepted.csv`, gate report and notes
+- `batch15-2026-09-15-accepted.csv`, gate report and notes
 
 Raw/public contact fields are retained only where supported by current business evidence. A missing value is not permission to reconstruct or guess it.
 
