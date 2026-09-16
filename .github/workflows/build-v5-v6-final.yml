@@ -27,17 +27,19 @@ jobs:
       - name: Install build dependencies
         run: python -m pip install --upgrade pip pillow beautifulsoup4
 
-      - name: Normalize legacy CSV parser edge case
+      - name: Normalize final builder compatibility
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('scripts/build_v5_v6_assets.py')
           s=p.read_text()
-          old='if not k.startswith("_")'
-          new='if k and not k.startswith("_")'
+          s=s.replace('if not k.startswith("_")','if k and not k.startswith("_")')
+          old='''    for batch in (10,11):\n        rows.extend(parse_roster(RESEARCH/f"batch{batch}-2026-09-13.md", batch))\n'''
+          new='''    # Batches 10 and 11 now have canonical accepted CSVs with reverified public emails.\n    # Do not re-parse their older roster notes or duplicate those accepted records.\n'''
           if old in s:
-              p.write_text(s.replace(old,new))
-          print('legacy CSV parser normalized')
+              s=s.replace(old,new)
+          p.write_text(s)
+          print('final builder compatibility patch applied')
           PY
 
       - name: Build V5 and V6 assets
