@@ -1,0 +1,26 @@
+{
+  "batch": 19,
+  "checked": "2026-09-16",
+  "status": "staging_only",
+  "historical_canonical_identities": 747,
+  "previous_staging_accepted": 340,
+  "candidates_reviewed": 13,
+  "accepted": 12,
+  "historical_rejects": 0,
+  "staging_collision_rejects": 0,
+  "quality_or_geography_holds": 1,
+  "new_staging_total": 352,
+  "remaining_to_400": 48,
+  "next_exclusion_universe": 1099,
+  "holds_detail": [
+    "The Buzz PR — current business, but present Santa Clara County operating/service connection was not strong enough to promote from Gilroy Chamber membership alone"
+  ],
+  "controls": {
+    "canonical_workbook_local_gate": true,
+    "repo_domain_staging_check": true,
+    "public_business_contact_required": true,
+    "current_source_required": true,
+    "santa_clara_county_connection_required": true,
+    "guessed_email_allowed": false
+  }
+}
