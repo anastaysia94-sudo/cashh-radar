@@ -85,7 +85,7 @@ jobs:
           grep -q 'prospect' launcher.py
           grep -q 'performance' launcher.py
           grep -q 'scheduler' launcher.py
-          grep -q 'threshold' cashh_performance_radar.py
+          grep -q 'MIN_SEGMENT_SENT' cashh_performance_radar.py
 
           # The operator PWA is mounted from prospect-android-app/ at /prospects/.
           for f in prospect-android-app/index.html prospect-android-app/easy.html; do
