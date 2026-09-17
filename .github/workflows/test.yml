@@ -62,7 +62,7 @@ jobs:
       - name: Validate deployment files and canonical prospect PWA
         shell: bash
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           test -f Dockerfile
           test -f render.yaml
           test -f deploy/render.yaml
