@@ -107,11 +107,11 @@ jobs:
           test -f prospect-android-app/prospect-bridge.js
           grep -q 'state' prospect-android-app/prospect-bridge.js
           grep -q 'performance' prospect-android-app/prospect-bridge.js
-          grep -q 'not revenue' prospect-android-app/prospect-bridge.js
 
           test -f prospect-android-app/server-performance.js
           grep -q 'server' prospect-android-app/server-performance.js
           grep -Eq 'actual performance|realized' prospect-android-app/server-performance.js
+          grep -q 'not counted as revenue' prospect-android-app/server-performance.js
 
           test -f prospect-android-app/easy-v4-policy.js
           grep -q 'reddit:false' prospect-android-app/easy-v4-policy.js
