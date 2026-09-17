@@ -1,0 +1,5 @@
+Cashh Radar Prospect Engine deployment trigger
+
+Purpose: force Railway's GitHub autodeploy path to evaluate the current main branch after CI validation.
+Requested production sequence: deploy latest main, not an old Railway snapshot.
+Created: 2026-09-17
