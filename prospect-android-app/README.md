@@ -15,6 +15,8 @@ The canonical entrypoints are `index.html` and the backward-compatible `easy.htm
 
 The packed loader refuses to continue unless the business dataset contains exactly 500 records with 500 unique non-empty public email values.
 
+The operator queue is designed for up to 700 positions: the 500 source-backed business records come first, preserved legacy records remain available for continuity, and any unfilled positions are explicit discovery slots rather than fabricated leads.
+
 ## One opportunity lifecycle
 
 On the server, `cashh_prospect_bridge.py` validates the same packed 500-record universe and maps every source-backed business into the canonical `opportunities` table as a `Client Prospect`.
@@ -128,13 +130,14 @@ The same launcher also registers the canonical loop, unified prospect bridge and
 
 The GitHub Actions suite validates:
 
-- Python compilation including `cashh_prospect_bridge.py`;
-- **41 passing automated tests** on the unified integration build;
+- Python compilation including `cashh_prospect_bridge.py` and the prospect-performance/lifecycle modules;
+- **56 passing automated tests** on the current unified integration build;
 - end-to-end `SENT → REPLIED → PAID → learned` behavior;
 - persistent prospect-state API behavior;
 - realized vs modeled value-per-hour semantics;
 - unified Radar inclusion of prospect and non-prospect opportunities;
 - exact 500-row / 500-unique-public-email packed-data integrity;
+- 700-position operator-queue wiring;
 - v4/unified runtime wiring;
 - no service-worker caching of `/api/*`;
 - frontend and service-worker JavaScript syntax;
