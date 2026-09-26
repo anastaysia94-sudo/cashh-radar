@@ -48,8 +48,9 @@ jobs:
 
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
-            const response = await page.goto(base + '/prospects/', { waitUntil: 'domcontentloaded', timeout: 60000 });
-            await page.waitForTimeout(3000);
+            const response = await page.goto(base + '/prospects/', { waitUntil: 'commit', timeout: 15000 });
+            await page.waitForSelector('body', { timeout: 15000 });
+            await page.waitForTimeout(2500);
             if (!response || !response.ok()) throw new Error(`/prospects/ returned HTTP ${response && response.status()}`);
 
             const mobile = await page.evaluate(async () => {
@@ -59,7 +60,7 @@ jobs:
               let sw = null;
               if ('serviceWorker' in navigator) {
                 await new Promise(resolve => setTimeout(resolve, 1500));
-                const reg = await navigator.serviceWorker.getRegistration();
+                const reg = await Promise.race([navigator.serviceWorker.getRegistration(), new Promise(resolve => setTimeout(() => resolve(null), 5000))]);
                 sw = reg ? { scope: reg.scope, active: Boolean(reg.active || reg.waiting || reg.installing) } : null;
               }
               return {
