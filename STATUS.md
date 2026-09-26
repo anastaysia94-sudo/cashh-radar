@@ -8,7 +8,7 @@ Cashh Radar opportunity intelligence, including Sales OS.
 ## VERIFIED
 - Canonical repository and cross-account handoff files are present.
 - Production mobile acceptance workflow exists.
-- Commit `3c52a0ffb3af1ebb4b97c7638e44ce5144184857` fixes the generated acceptance script so the Playwright navigation/wait statements are valid separate lines.
+- Commit `4367dc613fd425e2c2bf1cdc37fc06e0c22b5068` bounds production-mobile browser navigation, body readiness, and service-worker registration waits so the acceptance job fails cleanly instead of hanging.
 - The live acceptance checks health/readiness, mobile viewport, horizontal overflow, manifest, service worker, screenshot, and JSON evidence.
 
 ## VERIFICATION PENDING
