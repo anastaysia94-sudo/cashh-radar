@@ -1,6 +1,6 @@
 # AI Handoff — Cashh Radar
 
-Updated: 2026-09-25
+Updated: 2026-09-25 23:12 America/Los_Angeles
 
 ## Identity
 
@@ -31,4 +31,4 @@ Evidence-based opportunity discovery, scoring, outreach, outcomes, and Sales OS.
 
 ## Smallest next execution block
 
-Inspect current Sales OS files/commits, reconcile ownership, and verify one complete live workflow.
+Run the current production mobile acceptance workflow from `3c52a0ffb3af1ebb4b97c7638e44ce5144184857`; if green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
