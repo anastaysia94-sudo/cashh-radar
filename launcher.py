@@ -119,3 +119,5 @@ if PROSPECT_APP_DIR.exists():
     )
 
 app = core_app
+
+# Deployment marker: 2026-09-25 production refresh requested from current main.
