@@ -7,10 +7,14 @@ on:
     paths:
       - '.github/workflows/production-mobile-acceptance.yml'
 
+concurrency:
+  group: cashh-production-mobile-acceptance
+  cancel-in-progress: true
+
 jobs:
   production-mobile:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     env:
       CASHH_BASE_URL: https://cashh-radar-web-production.up.railway.app
 
@@ -40,7 +44,7 @@ jobs:
             return await r.json();
           }
 
-          (async () => {
+          async function acceptance() {
             const health = await mustJson('/api/health');
             const ready = await mustJson('/api/health/ready');
             if (health.status !== 'ok') throw new Error(`/api/health did not report status=ok (got ${health.status})`);
@@ -87,11 +91,16 @@ jobs:
               throw new Error('service worker registration not active');
             }
 
-            await page.screenshot({ path: 'cashh-production-mobile.png', fullPage: true });
+            await page.screenshot({ path: 'cashh-production-mobile.png', fullPage: false });
             fs.writeFileSync('cashh-production-mobile.json', JSON.stringify({ health, ready, mobile }, null, 2));
             console.log(JSON.stringify({ health: health.status, ready: ready.status, mobile }, null, 2));
             await browser.close();
-          })().catch(err => {
+          }
+
+          Promise.race([
+            acceptance(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('overall_mobile_acceptance_timeout_45s')), 45000))
+          ]).catch(err => {
             console.error(err.stack || err);
             process.exit(1);
           });
