@@ -31,4 +31,4 @@ Evidence-based opportunity discovery, scoring, outreach, outcomes, and Sales OS.
 
 ## Smallest next execution block
 
-Run the current production mobile acceptance workflow from `3c52a0ffb3af1ebb4b97c7638e44ce5144184857`; if green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
+Run the current production mobile acceptance workflow from `4367dc613fd425e2c2bf1cdc37fc06e0c22b5068`; if green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
