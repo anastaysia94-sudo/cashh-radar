@@ -43,8 +43,8 @@ jobs:
           (async () => {
             const health = await mustJson('/api/health');
             const ready = await mustJson('/api/health/ready');
-            if (!health.ok) throw new Error('/api/health did not report ok=true');
-            if (!ready.ready) throw new Error('/api/health/ready did not report ready=true');
+            if (health.status !== 'ok') throw new Error(`/api/health did not report status=ok (got ${health.status})`);
+            if (ready.status !== 'ready') throw new Error(`/api/health/ready did not report status=ready (got ${ready.status})`);
 
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
@@ -87,7 +87,7 @@ jobs:
 
             await page.screenshot({ path: 'cashh-production-mobile.png', fullPage: true });
             fs.writeFileSync('cashh-production-mobile.json', JSON.stringify({ health, ready, mobile }, null, 2));
-            console.log(JSON.stringify({ health: health.ok, ready: ready.ready, mobile }, null, 2));
+            console.log(JSON.stringify({ health: health.status, ready: ready.status, mobile }, null, 2));
             await browser.close();
           })().catch(err => {
             console.error(err.stack || err);
