@@ -48,7 +48,7 @@ jobs:
 
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
-            const response = await page.goto(base + '/prospects/', { waitUntil: 'networkidle', timeout: 60000 });
+            const response = await page.goto(base + '/prospects/', { waitUntil: 'domcontentloaded', timeout: 60000 });\n            await page.waitForTimeout(3000);
             if (!response || !response.ok()) throw new Error(`/prospects/ returned HTTP ${response && response.status()}`);
 
             const mobile = await page.evaluate(async () => {
