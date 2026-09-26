@@ -1,9 +1,9 @@
 # NEXT ACTIONS
 
-Updated: 2026-09-25
+Updated: 2026-09-25 23:12 America/Los_Angeles
 
 ## Smallest next execution block
-1. Verify opportunity → source → score → outreach draft → recorded outcome as one end-to-end flow.
-2. Run the relevant build/tests or workflow checks.
-3. Record concrete proof: commit SHA, test/workflow result, deployment URL/status when applicable.
-4. Update STATUS.md only after verification.
+1. Run the current `Cashh Radar Production Mobile Acceptance` workflow from commit `3c52a0ffb3af1ebb4b97c7638e44ce5144184857`.
+2. Verify health, readiness, mobile layout, manifest, active service worker, screenshot, and JSON artifact.
+3. If green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
+4. Record the workflow/run evidence and update STATUS.md.
