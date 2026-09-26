@@ -50,3 +50,5 @@ footer:before{content:"SMARTPICKSHOP HOLDINGS • IDEAS TODAY. EMPIRES TOMORROW.
   .status-dot{animation:spsPulse 2.6s ease-in-out infinite}
   @keyframes spsPulse{50%{box-shadow:0 0 24px var(--sps-neon-cyan)}}
 }
+
+/* deployment-sync: SmartPickShop steampunk neon rollout 2026-09-26 */
