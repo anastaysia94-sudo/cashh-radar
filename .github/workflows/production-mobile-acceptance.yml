@@ -28,7 +28,7 @@ jobs:
       - name: Verify live health and mobile PWA
         shell: bash
         run: |
-          cat > /tmp/cashh-production-acceptance.cjs <<'NODE'
+          cat > cashh-production-acceptance.cjs <<'NODE'
           const fs = require('fs');
           const { chromium } = require('playwright');
 
@@ -94,7 +94,7 @@ jobs:
             process.exit(1);
           });
           NODE
-          node /tmp/cashh-production-acceptance.cjs
+          node cashh-production-acceptance.cjs
 
       - name: Upload production acceptance evidence
         if: always()
