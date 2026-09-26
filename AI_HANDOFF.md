@@ -1,12 +1,12 @@
 # AI Handoff — Cashh Radar
 
-Updated: 2026-09-25 23:12 America/Los_Angeles
+Updated: 2026-09-26 America/Los_Angeles
 
 ## Identity
 
 - Canonical repository: `anastaysia94-sudo/cashh-radar`
 - Master project IDs: P010, P004, P013
-- Portfolio index: `anastaysia94-sudo/anastaysia94-sudo` → `PORTFOLIO_CONTINUITY.md`
+- Portfolio index: `anastaysia94-sudo/anastaysia94-sudo` → `CROSS_LLM_BOOTSTRAP.md`
 - Machine-readable register: `portfolio/PROJECTS.json`
 
 ## Purpose
@@ -22,13 +22,25 @@ Evidence-based opportunity discovery, scoring, outreach, outcomes, and Sales OS.
 - Record what changed, why, verification evidence, blockers, and rollback risk.
 - Never commit secrets, API keys, passwords, customer secrets, or private personal information.
 
-## Resume sequence
+## Current source checkpoint
 
-1. Establish the current branch/commit and working build.
-2. Verify the latest claimed milestone with executable evidence.
-3. Continue the smallest concrete unfinished block.
-4. Update this repo's status/handoff artifacts before stopping.
+Current observed main head: `84d4cc4273ef9a6e5af2115ad4103212b68cca5d`.
+
+Changes since the prior continuity snapshot:
+- `a8c42a0878345be678c4bbbf155cf661702d4cf0` hard-bounded the live production-mobile acceptance job.
+- `842d6ad28205c71680dbebe2c386910ca36c1d13` changed the PWA checks to avoid a service-worker activation race.
+- `1a7c37ebd973e83715cd8cc8a3ac21d5b249b6a1` applied the SmartPickShop steampunk/neon visual system.
+- `84d4cc4273ef9a6e5af2115ad4103212b68cca5d` is a deployment-trigger commit for the branded main branch.
+
+The current production-mobile workflow checks live health/readiness, manifest and service-worker file availability, mobile viewport, horizontal overflow, and emits screenshot + JSON evidence. It does not by itself prove that a service worker became active in the browser.
+
+## Verification boundary
+
+Do not call the current branded production deployment healthy until the newest workflow result and live source/deployment match are checked.
 
 ## Smallest next execution block
 
-Run the current production mobile acceptance workflow from `4367dc613fd425e2c2bf1cdc37fc06e0c22b5068`; if green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
+1. Inspect the latest `Cashh Radar Production Mobile Acceptance` run for current main.
+2. Verify the live Railway deployment is serving the branded source corresponding to current main.
+3. If green, verify one opportunity → source → score → outreach draft → recorded outcome flow.
+4. Record exact run/deployment evidence in STATUS.md before stopping.
