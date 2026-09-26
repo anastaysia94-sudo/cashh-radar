@@ -1,0 +1,107 @@
+name: Cashh Radar Production Mobile Acceptance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/production-mobile-acceptance.yml'
+
+jobs:
+  production-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CASHH_BASE_URL: https://cashh-radar-web-production.up.railway.app
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Verify live health and mobile PWA
+        shell: bash
+        run: |
+          cat > /tmp/cashh-production-acceptance.cjs <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+
+          const base = process.env.CASHH_BASE_URL.replace(/\/$/, '');
+
+          async function mustJson(path) {
+            const r = await fetch(base + path, { redirect: 'follow' });
+            if (!r.ok) throw new Error(`${path} returned HTTP ${r.status}`);
+            return await r.json();
+          }
+
+          (async () => {
+            const health = await mustJson('/api/health');
+            const ready = await mustJson('/api/health/ready');
+            if (!health.ok) throw new Error('/api/health did not report ok=true');
+            if (!ready.ready) throw new Error('/api/health/ready did not report ready=true');
+
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
+            const response = await page.goto(base + '/prospects/', { waitUntil: 'networkidle', timeout: 60000 });
+            if (!response || !response.ok()) throw new Error(`/prospects/ returned HTTP ${response && response.status()}`);
+
+            const mobile = await page.evaluate(async () => {
+              const manifest = document.querySelector('link[rel="manifest"]')?.getAttribute('href') || null;
+              const viewport = document.querySelector('meta[name="viewport"]')?.getAttribute('content') || null;
+              const overflow = document.documentElement.scrollWidth - window.innerWidth;
+              let sw = null;
+              if ('serviceWorker' in navigator) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                const reg = await navigator.serviceWorker.getRegistration();
+                sw = reg ? { scope: reg.scope, active: Boolean(reg.active || reg.waiting || reg.installing) } : null;
+              }
+              return {
+                title: document.title,
+                manifest,
+                viewport,
+                overflow,
+                width: window.innerWidth,
+                height: window.innerHeight,
+                sw
+              };
+            });
+
+            if (!mobile.viewport || !mobile.viewport.includes('width=device-width')) {
+              throw new Error('mobile viewport meta tag missing');
+            }
+            if (mobile.overflow > 1) {
+              throw new Error(`horizontal overflow detected: ${mobile.overflow}px`);
+            }
+            if (!mobile.manifest) {
+              throw new Error('manifest link missing');
+            }
+            if (!mobile.sw || !mobile.sw.active) {
+              throw new Error('service worker registration not active');
+            }
+
+            await page.screenshot({ path: 'cashh-production-mobile.png', fullPage: true });
+            fs.writeFileSync('cashh-production-mobile.json', JSON.stringify({ health, ready, mobile }, null, 2));
+            console.log(JSON.stringify({ health: health.ok, ready: ready.ready, mobile }, null, 2));
+            await browser.close();
+          })().catch(err => {
+            console.error(err.stack || err);
+            process.exit(1);
+          });
+          NODE
+          node /tmp/cashh-production-acceptance.cjs
+
+      - name: Upload production acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cashh-production-mobile-acceptance
+          path: |
+            cashh-production-mobile.png
+            cashh-production-mobile.json
+          if-no-files-found: warn
