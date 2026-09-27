@@ -6,6 +6,17 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/production-mobile-acceptance.yml'
+      - 'app.py'
+      - 'launcher.py'
+      - 'cashh_loop.py'
+      - 'cashh_loop_ui.py'
+      - 'prospect_performance.py'
+      - 'cashh_performance_radar.py'
+      - 'static/**'
+      - 'prospect-android-app/**'
+      - 'Dockerfile'
+      - 'requirements.txt'
+      - 'railway.json'
 
 concurrency:
   group: cashh-production-mobile-acceptance
@@ -58,6 +69,11 @@ jobs:
               mustResponse('/prospects/manifest.webmanifest'),
               mustResponse('/prospects/sw.js')
             ]);
+
+            const brandCss = await (await mustResponse('/static/brand.css')).text();
+            if (!brandCss.includes('--sps-neon-cyan') || !brandCss.includes('SMARTPICKSHOP HOLDINGS')) {
+              throw new Error('live SmartPickShop steampunk-neon branding marker missing');
+            }
 
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
