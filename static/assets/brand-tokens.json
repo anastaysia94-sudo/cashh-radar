@@ -1,20 +1,59 @@
 {
   "brand": "Cashh Radar",
-  "tagline": "Spot better money opportunities.",
+  "portfolio": "SmartPickShop Holdings",
+  "tagline": "Find the signal. Verify it. Act.",
+  "portfolioTagline": "Ideas today. Empires tomorrow.",
+  "visualSystem": "Industrial Steampunk × Electric Neon × Futuristic Workshop",
   "fonts": {
     "heading": "Sora",
-    "body": "Inter"
+    "body": "Inter",
+    "mono": "ui-monospace, SFMono-Regular, Menlo, monospace"
   },
   "colors": {
     "midnight": "#0B1020",
     "charcoal": "#151A26",
+    "iron": "#080B0F",
+    "coal": "#10151B",
+    "gunmetal": "#202832",
+    "brass": "#C58A32",
+    "copper": "#B65F35",
     "teal": "#00E5C2",
+    "neonCyan": "#39F6FF",
+    "neonMagenta": "#FF3FD1",
     "green": "#22D463",
     "aqua": "#7CF2E3",
+    "ivory": "#F4EAD7",
     "text": "#F8F7F9",
     "muted": "#A6ACB9",
     "border": "#27303B",
     "warning": "#FFC53D",
     "danger": "#FF5C5C"
-  }
+  },
+  "effects": {
+    "metalLine": "rgba(197,138,50,.42)",
+    "cyanGlow": "0 0 24px rgba(57,246,255,.20)",
+    "magentaGlow": "0 0 24px rgba(255,63,209,.16)",
+    "panelShadow": "0 18px 55px rgba(0,0,0,.42)"
+  },
+  "radii": {
+    "control": "10px",
+    "panel": "18px",
+    "shell": "28px",
+    "pill": "9999px"
+  },
+  "motion": {
+    "fast": "150ms",
+    "base": "250ms",
+    "signalPulse": "2600ms"
+  },
+  "motifs": [
+    "radar sweeps",
+    "copper gears",
+    "brass rails",
+    "riveted panel frames",
+    "glowing cyan instrumentation",
+    "magenta alert energy",
+    "dark industrial metal",
+    "blueprint-grid texture"
+  ]
 }
