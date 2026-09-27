@@ -241,3 +241,5 @@ footer a{color:var(--sps-neon-cyan)!important}
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+/* Railway production sync trigger — 2026-09-27T15:17-07:00 */
