@@ -1,22 +1,25 @@
 # STATUS
 
-Updated: 2026-09-26 America/Los_Angeles
+Updated: 2026-09-30 America/Los_Angeles
 
 ## Purpose
-Cashh Radar opportunity intelligence, including Sales OS.
+Cashh Radar opportunity intelligence, including Sales OS and the production Fix Desk commercial lane.
 
-## VERIFIED SOURCE STATE
-- Current observed main head is `84d4cc4273ef9a6e5af2115ad4103212b68cca5d`.
-- The production-mobile acceptance workflow now has hard time bounds for network/browser execution.
-- The PWA portion checks that the manifest and service-worker script are reachable without waiting on service-worker activation.
-- The live browser check verifies health, readiness, mobile viewport metadata, horizontal overflow, and captures PNG + JSON evidence.
-- SmartPickShop steampunk/neon branding was added at `1a7c37ebd973e83715cd8cc8a3ac21d5b249b6a1`.
-- `84d4cc4273ef9a6e5af2115ad4103212b68cca5d` exists to trigger deployment of the current branded main branch.
+## VERIFIED CURRENT STATE
+- Canonical production URL: `https://cashh-radar-web-production.up.railway.app/`.
+- Current observed main before this status reconciliation: `51269c7554f089cedb325409378b856deae5a974`.
+- The only commit after certification head `40767f07ad67eaabd354942858dcf4e939e5ad5a` changes `MASTER_STATUS.md` only; runtime source is unchanged from the certified head.
+- Fix Desk live Android/PWA E2E run `36721261099`: SUCCESS.
+- Cashh Radar validation run `36721261063`: SUCCESS.
+- Earlier Production Mobile Acceptance run `36714799449`: SUCCESS.
+- Production `/api/health/ready`, PWA assets, mobile layout, branding, personalized offer context, exact checkout URL and PayPal handoff are covered by the current production evidence.
+- `MASTER_STATUS.md` is the detailed current product/production ledger and records the deployed Fix Desk offer ladder and commercial extraction.
+- PayPal handoff verification is not customer payment proof. No new paid customer/revenue is inferred from the green E2E.
 
-## VERIFICATION PENDING
-- The newest production-mobile Actions result was not verified in this continuity refresh.
-- The live Railway deployment has not been proven here to match current main.
-- Full opportunity → source → score → outreach draft → recorded outcome acceptance remains outstanding.
+## OPEN GATES
+- Complete/record a genuine customer or controlled commercial payment only when corresponding payment evidence exists.
+- Continue one full opportunity → source → score → action → response/outcome → learned loop with real outcome evidence.
+- Keep single-replica SQLite scaling boundary until migration to managed PostgreSQL is deliberately tested.
 
 ## Current gate
-Verify the newest production-mobile workflow and the live deployment/source match. Only then continue the real end-to-end opportunity workflow.
+Do not reopen the stale branding/source-match failure. Current production acceptance is green. Move to genuine commercial/outcome evidence while preserving modeled-vs-realized value semantics.
