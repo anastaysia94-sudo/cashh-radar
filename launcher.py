@@ -118,6 +118,13 @@ if PROSPECT_APP_DIR.exists():
         name="prospect-android-app",
     )
 
+if FIX_DESK_DIR.exists():
+    core_app.mount(
+        "/fix-desk",
+        StaticFiles(directory=str(FIX_DESK_DIR), html=True),
+        name="fix-desk",
+    )
+
 app = core_app
 
 # Deployment marker: 2026-09-25 production refresh requested from current main.
