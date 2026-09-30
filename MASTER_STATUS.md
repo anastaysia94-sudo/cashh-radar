@@ -1,6 +1,6 @@
 # Cashh Radar — Master Project Status
 
-Updated: 2026-09-13  
+Updated: 2026-09-30  
 Current production architecture: **Unified Opportunity + Prospect Lifecycle, schema v6**
 
 ## Production state
@@ -11,9 +11,9 @@ Cashh Radar is deployed in production on Railway.
 - Railway project: `cashh-radar`
 - Railway service: `cashh-radar-web`
 - Production URL: `https://cashh-radar-web-production.up.railway.app/`
-- Latest verified production deployment commit: `d442eeb848088759f64fb7917213fef8d8987376`
-- Latest verified Railway deployment: `3691f900-c6a4-4802-8cf1-758b18b09fe6` — **SUCCESS**
-- Deployment commit message: `Update smoke test docs for Railway launch status checks`
+- Latest verified production deployment commit: `d0eb64458139b660ce19f6b183208324a2f46f3c`
+- Latest verified Railway deployment: `c78334b1-b575-42f9-810e-b463a4283df0` — **SUCCESS**
+- Deployment commit message: `Style customer-facing Fix Desk offer ladder`
 - Canonical prospect entrypoint: `/prospects/`
 - Database schema: **v6**
 - Launch datastore: SQLite under `/app/data`
@@ -90,6 +90,36 @@ The current main/deployed lineage includes a public-safe launch-status surface i
 
 Sensitive values such as metrics tokens remain private and must never be copied into public documentation, screenshots or chat logs.
 
+## Fix Desk commercial completion — 2026-09-30
+
+The Fix Desk commercial lane is now production-deployed and live-certified.
+
+- Live route: `/fix-desk/`
+- Customer-facing paid offer ladder is live:
+  - Entry Fix Desk: **$99–$100**
+  - Growth Fix Desk: **$149**
+  - Local Growth: **$199**
+  - Launch Rescue: **$249**
+- The personalized V5/V6 final offer remains the **$100 Business Content Pack**.
+- Live Android/PWA E2E certification run: `36721261099` — **SUCCESS**
+- Full Cashh Radar validation run on the certification commit: `36721261063` — **SUCCESS**
+- Certification commit: `40767f07ad67eaabd354942858dcf4e939e5ad5a`
+- The live E2E verifies HTTPS, personalized business context, the $100 final offer, PWA manifest/icons/service-worker scope, form prefill, scope generation, exact checkout URL, visible/enabled checkout CTA, and PayPal handoff.
+- QA evidence is uploaded by the workflow as the `fix-desk-live-e2e-evidence` artifact.
+- This verifies the handoff to PayPal. It does **not** claim that a customer completed payment.
+
+A canonical commercial ladder is documented in `COMMERCIAL_OFFER_LADDER.md`.
+
+Five customer-ready digital products were also extracted from existing Cashh Radar systems and stored in private fulfillment storage rather than this public repository:
+
+1. Opportunity Scoring Kit
+2. Prospecting Command Pack
+3. Evidence-First Income Planner
+4. Founder Revenue Experiment Workbook
+5. Opportunity Intelligence Brief Template
+
+The storefront-facing catalog/spec is documented in `DIGITAL_PRODUCT_CATALOG.md`. Selling prices for those download products remain an explicit storefront publication gate; no price was invented or silently published.
+
 ## Evidence freshness
 
 Source-backed prospects have a canonical server catalog tied to the corresponding opportunity. Freshness can be checked manually or by the bounded scheduler.
@@ -146,32 +176,24 @@ Do not claim a live deployment merely because code exists in GitHub. Verify the 
 
 ## V5 + V6 ethical expansion
 
-The V5/V6 research program remains a separate future prospect-universe expansion, not a relabeling of the existing 500 source-backed production records.
+The V5/V6 expansion is now complete as a final 400-prospect source-backed package:
 
-Goal:
+- V5: **200** genuinely new prospects — Show the work + clear value
+- V6: **200** genuinely new prospects — Show the work + choice/control
+- final unique V5/V6 prospects: **400**
+- historical V1–V4 identities excluded: **747**
+- final exclusion universe: **1,147 identities**
+- public/business-intended emails: **400/400**
+- source URLs present: **400/400**
+- individualized first emails: **400**
+- business-specific preview graphics: **400**
+- ready `.eml` files: **400**
+- local portals: V5 / V6 / combined
+- Excel trackers: V5 / V6 / combined
+- V5, V6 and combined ZIP packaging: complete
+- build/QA workflow: pass
 
-- V5: 200 genuinely new prospects — **Show the work + clear value**
-- V6: 200 additional genuinely new prospects — **Show the work + choice + control**
-
-Historical exclusion universe:
-
-- raw V1–V4 rows: 750;
-- canonical historical identities: 747;
-- recovered 500-row expert workbook: 0 genuinely new V5/V6 identities after audit.
-
-Fresh staging has advanced through **Batch 12**:
-
-- accepted staging prospects: **193**;
-- remaining to the 400 accepted-candidate threshold: **207**;
-- next exclusion universe: **940 identities** (747 historical + 193 staging).
-
-The staging pool is still not a final V5/V6 package. Finalization waits for sufficient over-research, rank/prune, the deliberate 200/200 split, enrichment, individualized emails, business-specific preview graphics, matching `.eml` files, trackers, portals and final QA.
-
-The newest research checkpoint is documented under:
-
-- `data/v5-v6-research/batch12-2026-09-13.md`
-- `data/v5-v6-research/batch12-2026-09-13-gate-report.json`
-- `V5_V6_STATUS.md`
+The final V5/V6 package uses the approved $100 Business Content Pack purchase path. No Venmo references are permitted in this campaign. The latest detailed final status remains in `V5_V6_STATUS.md`.
 
 ## Outreach policy
 
