@@ -15,7 +15,7 @@ from cashh_performance_radar import register_performance_radar
 from prospect_performance import summarize as summarize_prospect_performance
 
 BASE_DIR = Path(__file__).resolve().parent
-PROSPECT_APP_DIR = BASE_DIR / "prospect-android-app"
+PROSPECT_APP_DIR = BASE_DIR / "prospect-android-app"\nFIX_DESK_DIR = BASE_DIR / "fix-desk"
 
 # Cashh Radar has one canonical opportunity lifecycle. Register the orchestration
 # layer, the prospect bridge, performance-aware ranking, and the connected UI before exposing production.
