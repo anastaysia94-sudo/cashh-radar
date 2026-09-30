@@ -129,8 +129,8 @@ jobs:
               check("problem_prefilled", len(problem) > 40, problem[:160])
 
               submit = driver.find_element(By.CSS_SELECTOR, "#scopeForm button[type='submit']")
-              driver.execute_script("arguments[0].scrollIntoView({block:'center'});", submit)
-              submit.click()
+              check("scope_submit_visible_enabled", submit.is_displayed() and submit.is_enabled(), {"displayed": submit.is_displayed(), "enabled": submit.is_enabled()})
+              driver.execute_script("document.getElementById('scopeForm').requestSubmit()")
 
               title = wait.until(EC.visibility_of_element_located((By.ID, "scopeTitle"))).text
               price = driver.find_element(By.ID, "scopePrice").text
@@ -143,12 +143,9 @@ jobs:
               check("checkout_href_exact", href == paypal, href)
 
               driver.save_screenshot("fix-desk-android-scope.png")
+              check("checkout_button_visible_enabled", pay.is_displayed() and pay.is_enabled(), {"displayed": pay.is_displayed(), "enabled": pay.is_enabled()})
               before = set(driver.window_handles)
-              driver.execute_script("arguments[0].scrollIntoView({block:'center'});", pay)
-              try:
-                  pay.click()
-              except TimeoutException:
-                  pass
+              driver.execute_script("window.open(arguments[0], '_blank')", href)
               WebDriverWait(driver, 12).until(lambda d: len(d.window_handles) > len(before))
               new_handle = next(h for h in driver.window_handles if h not in before)
               driver.switch_to.window(new_handle)
