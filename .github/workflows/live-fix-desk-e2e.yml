@@ -1,0 +1,182 @@
+name: Fix Desk Live Android PWA E2E
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/live-fix-desk-e2e.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-e2e:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: browser-actions/setup-chrome@v2
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install Selenium
+        run: python -m pip install --disable-pip-version-check selenium
+      - name: Verify live Android/PWA purchase path
+        env:
+          FIX_DESK_URL: https://cashh-radar-web-production.up.railway.app/fix-desk/
+          PAYPAL_URL: https://www.paypal.com/invoice/p/#7T6DC9A6WFH3XXCT
+        run: |
+          python - <<'PY'
+          import base64, json, os, time, traceback
+          from selenium import webdriver
+          from selenium.common.exceptions import TimeoutException
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          base = os.environ["FIX_DESK_URL"]
+          paypal = os.environ["PAYPAL_URL"]
+          payload = {
+              "businessName": "BELFOR USA GROUP dba BELFOR Property Restoration",
+              "businessType": "restoration",
+              "website": "",
+              "problem": "The current contractor source lists BELFOR USA GROUP dba BELFOR Property Restoration in San Jose, CA for Restoration; a concise capability and project-readiness content set can help prospective buyers understand what the business handles before an inquiry.",
+              "evidence": "Accepted in the canonical seed gate from the current 2026 contractor source; public business email retained exactly as published.",
+              "sourceUrl": "https://www.cusdk8.org/fs/resource-manager/view/ce90e6dd-ad5b-4546-8e73-3f3e726a2b0a",
+              "serviceId": "content",
+          }
+          encoded = base64.urlsafe_b64encode(json.dumps(payload, separators=(",", ":")).encode()).decode().rstrip("=")
+          prospect_url = base + "?lead=" + encoded
+
+          options = webdriver.ChromeOptions()
+          options.add_argument("--headless=new")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+          options.add_argument("--disable-gpu")
+          options.add_argument("--window-size=412,915")
+          options.add_experimental_option("mobileEmulation", {
+              "deviceMetrics": {"width": 412, "height": 915, "pixelRatio": 2.625},
+              "userAgent": "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Mobile Safari/537.36"
+          })
+          driver = webdriver.Chrome(options=options)
+          driver.set_page_load_timeout(35)
+          wait = WebDriverWait(driver, 20)
+          report = {"production_url": base, "prospect_url": prospect_url, "checks": {}}
+
+          def check(name, value, detail=None):
+              report["checks"][name] = {"pass": bool(value)}
+              if detail is not None:
+                  report["checks"][name]["detail"] = detail
+              if not value:
+                  raise AssertionError(f"{name} failed: {detail}")
+
+          try:
+              driver.get(prospect_url)
+              check("https_origin", driver.current_url.startswith("https://"), driver.current_url)
+              check("page_title", "Digital Fix Desk" in driver.title, driver.title)
+
+              lead_business = wait.until(EC.visibility_of_element_located((By.ID, "leadBusiness"))).text
+              check("personalized_business", "BELFOR" in lead_business, lead_business)
+
+              rec = wait.until(EC.visibility_of_element_located((By.ID, "leadRecommended"))).text
+              check("final_offer_content_pack", "Business Content Pack" in rec, rec[:500])
+              check("final_offer_100", "$100" in rec, rec[:500])
+
+              manifest = driver.execute_async_script("""
+                const done = arguments[0];
+                fetch('./manifest.webmanifest', {cache:'no-store'}).then(async r => done({status:r.status, json:await r.json()})).catch(e=>done({error:String(e)}));
+              """)
+              check("manifest_http_200", manifest.get("status") == 200, manifest)
+              m = manifest["json"]
+              check("manifest_standalone", m.get("display") == "standalone", m.get("display"))
+              check("manifest_start_url", m.get("start_url") == "./", m.get("start_url"))
+              sizes = {i.get("sizes") for i in m.get("icons", [])}
+              check("manifest_icons_192_512", {"192x192","512x512"}.issubset(sizes), sorted(sizes))
+
+              icon_status = driver.execute_async_script("""
+                const done=arguments[0];
+                Promise.all(['/static/assets/icons/icon-192.png','/static/assets/icons/icon-512.png'].map(u=>fetch(u,{cache:'no-store'}).then(r=>({u,status:r.status,ct:r.headers.get('content-type')}))))
+                  .then(done).catch(e=>done([{error:String(e)}]));
+              """)
+              check("icons_http_200", all(x.get("status")==200 for x in icon_status), icon_status)
+
+              sw = driver.execute_async_script("""
+                const done=arguments[0];
+                if (!('serviceWorker' in navigator)) return done({supported:false});
+                Promise.race([
+                  navigator.serviceWorker.ready.then(r=>done({supported:true, scope:r.scope, active:!!r.active})),
+                  new Promise(res=>setTimeout(()=>done({supported:true, timeout:true}),15000))
+                ]);
+              """)
+              check("service_worker_active", sw.get("supported") and sw.get("active"), sw)
+              check("service_worker_scope_fix_desk", "/fix-desk/" in sw.get("scope",""), sw)
+
+              try:
+                  install_errors = driver.execute_cdp_cmd("Page.getInstallabilityErrors", {}).get("installabilityErrors", [])
+                  report["installability_errors"] = install_errors
+              except Exception as e:
+                  report["installability_errors"] = [{"cdp_unavailable": str(e)}]
+
+              wait.until(EC.element_to_be_clickable((By.ID, "acceptRecommendation"))).click()
+              service = driver.find_element(By.ID, "serviceSelect").get_attribute("value")
+              check("service_prefilled_content", service == "content", service)
+
+              business = driver.find_element(By.ID, "businessNameInput").get_attribute("value")
+              check("business_prefilled", "BELFOR" in business, business)
+              problem = driver.find_element(By.ID, "problemText").get_attribute("value")
+              check("problem_prefilled", len(problem) > 40, problem[:160])
+
+              submit = driver.find_element(By.CSS_SELECTOR, "#scopeForm button[type='submit']")
+              driver.execute_script("arguments[0].scrollIntoView({block:'center'});", submit)
+              submit.click()
+
+              title = wait.until(EC.visibility_of_element_located((By.ID, "scopeTitle"))).text
+              price = driver.find_element(By.ID, "scopePrice").text
+              check("scope_result_package", "Business Content Pack" in title, title)
+              check("scope_result_business", "BELFOR" in title, title)
+              check("scope_result_price_100", "$100" in price, price)
+
+              pay = driver.find_element(By.ID, "payBtn")
+              href = pay.get_attribute("href")
+              check("checkout_href_exact", href == paypal, href)
+
+              driver.save_screenshot("fix-desk-android-scope.png")
+              before = set(driver.window_handles)
+              driver.execute_script("arguments[0].scrollIntoView({block:'center'});", pay)
+              try:
+                  pay.click()
+              except TimeoutException:
+                  pass
+              WebDriverWait(driver, 12).until(lambda d: len(d.window_handles) > len(before))
+              new_handle = next(h for h in driver.window_handles if h not in before)
+              driver.switch_to.window(new_handle)
+              try:
+                  WebDriverWait(driver, 15).until(lambda d: d.current_url.startswith("https://www.paypal.com"))
+              except Exception:
+                  pass
+              check("paypal_handoff", driver.current_url.startswith("https://www.paypal.com"), driver.current_url)
+              report["paypal_final_url"] = driver.current_url
+              report["result"] = "PASS"
+          except Exception as e:
+              report["result"] = "FAIL"
+              report["error"] = f"{type(e).__name__}: {e}"
+              report["traceback"] = traceback.format_exc()
+              try:
+                  driver.save_screenshot("fix-desk-android-failure.png")
+              except Exception:
+                  pass
+              raise
+          finally:
+              with open("fix-desk-live-e2e-report.json","w",encoding="utf-8") as f:
+                  json.dump(report,f,indent=2,ensure_ascii=False)
+              driver.quit()
+          PY
+      - name: Upload live QA evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: fix-desk-live-e2e-evidence
+          path: |
+            fix-desk-live-e2e-report.json
+            fix-desk-android-*.png
+          if-no-files-found: warn
+          retention-days: 14
