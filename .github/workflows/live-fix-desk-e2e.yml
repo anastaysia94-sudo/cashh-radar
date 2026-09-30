@@ -116,7 +116,7 @@ jobs:
               except Exception as e:
                   report["installability_errors"] = [{"cdp_unavailable": str(e)}]
 
-              wait.until(EC.element_to_be_clickable((By.ID, "acceptRecommendation"))).click()
+              install_btn = wait.until(EC.presence_of_element_located((By.ID, "installBtn")))\n              check("pwa_install_prompt_available", install_btn.is_displayed(), install_btn.get_attribute("class"))\n\n              wait.until(EC.element_to_be_clickable((By.ID, "leadReviewBtn"))).click()
               service = driver.find_element(By.ID, "serviceSelect").get_attribute("value")
               check("service_prefilled_content", service == "content", service)
 
