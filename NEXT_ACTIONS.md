@@ -1,10 +1,10 @@
 # NEXT ACTIONS
 
-Updated: 2026-09-26 America/Los_Angeles
+Updated: 2026-09-30 America/Los_Angeles
 
 ## Smallest next execution block
-1. Check the latest `Cashh Radar Production Mobile Acceptance` run for current main head `84d4cc4273ef9a6e5af2115ad4103212b68cca5d`.
-2. Confirm live `/api/health`, `/api/health/ready`, manifest, service-worker script, mobile layout, and evidence artifact results.
-3. Confirm the live Railway app is actually serving the current branded source.
-4. If those pass, verify one opportunity → source → score → outreach draft → recorded outcome flow.
-5. Save run/deployment evidence and update STATUS.md. Do not claim an active service worker unless browser evidence actually proves activation.
+1. Preserve the green production evidence: Fix Desk live E2E `36721261099`, validation `36721261063`, and Production Mobile Acceptance `36714799449`.
+2. Run one genuine opportunity → source → score → action/outreach draft → response/outcome → learned loop using authorized real data.
+3. Record actual outcome/payment only when corresponding external evidence exists; do not treat PayPal handoff or modeled offer value as revenue.
+4. Continue the current single-replica SQLite production boundary until a managed-Postgres migration is deliberately tested.
+5. Use `MASTER_STATUS.md` as the detailed current source of truth; do not regress to the superseded September 26 source-match checklist.
