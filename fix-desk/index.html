@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="Fixed-price same-day digital help for small businesses, with personalized prospect links and purchase-ready scopes." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="/static/assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/static/assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Same-Day Digital Fix Desk</title>
+</head>
+<body>
+  <div class="bg-orb orb-a"></div><div class="bg-orb orb-b"></div>
+  <header class="topbar shell">
+    <a class="brand" href="#top" aria-label="Home">
+      <span class="brand-mark">⚡</span>
+      <span><strong id="brandName">Same-Day Digital Fix Desk</strong><small>small problem → fixed scope → paid work</small></span>
+    </a>
+    <div class="top-actions">
+      <button id="installBtn" class="ghost hidden" type="button">Install app</button>
+      <a class="ghost" href="#how">How it works</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section id="leadBanner" class="lead-banner shell hidden" aria-live="polite">
+      <div><span class="lead-kicker">PERSONALIZED REVIEW</span><strong id="leadBusiness"></strong></div>
+      <button id="leadReviewBtn" class="primary" type="button">Review recommended fix</button>
+    </section>
+
+    <section class="hero shell">
+      <div class="hero-copy">
+        <div id="heroEyebrow" class="eyebrow">FIXED-PRICE DIGITAL HELP • NO CALL REQUIRED</div>
+        <h1 id="heroTitle">Pick the digital problem that is costing you time or customers. <span>Get a clean fix without an agency circus.</span></h1>
+        <p id="heroSub" class="hero-sub">Website copy, AI-search readiness, messy spreadsheets, lead research, AI-written copy cleanup, and launch emergencies. You choose the problem. The scope is defined before checkout.</p>
+        <div class="hero-cta">
+          <a id="heroPrimary" class="primary" href="#services">See the fix menu</a>
+          <button class="secondary" id="startScopeBtn" type="button">Build my scope</button>
+        </div>
+        <div class="trust-row">
+          <span>✓ fixed deliverables</span><span>✓ written scope</span><span>✓ no invented results</span><span>✓ email-first</span>
+        </div>
+      </div>
+      <aside id="heroCard" class="hero-card">
+        <div class="pulse-dot"></div>
+        <p id="heroCardLabel" class="muted caps">TODAY'S FASTEST PATH</p>
+        <h2 id="heroCardTitle">Start with one painful, bounded problem.</h2>
+        <p id="heroCardText">Big vague projects drag. Small concrete fixes close faster because the buyer can understand what they get and what it costs.</p>
+        <div id="heroMiniGrid" class="mini-grid">
+          <div><strong>$99–$249</strong><span>typical fixed price</span></div>
+          <div><strong>1 scope</strong><span>before payment</span></div>
+          <div><strong>0 calls</strong><span>unless requested</span></div>
+          <div><strong>100%</strong><span>digital delivery</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="leadEvidence" class="shell lead-evidence hidden">
+      <div class="evidence-card">
+        <p class="eyebrow">WHAT I NOTICED</p>
+        <h2 id="leadEvidenceTitle"></h2>
+        <p id="leadProblem"></p>
+        <div class="evidence-note"><strong>Evidence / context</strong><span id="leadEvidenceText"></span></div>
+        <a id="leadSource" class="source-link hidden" target="_blank" rel="noopener noreferrer">Open supporting source ↗</a>
+        <p class="tiny muted">This is an observed issue or opportunity, not a claim that a purchase will produce guaranteed revenue or rankings.</p>
+      </div>
+      <div class="recommended-card">
+        <p class="eyebrow">RECOMMENDED FIX</p>
+        <div id="leadRecommended"></div>
+      </div>
+    </section>
+
+    <section class="strip">
+      <div class="shell strip-inner">
+        <p><strong>Why this exists:</strong> 2026 SMB research shows speed and specialized expertise are leading reasons businesses use freelancers, while AI-search/AEO has become a major new client request for agencies. This desk packages those needs into small, understandable purchases.</p>
+        <div class="research-links"><a href="https://www.upwork.com/resources/how-smbs-are-using-freelancers" target="_blank" rel="noopener noreferrer">Upwork SMB research ↗</a><a href="https://agencyanalytics.com/blog/agency-benchmarks-2026-ai-search" target="_blank" rel="noopener noreferrer">AgencyAnalytics 2026 benchmarks ↗</a></div>
+      </div>
+    </section>
+
+    <section id="services" class="shell section">
+      <div class="section-head">
+        <div><p class="eyebrow">THE FIX MENU</p><h2>Choose the problem, not a mysterious bundle of “marketing services.”</h2></div>
+        <button id="compareBtn" class="ghost" type="button">Compare all</button>
+      </div>
+      <div id="serviceGrid" class="service-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="scope" class="shell section two-col">
+      <div>
+        <p class="eyebrow">INSTANT SCOPE BUILDER</p>
+        <h2>Turn “I need help” into a purchase-ready brief.</h2>
+        <p class="muted">The form creates a plain-English scope you can review before you pay. No interpretive dance between buyer and seller required.</p>
+        <div class="principles">
+          <div><b>1.</b><span><strong>Problem first</strong><small>What is broken or missing?</small></span></div>
+          <div><b>2.</b><span><strong>Evidence second</strong><small>What can we actually inspect?</small></span></div>
+          <div><b>3.</b><span><strong>Deliverable third</strong><small>What exactly changes hands?</small></span></div>
+        </div>
+      </div>
+      <form id="scopeForm" class="scope-card">
+        <label>Business name <span class="optional">optional</span><input id="businessNameInput" maxlength="100" placeholder="e.g. Acme Plumbing" /></label>
+        <label>What kind of business is this?<input id="businessType" required maxlength="80" placeholder="e.g. salon, SaaS, contractor, online shop" /></label>
+        <label>What needs fixing first?<select id="serviceSelect" required></select></label>
+        <label>Website or work link <span class="optional">optional</span><input id="workUrl" type="url" placeholder="https://example.com" /></label>
+        <label>What is going wrong right now?<textarea id="problemText" required maxlength="700" placeholder="Be concrete. Example: visitors land on the page but the offer is confusing and nobody clicks the checkout button."></textarea></label>
+        <label>Deadline<select id="deadline"><option>Today</option><option>Within 24 hours</option><option>Within 48 hours</option><option>This week</option></select></label>
+        <button class="primary wide" type="submit">Build my scope</button>
+      </form>
+    </section>
+
+    <section id="scopeResult" class="shell section hidden">
+      <div class="result-card">
+        <div class="result-top"><div><p class="eyebrow">YOUR READY-TO-SEND SCOPE</p><h2 id="scopeTitle"></h2></div><span id="scopePrice" class="price-pill"></span></div>
+        <div id="scopeOutput" class="scope-output"></div>
+        <div class="result-actions">
+          <button id="copyScopeBtn" class="secondary" type="button">Copy scope</button>
+          <a id="emailScopeBtn" class="secondary" href="#">Email scope</a>
+          <a id="payBtn" class="primary" href="#" target="_blank" rel="noopener noreferrer">Continue to checkout</a>
+        </div>
+        <p id="checkoutNote" class="tiny muted"></p>
+      </div>
+    </section>
+
+    <section id="how" class="shell section">
+      <div class="section-head"><div><p class="eyebrow">HOW IT WORKS</p><h2>Four steps. Because six onboarding calls would be a cry for help.</h2></div></div>
+      <div class="steps">
+        <article><span>01</span><h3>Choose</h3><p>Pick the smallest fix that would create the most immediate relief or value.</p></article>
+        <article><span>02</span><h3>Scope</h3><p>Answer a few questions. The app turns them into a written deliverable list.</p></article>
+        <article><span>03</span><h3>Pay</h3><p>Use the configured checkout link. No surprise upsells hidden behind a discovery call.</p></article>
+        <article><span>04</span><h3>Deliver</h3><p>The work is completed to the agreed scope, with evidence and editable files where applicable.</p></article>
+      </div>
+    </section>
+
+    <section class="shell section ethics">
+      <div><p class="eyebrow">THE NON-NONSENSE POLICY</p><h2>No fake scarcity. No fake testimonials. No guaranteed revenue fairy tales.</h2></div>
+      <p>Fast work can still be honest work. Outcomes depend on the buyer's market, traffic, offer, implementation, and a thousand other things humans invented. This desk sells clearly defined digital deliverables, not certainty.</p>
+    </section>
+
+    <section id="ownerPanel" class="shell section hidden">
+      <div class="owner-card">
+        <p class="eyebrow">OWNER LAUNCH CONSOLE</p>
+        <h2>Configure checkout, then generate personalized prospect links in bulk.</h2>
+        <p class="muted">Everything below runs locally in this browser. Paste PayPal, Shopify, Sellvia, Stripe Payment Links, or any HTTPS checkout URL. You can set one fallback checkout or a different URL for every package.</p>
+        <div class="owner-grid">
+          <label>Public brand name<input id="ownerBrand" value="Same-Day Digital Fix Desk" /></label>
+          <label>Fallback checkout URL<input id="ownerPay" type="url" placeholder="https://..." /></label>
+          <label>Reply email<input id="ownerEmail" type="email" placeholder="you@example.com" /></label>
+          <label>Seller note<input id="ownerNote" maxlength="140" placeholder="e.g. Email delivery only. Most scopes completed same day when capacity allows." /></label>
+        </div>
+        <h3 class="owner-subhead">Package prices + checkout links</h3>
+        <div class="owner-services" id="ownerServices"></div>
+        <div class="result-actions">
+          <button id="generateLinkBtn" class="primary" type="button">Generate generic customer link</button>
+          <button id="copyLinkBtn" class="secondary hidden" type="button">Copy customer link</button>
+          <button id="shareLinkBtn" class="secondary hidden" type="button">Share</button>
+        </div>
+        <div id="customerLinkBox" class="linkbox hidden"></div>
+        <div class="goal-card"><strong id="goalMath"></strong><span>Seller-side launch math, not a promise of sales.</span></div>
+      </div>
+
+      <div class="owner-card campaign-card">
+        <p class="eyebrow">CAMPAIGN LINK GENERATOR</p>
+        <h2>Turn a prospect sheet into one personalized sales page per business.</h2>
+        <p class="muted">Use these headers: <code>business_name,business_type,website,problem,evidence,source_url,service_id</code>. Valid service IDs: <code>content, aeo, conversion, cleanup, leads, data, local, launch</code>. Leave service_id blank and the app will infer a best-fit package from the problem text.</p>
+        <div class="campaign-actions">
+          <label class="file-label">Import CSV<input id="campaignFile" type="file" accept=".csv,text/csv" /></label>
+          <button id="loadSampleBtn" class="secondary" type="button">Load sample row</button>
+          <button id="clearCampaignBtn" class="ghost" type="button">Clear</button>
+        </div>
+        <textarea id="campaignCsv" class="campaign-textarea" spellcheck="false" placeholder="business_name,business_type,website,problem,evidence,source_url,service_id
+Example Co,local retailer,https://example.com,Homepage offer is hard to understand,Homepage hero leads with generic copy,https://example.com,conversion"></textarea>
+        <div class="result-actions">
+          <button id="generateCampaignBtn" class="primary" type="button">Generate personalized links</button>
+          <button id="downloadCampaignBtn" class="secondary hidden" type="button">Download enriched CSV</button>
+        </div>
+        <div id="campaignStatus" class="campaign-status muted"></div>
+        <div id="campaignPreview" class="campaign-preview"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <div><strong id="footerBrand">Same-Day Digital Fix Desk</strong><p>Fixed-scope digital work for businesses that would rather solve the problem than schedule a committee meeting about it.</p></div>
+    <div class="footer-links"><a href="#services">Services</a><a href="#scope">Scope builder</a><a href="#how">Process</a></div>
+  </footer>
+
+  <dialog id="compareDialog">
+    <button class="dialog-close" id="closeCompare" aria-label="Close">×</button>
+    <p class="eyebrow">COMPARE FIXES</p><h2>Pick the smallest scope that solves the actual problem.</h2>
+    <div id="compareTable"></div>
+  </dialog>
+
+  <script src="app-base.js" defer></script>
+  <script src="app-ui.js" defer></script>
+  <script src="app-owner.js" defer></script>
+  <script src="app-campaign.js" defer></script>
+</body>
+</html>

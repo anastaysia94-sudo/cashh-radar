@@ -16,6 +16,7 @@ from prospect_performance import summarize as summarize_prospect_performance
 
 BASE_DIR = Path(__file__).resolve().parent
 PROSPECT_APP_DIR = BASE_DIR / "prospect-android-app"
+FIX_DESK_DIR = BASE_DIR / "fix-desk"
 
 # Cashh Radar has one canonical opportunity lifecycle. Register the orchestration
 # layer, the prospect bridge, performance-aware ranking, and the connected UI before exposing production.
@@ -116,6 +117,13 @@ if PROSPECT_APP_DIR.exists():
         "/prospects",
         StaticFiles(directory=str(PROSPECT_APP_DIR), html=True),
         name="prospect-android-app",
+    )
+
+if FIX_DESK_DIR.exists():
+    core_app.mount(
+        "/fix-desk",
+        StaticFiles(directory=str(FIX_DESK_DIR), html=True),
+        name="fix-desk",
     )
 
 app = core_app
