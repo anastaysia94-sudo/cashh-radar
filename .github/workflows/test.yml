@@ -93,7 +93,7 @@ jobs:
             grep -q 'data/p500-loader.js' "$f"
             grep -q 'bootstrap-v4.js' "$f"
             grep -q 'pwa-runtime.js' "$f"
-            grep -q '700 prospects' "$f"
+            grep -q 'next-best-action mode' "$f"
           done
 
           test -f prospect-android-app/sw.js
