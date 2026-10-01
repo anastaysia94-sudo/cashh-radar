@@ -1,0 +1,16 @@
+
+:root{--brand-neon:#bff96b;--cyan:#75f4d0;--lime:#bff96b;--text:#edf7ed;--muted:#a9c3ba;--line:#31544e}
+body{background:radial-gradient(ellipse at 80% 0,#17433d 0,transparent 48%),#071916;color:#edf7ed}
+.topbar{background:#081b19ed;border-color:#31544e}.sidebar{background:#09231eeb;border-color:#31544e}
+.hero-copy{border-color:#697550;border-radius:5px 30px 5px 30px;background:linear-gradient(100deg,#0d2927f5,#0d2927e0 65%,#0d292799),url('/static/brand/hero.webp') 70% center/cover;padding:36px}
+.hero-copy h1{font-family:'Trebuchet MS',system-ui,sans-serif;font-size:clamp(38px,4.4vw,65px);letter-spacing:-.045em;line-height:1.05}.hero-copy p{color:#c4d9d1}
+.hero-panel{background:linear-gradient(140deg,#193b33,#0b2626);border:1px solid #69856a;border-radius:30px 5px 30px 5px}
+.workspace,.architecture{border-color:#375d50;background:linear-gradient(140deg,#12332ff5,#0b211df5)}
+.nav-item.active{border-left:3px solid #bff96b;background:#1b4236}.nav-title,.brand-copy small{font-size:12px;color:#9bbbaf}
+.primary-btn{background:linear-gradient(120deg,#bff96b,#75f4d0);color:#09201a}.primary-btn:disabled{opacity:.6}
+@media(max-width:650px){.hero-copy{padding:25px}.hero-copy h1{font-size:40px}}
+
+/* Original product identity • 2026-09-30 • Steampunk Neon */
+:focus-visible{outline:2px solid var(--brand-neon);outline-offset:4px}
+button,input,select,textarea{font:inherit}button,a,input,select,textarea{touch-action:manipulation}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}}
