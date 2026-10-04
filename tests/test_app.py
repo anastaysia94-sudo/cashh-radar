@@ -1,4 +1,5 @@
-import os, sys
+import os, sys, sqlite3
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -50,6 +51,12 @@ def test_admin_flow():
     dash=c.get('/api/admin/dashboard'); assert dash.status_code==200
     opps=c.get('/api/admin/opportunities').json()['opportunities']
     source=next(x for x in opps if x['trust']!='demo')
+    # Snapshot seed rows carry real closing dates that eventually pass, which
+    # would flip verification to 'expired'. Pin this row's close date to a
+    # relative future time so the test does not depend on today's date.
+    future=(datetime.now(timezone.utc)+timedelta(days=30)).replace(microsecond=0).isoformat()
+    with sqlite3.connect(TEST_DB) as conn:
+        conn.execute('UPDATE opportunities SET closes_at=? WHERE id=?',(future,source['id']))
     assert c.post(f"/api/admin/opportunities/{source['id']}/verify",headers=headers).status_code==200
     checked=c.get(f"/api/opportunities/{source['id']}").json()['opportunity']
     assert checked['verification']['status']=='verified'
