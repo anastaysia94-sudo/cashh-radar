@@ -23,3 +23,10 @@ Cashh Radar opportunity intelligence, including Sales OS and the production Fix 
 
 ## Current gate
 Do not reopen the stale branding/source-match failure. Current production acceptance is green. Move to genuine commercial/outcome evidence while preserving modeled-vs-realized value semantics.
+
+## 2026-10-04 PT — repo maintenance notes (The Albino · Pit Keeper)
+- `tests/test_app.py::test_admin_flow` fails on main since 2026-10-01: the first non-demo seed (`snapshot-usajobs-878631000`, closes `2026-10-01T03:59Z`) is now `expired`. Production logic is correct; the test was date-dependent.
+- Test-only fix proposed in PR https://github.com/anastaysia94-sudo/cashh-radar/pull/30 (OPEN): pins that row's `closes_at` to now+30 days in the throwaway test DB. Local pytest: main 1 failed / 55 passed; branch 56 passed.
+- Remaining seed snapshots close 2026-10-10 and 2026-10-13 (grants.gov), so the seeded live-source set will be all-expired soon; refreshing seeds is a separate product decision.
+- Licence: an all-rights-reserved SmartPickShop Holdings `LICENSE` notice is proposed in PR https://github.com/anastaysia94-sudo/cashh-radar/pull/29 (OPEN, not merged). Until it merges the repo still has no licence file. Its only red check is the date-dependent test above; it should go green after PR #30 merges and #29 is re-run/updated.
+- Nothing in this note is merged; PRs await Anastaysia's review. No secrets were read or changed.

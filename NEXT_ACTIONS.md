@@ -8,3 +8,7 @@ Updated: 2026-09-30 America/Los_Angeles
 3. Record actual outcome/payment only when corresponding external evidence exists; do not treat PayPal handoff or modeled offer value as revenue.
 4. Continue the current single-replica SQLite production boundary until a managed-Postgres migration is deliberately tested.
 5. Use `MASTER_STATUS.md` as the detailed current source of truth; do not regress to the superseded September 26 source-match checklist.
+
+## 2026-10-04 PT — repo maintenance notes (The Albino · Pit Keeper)
+1. Review/merge PR #30, then update/re-run licence PR #29.
+2. Decide whether to refresh the snapshot seed opportunities before they all pass their close dates (Oct 10 / Oct 13).
