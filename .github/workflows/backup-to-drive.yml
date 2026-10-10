@@ -1,0 +1,69 @@
+name: Backup GitHub to Google Drive (verify before cleanup)
+
+on:
+  workflow_dispatch:
+    inputs:
+      delete_after_backup:
+        description: 'Delete eligible GitHub artifacts only after EVERY Drive backup verifies?'
+        required: true
+        type: boolean
+        default: false
+      min_age_days:
+        description: 'Do not delete artifacts younger than this many days (0 to clear all eligible)'
+        required: true
+        type: number
+        default: 7
+  schedule:
+    - cron: '37 3 * * 0'  # Weekly on Sunday, UTC
+
+permissions:
+  contents: read
+  actions: write  # Needed ONLY to delete Actions artifacts
+
+concurrency:
+  group: gdrive-backup-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    # Scheduled work is inert until an explicit repository variable opts in.
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.DRIVE_BACKUP_READY == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # No PR trigger: OAuth Drive credential must not be exposed to PR jobs.
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      DRIVE_DESTINATION: ${{ vars.DRIVE_BACKUP_PATH || 'gdrive:GitHub-Backups' }}
+      # Schedule deletes only when this repository/org variable equals 'true'.
+      DELETE_AFTER_BACKUP: ${{ (github.event_name == 'workflow_dispatch' && inputs.delete_after_backup == true) || (github.event_name == 'schedule' && vars.BACKUP_DELETE_ENABLED == 'true') }}
+      MIN_AGE_DAYS: ${{ github.event_name == 'workflow_dispatch' && format('{0}', inputs.min_age_days) || '7' }}
+      PROTECTED_NAMES_REGEX: '(^|[-_])(release|deploy|production|acceptance|evidence)([-_]|$)'
+    steps:
+      - name: Check out backup script
+        uses: actions/checkout@v4
+
+      - name: Install free rclone CLI
+        shell: bash
+        run: |
+          if ! command -v rclone >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq rclone
+          fi
+
+      - name: Load Google Drive credential from GitHub secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$RCLONE_CONFIG_B64" ]]; then
+            echo 'Missing RCLONE_CONFIG_B64 secret. No backup or cleanup attempted.' >&2
+            exit 1
+          fi
+          conf="${RUNNER_TEMP}/rclone.conf"
+          (umask 077; printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$conf")
+          chmod 600 "$conf"
+          echo "RCLONE_CONFIG=$conf" >> "$GITHUB_ENV"
+
+      - name: Upload, verify, and optionally delete old artifacts
+        shell: bash
+        run: bash scripts/backup-to-drive.sh
